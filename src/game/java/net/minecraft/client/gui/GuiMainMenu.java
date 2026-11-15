@@ -520,9 +520,13 @@ public class GuiMainMenu extends GuiScreen {
 		int nameWidth = Math.min(150, this.fontRendererObj.getStringWidth(username));
 		int chipLeft = this.width - nameWidth - 39;
 		drawRect(chipLeft, 12, this.width - 10, 35, 0xC810141C);
-		drawRect(chipLeft + 5, 16, chipLeft + 21, 32, 0xFFFFC45C);
-		this.fontRendererObj.drawString(username.substring(0, Math.min(1, username.length())).toUpperCase(),
-				chipLeft + 10, 20, 0xFF171A20);
+		this.mc.getTextureManager().bindTexture(EaglerProfile.getActiveSkinResourceLocation());
+		this.drawScaledCustomSizeModalRect(chipLeft + 5, 16, 8.0F, 8.0F, 8, 8, 16, 16, 64.0F, 64.0F);
+		this.drawScaledCustomSizeModalRect(chipLeft + 5, 16, 40.0F, 8.0F, 8, 8, 16, 16, 64.0F, 64.0F);
+		// Tiny Santa hat above the player's skin head.
+		drawRect(chipLeft + 7, 13, chipLeft + 19, 16, 0xFFF4F5F7);
+		drawRect(chipLeft + 9, 9, chipLeft + 17, 14, 0xFFB52D32);
+		drawRect(chipLeft + 14, 7, chipLeft + 18, 11, 0xFFF4F5F7);
 		this.fontRendererObj.drawString(username, chipLeft + 26, 20, 0xFFFFFFFF);
 	}
 
