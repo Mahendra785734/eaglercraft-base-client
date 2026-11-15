@@ -11,7 +11,8 @@ public class FullBright extends Module {
 
 
     public FullBright() {
-        super("Fullbright", Category.Render);
+        super("FullBright", "Adjusts world brightness.", Category.Render);
+        setKey(33);
 
         this.description = "Changes the brightness of the world.";
 
@@ -22,6 +23,13 @@ public class FullBright extends Module {
     public void onEnable() {
         super.onEnable();
         Minecraft.getMinecraft().gameSettings.gammaSetting = gamma.getValue().floatValue();
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc != null && mc.gameSettings != null) {
+            mc.gameSettings.gammaSetting = gamma.getValue().floatValue();
+        }
     }
 
     @Override
