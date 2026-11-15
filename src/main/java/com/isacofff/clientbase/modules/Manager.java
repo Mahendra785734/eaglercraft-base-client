@@ -11,6 +11,7 @@ import com.isacofff.clientbase.modules.features.ClickCPS;
 import com.isacofff.clientbase.modules.features.ArmorStatus;
 import com.isacofff.clientbase.modules.features.ModuleList;
 import com.isacofff.clientbase.modules.features.FPS;
+import com.isacofff.clientbase.modules.features.HudFeatures;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -31,6 +32,48 @@ public class Manager {
     modules.add(new ArmorStatus());
     modules.add(new ModuleList());
     modules.add(new FPS());
+    modules.add(new HudFeatures.DirectionHUD());
+    modules.add(new HudFeatures.PotionHUD());
+    modules.add(new HudFeatures.ItemCounter());
+    modules.add(new HudFeatures.ClockHUD());
+    modules.add(new HudFeatures.BiomeHUD());
+    modules.add(new HudFeatures.SpeedHUD());
+    modules.add(new HudFeatures.HeldDurability());
+    modules.add(new HudFeatures.TotemCounter());
+    modules.add(new HudFeatures.ArrowCounter());
+    modules.add(new HudFeatures.DayCounter());
+    modules.add(new HudFeatures.PingHUD());
+    modules.add(new HudFeatures.FoodHUD());
+    modules.add(new HudFeatures.XPDisplay());
+    modules.add(new HudFeatures.HealthHUD());
+    modules.add(new HudFeatures.WorldTime());
+    modules.add(new HudFeatures.RotationHUD());
+    modules.add(new HudFeatures.ChunkHUD());
+    modules.add(new HudFeatures.LightLevel());
+    modules.add(new HudFeatures.InventoryCount());
+    modules.add(new HudFeatures.ArmorValue());
+    modules.add(new HudFeatures.TargetHUD());
+    modules.add(new HudFeatures.EntityCount());
+    modules.add(new HudFeatures.DimensionHUD());
+    modules.add(new HudFeatures.PlayerNameHUD());
+    modules.add(new HudFeatures.SaturationHUD());
+    modules.add(new HudFeatures.AirHUD());
+    modules.add(new HudFeatures.ArmorCount());
+    modules.add(new HudFeatures.HeldItemHUD());
+    modules.add(new HudFeatures.SelectedSlotHUD());
+    modules.add(new HudFeatures.WorldNameHUD());
+    modules.add(new HudFeatures.LocalDifficultyHUD());
+    modules.add(new HudFeatures.HideScoreboard());
+    modules.add(new HudFeatures.HideBossBar());
+    modules.add(new HudFeatures.HidePotionEffects());
+    modules.add(new HudFeatures.HideHotbar());
+    modules.add(new HudFeatures.HideCrosshair());
+    modules.add(new HudFeatures.HidePlayerList());
+    modules.add(new HudFeatures.HideTitles());
+    modules.add(new HudFeatures.HideSubtitles());
+    modules.add(new HudFeatures.HidePumpkin());
+    modules.add(new HudFeatures.HidePortal());
+    modules.add(new HudFeatures.HideVignette());
     }
 
     public void onTick() {
