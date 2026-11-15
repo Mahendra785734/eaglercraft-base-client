@@ -1196,6 +1196,9 @@ public class Minecraft implements IThreadListener {
      * Runs the current tick.
      */
     public void runTick() throws IOException {
+        if (com.isacofff.clientbase.Client.manager != null) {
+            com.isacofff.clientbase.Client.manager.onTick();
+        }
         if (this.rightClickDelayTimer > 0) {
             --this.rightClickDelayTimer;
         }
@@ -1423,6 +1426,11 @@ public class Minecraft implements IThreadListener {
             }
 
             boolean flag = Keyboard.getEventKeyState();
+
+            if (flag && (this.currentScreen == null || this.currentScreen instanceof ClickGuiScreen)
+                    && com.isacofff.clientbase.Client.manager != null) {
+                com.isacofff.clientbase.Client.manager.onKey(i);
+            }
 
             if (flag) {
                 if (i == 62 && this.entityRenderer != null) {
