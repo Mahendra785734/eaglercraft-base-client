@@ -1,23 +1,32 @@
 package com.isacofff.clientbase.modules.features;
 
-/**
- * Runtime layout and style settings for the ActiveModules overlay.
- * These settings remain active while the client is running.
- */
+/** Runtime layout and style settings for the ActiveModules overlay. */
 public final class ActiveModulesHud {
     public static int x = 6;
     public static int y = 70;
     public static int colorIndex = 0;
     public static boolean rainbow = false;
     public static boolean background = true;
+    public static boolean leftAccent = true;
     public static boolean editing = false;
+    private static String colorMode = "GOLD";
 
     private static final int[] COLORS = new int[] {
         0xFFFFC45C, 0xFF55D6BE, 0xFF69A7FF, 0xFFFF6B81,
         0xFFB78CFF, 0xFFFFFFFF, 0xFF72D572, 0xFFFFA45B
     };
 
-    private ActiveModulesHud() {
+    private ActiveModulesHud() {}
+
+    public static void setColorMode(String mode) {
+        colorMode = mode == null ? "GOLD" : mode;
+        rainbow = "RAINBOW".equalsIgnoreCase(colorMode);
+        for (int i = 0; i < 8; ++i) {
+            if (new String[] {"GOLD","TEAL","BLUE","PINK","PURPLE","WHITE","GREEN","ORANGE"}[i].equalsIgnoreCase(colorMode)) {
+                colorIndex = i;
+                break;
+            }
+        }
     }
 
     public static int getColor(int index) {
@@ -31,5 +40,6 @@ public final class ActiveModulesHud {
 
     public static void nextColor() {
         colorIndex = (colorIndex + 1) % COLORS.length;
+        rainbow = false;
     }
 }
