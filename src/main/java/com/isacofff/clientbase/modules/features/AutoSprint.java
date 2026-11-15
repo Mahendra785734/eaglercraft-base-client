@@ -7,7 +7,9 @@ import net.minecraft.client.Minecraft;
 public class AutoSprint extends Module {
 
     public AutoSprint() {
-        super("AutoSprint", Category.Movement);
+        // Use the same name as the old catalog entry so the real module
+        // replaces the non-functional Sprint placeholder during registration.
+        super("Sprint", Category.Movement);
         this.description = "Automatically sprints while moving forward.";
     }
 
