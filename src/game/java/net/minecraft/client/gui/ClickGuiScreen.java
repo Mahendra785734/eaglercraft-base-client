@@ -33,6 +33,7 @@ public class ClickGuiScreen extends GuiScreen {
     private static final int SLIDER_KNOB = -1;
 
     private final ArrayList<Panel> panels = new ArrayList<>();
+    private Module listeningForKeybind = null;
 
     public ClickGuiScreen() {
         int x = 1;
@@ -110,6 +111,10 @@ public class ClickGuiScreen extends GuiScreen {
         fontRendererObj.drawString("KYZXX CLIENT  |  RIGHT CLICK MODULE FOR SETTINGS", 12, this.height - 15, 0xFFFFC45C);
         fontRendererObj.drawString("EDIT HUD", this.width / 2 - 28, this.height - 15, 0xFFFFFFFF);
         fontRendererObj.drawString("RSHIFT: GUI", this.width - 78, this.height - 15, 0xFFD7DCE5);
+        if (listeningForKeybind != null) {
+            drawRect(6, 6, this.width - 6, 20, 0xD910141C);
+            fontRendererObj.drawString("PRESS A KEY FOR " + listeningForKeybind.getName() + "  |  ESC CANCEL  |  BACKSPACE CLEAR", 12, 10, ACCENT_COLOR);
+        }
 
         String descriptionn = null;
 
@@ -148,6 +153,15 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
+        if (listeningForKeybind != null) {
+            if (keyCode == KeyboardConstants.KEY_ESCAPE) {
+                listeningForKeybind = null;
+            } else {
+                listeningForKeybind.setKeybind((keyCode == 14 || keyCode == 211) ? 0 : keyCode);
+                listeningForKeybind = null;
+            }
+            return;
+        }
         if (keyCode == KeyboardConstants.KEY_ESCAPE || keyCode == 54) {
             Module clickGui = Client.INSTANCE.manager.getModuleByName("ClickGUI");
             if (clickGui != null && clickGui.isEnabled()) {
@@ -259,6 +273,8 @@ public class ClickGuiScreen extends GuiScreen {
                         drawRect(x, rowY, x + width, rowY + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
                         String symbol = module.open ? "-" : "+";
                         fontRendererObj.drawString(symbol, x + width - 10, rowY + 4, ACCENT_COLOR);
+                        String bindLabel = listeningForKeybind == module ? "..." : (module.getKeybind() == 0 ? "K" : Keyboard.getKeyName(module.getKeybind()));
+                        fontRendererObj.drawString(bindLabel, x + width - 34, rowY + 4, listeningForKeybind == module ? ACCENT_COLOR : 0xFFD7DCE5);
                         fontRendererObj.drawString(module.getName(), x + 4, rowY + 4, TEXT_COLOR);
                     }
                     offset += 14;
@@ -358,6 +374,12 @@ public class ClickGuiScreen extends GuiScreen {
                         int gearY = y + offset + 1;
 
                         boolean overGear = mouseX >= gearX && mouseX <= gearX + gearSize && mouseY >= gearY && mouseY <= gearY + gearSize;
+                        boolean overKeybind = mouseX >= x + width - 38 && mouseX < gearX && mouseY >= rowY && mouseY <= rowY + 14;
+
+                        if (overKeybind && mouseButton == 0) {
+                            listeningForKeybind = module;
+                            return;
+                        }
 
                         if (overGear && mouseButton == 0) {
                             module.open = !module.open;
