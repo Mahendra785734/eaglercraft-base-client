@@ -107,7 +107,7 @@ public class ClickGuiScreen extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         drawRect(6, this.height - 19, this.width - 6, this.height - 5, 0xB810141C);
-        fontRendererObj.drawString("KYZXX CLIENT  |  RIGHT CLICK A PANEL TO COLLAPSE", 12, this.height - 15, 0xFFFFC45C);
+        fontRendererObj.drawString("KYZXX CLIENT  |  RIGHT CLICK MODULE FOR SETTINGS", 12, this.height - 15, 0xFFFFC45C);
         fontRendererObj.drawString("EDIT HUD", this.width / 2 - 28, this.height - 15, 0xFFFFFFFF);
         fontRendererObj.drawString("RSHIFT: GUI", this.width - 78, this.height - 15, 0xFFD7DCE5);
 
