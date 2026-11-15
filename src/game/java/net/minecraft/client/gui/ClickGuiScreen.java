@@ -14,6 +14,7 @@ import java.io.IOException;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.client.gui.HudEditorScreen;
+import net.lax1dude.eaglercraft.profile.GuiScreenEditProfile;
 import java.util.ArrayList;
 
 public class ClickGuiScreen extends GuiScreen {
@@ -116,6 +117,9 @@ public class ClickGuiScreen extends GuiScreen {
         this.drawDefaultBackground();
         fontRendererObj.drawString("KYZXX", 12, 12, 0xFFFFC45C);
         fontRendererObj.drawString("MODULES", 12, 23, 0xFFB8C1CF);
+        drawRect(this.width - 78, 8, this.width - 8, 27, 0xFFB88A3B);
+        drawRect(this.width - 77, 9, this.width - 9, 26, 0xF0121722);
+        fontRendererObj.drawString("COSMETICS", this.width - 72, 14, 0xFFFFC45C);
 
         int searchWidth = Math.min(260, this.width - 24);
         int searchX = (this.width - searchWidth) / 2;
@@ -162,6 +166,11 @@ public class ClickGuiScreen extends GuiScreen {
         int searchX = (this.width - searchWidth) / 2;
         if (mouseButton == 0 && mouseY >= 8 && mouseY <= 27 && mouseX >= searchX && mouseX <= searchX + searchWidth) {
             searchFocused = true;
+            return;
+        }
+        if (mouseButton == 0 && mouseY >= 8 && mouseY <= 27 && mouseX >= this.width - 78 && mouseX <= this.width - 8) {
+            searchFocused = false;
+            mc.displayGuiScreen(new GuiScreenEditProfile(this));
             return;
         }
         searchFocused = false;
