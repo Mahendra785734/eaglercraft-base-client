@@ -1,0 +1,44 @@
+name: Build KYZXX Client
+
+on:
+  push:
+    branches:
+      - kyzxx-client-development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build asset pack
+        run: |
+          chmod +x CompileEPK.sh CompileJS.sh MakeOfflineDownload.sh gradlew
+          ./CompileEPK.sh
+      - name: Compile web client
+        run: ./CompileJS.sh
+      - name: Create offline downloads
+        run: ./MakeOfflineDownload.sh
+      - name: Package client
+        run: |
+          mkdir -p release
+          cp -r javascript release/
+          cp classes.js release/ 2>/dev/null || true
+          cd release
+          zip -r ../KYZXX-Client-1.12.2.zip .
+      - name: Upload client ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: KYZXX-Client-1.12.2
+          path: KYZXX-Client-1.12.2.zip
+          if-no-files-found: error
+          retention-days: 14
