@@ -405,6 +405,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 	}
 
 	private void hurtCameraEffect(float partialTicks) {
+		com.isacofff.clientbase.modules.Module noHurtCam = com.isacofff.clientbase.Client.manager == null
+				? null : com.isacofff.clientbase.Client.manager.getModuleByName("NoHurtCam");
+		if (noHurtCam != null && noHurtCam.isEnabled()) {
+			return;
+		}
 		if (this.mc.getRenderViewEntity() instanceof EntityLivingBase) {
 			EntityLivingBase entitylivingbase = (EntityLivingBase) this.mc.getRenderViewEntity();
 			float f = (float) entitylivingbase.hurtTime - partialTicks;
