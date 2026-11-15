@@ -2,6 +2,7 @@ package com.isacofff.clientbase.modules;
 
 import com.isacofff.clientbase.modules.features.ClickGui;
 import com.isacofff.clientbase.modules.features.FullBright;
+import com.isacofff.clientbase.modules.features.ToggleSprint;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -14,6 +15,14 @@ public class Manager {
         modules.clear();
         modules.add(new ClickGui());
         modules.add(new FullBright());
+        modules.add(new ToggleSprint());
+    }
+
+    public void onKey(int key) {
+        if (key <= 0) return;
+        for (Module module : modules) {
+            if (module.getKey() == key) module.toggle();
+        }
     }
 
     public void onTick() {
