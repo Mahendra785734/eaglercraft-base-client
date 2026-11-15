@@ -10,6 +10,7 @@ public abstract class Module {
     private String name;
     private Category category;
     private boolean enabled;
+    private int keybind = 0;
 
     public boolean open = false;
 
@@ -26,6 +27,10 @@ public abstract class Module {
     public Category getCategory() { return category; }
 
     public boolean isEnabled() { return enabled; }
+
+    public int getKeybind() { return keybind; }
+
+    public void setKeybind(int keybind) { this.keybind = keybind; }
 
     public void toggle() {
         this.enabled = !this.enabled;
