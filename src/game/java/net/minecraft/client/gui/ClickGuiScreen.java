@@ -374,7 +374,7 @@ public class ClickGuiScreen extends GuiScreen {
                         int gearY = y + offset + 1;
 
                         boolean overGear = mouseX >= gearX && mouseX <= gearX + gearSize && mouseY >= gearY && mouseY <= gearY + gearSize;
-                        boolean overKeybind = mouseX >= x + width - 38 && mouseX < gearX && mouseY >= rowY && mouseY <= rowY + 14;
+                        boolean overKeybind = mouseX >= x + width - 38 && mouseX < gearX && mouseY >= y + offset && mouseY <= y + offset + 14;
 
                         if (overKeybind && mouseButton == 0) {
                             listeningForKeybind = module;
