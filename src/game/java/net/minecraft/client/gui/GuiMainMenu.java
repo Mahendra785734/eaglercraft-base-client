@@ -42,6 +42,8 @@ import net.peyton.eagler.gui.GuiCredits;
 import net.lax1dude.eaglercraft.profile.*;
 
 public class GuiMainMenu extends GuiScreen {
+	private static int kyzxxBackgroundStyle = 0;
+	private static final String[] KYZXX_BACKGROUNDS = new String[] { "WINTER", "AURORA", "STARS", "SUNSET", "CYBER", "NEBULA" };
 	private static final EaglercraftRandom RANDOM = new EaglercraftRandom();
 
 	/** Counts the number of screen updates. */
@@ -187,6 +189,7 @@ public class GuiMainMenu extends GuiScreen {
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
 		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("Profile & Cosmetics")));
 		this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
+		this.buttonList.add(new GuiButton(15, this.width - 112, 44, 102, 20, "BG: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle]));
 	}
 
 	/**
@@ -258,6 +261,11 @@ public class GuiMainMenu extends GuiScreen {
 
 		if (button.id == 14) {
 			this.mc.displayGuiScreen(new GuiCredits(this, "/assets/eagler/credits.txt"));
+		}
+
+		if (button.id == 15) {
+			kyzxxBackgroundStyle = (kyzxxBackgroundStyle + 1) % KYZXX_BACKGROUNDS.length;
+			button.displayString = "BG: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle];
 		}
 	}
 
@@ -495,41 +503,87 @@ public class GuiMainMenu extends GuiScreen {
 
 	private void drawKyzxxWinterOverlay() {
 		long time = Minecraft.getSystemTime();
-		for (int n = 0; n < 52; ++n) {
-			int x = (int) ((n * 97L + time / 34L) % Math.max(1, this.width));
-			int y = (int) ((n * 53L + time / 23L) % Math.max(1, this.height));
-			int size = n % 5 == 0 ? 3 : 2;
-			drawRect(x, y, x + size, y + size, 0xDDEAF4FF);
+		int style = kyzxxBackgroundStyle;
+		if (style == 0) {
+			for (int n = 0; n < 72; ++n) {
+				int x = (int) ((n * 97L + time / (25L + n % 5)) % Math.max(1, this.width));
+				int y = (int) ((n * 53L + time / (18L + n % 7)) % Math.max(1, this.height));
+				int size = n % 6 == 0 ? 3 : 2;
+				drawRect(x, y, x + size, y + size, 0xDDEAF4FF);
+			}
+			int sx = this.width - 58;
+			int sy = Math.max(118, this.height - 72);
+			drawRect(sx + 4, sy + 24, sx + 22, sy + 42, 0xFFF4F7FA);
+			drawRect(sx + 6, sy + 12, sx + 20, sy + 28, 0xFFF4F7FA);
+			drawRect(sx + 8, sy + 2, sx + 18, sy + 15, 0xFFF4F7FA);
+			drawRect(sx + 7, sy - 3, sx + 19, sy + 2, 0xFFB52D32);
+			drawRect(sx + 7, sy - 8, sx + 19, sy - 3, 0xFF20242C);
+			drawRect(sx + 8, sy + 17, sx + 20, sy + 20, 0xFFB52D32);
+			drawRect(sx + 12, sy + 7, sx + 14, sy + 9, 0xFF252A32);
+			drawRect(sx + 12, sy + 14, sx + 14, sy + 16, 0xFF252A32);
+			drawRect(sx + 12, sy + 25, sx + 14, sy + 27, 0xFF252A32);
+			drawRect(sx + 12, sy + 31, sx + 14, sy + 33, 0xFF252A32);
+		} else if (style == 1) {
+			for (int n = 0; n < 8; ++n) {
+				int y = 35 + n * 18 + (int)(Math.sin((time / 900.0D) + n) * 7.0D);
+				drawRect(0, y, this.width, y + 9, n % 2 == 0 ? 0x2635D6A4 : 0x263A83D8);
+			}
+			for (int n = 0; n < 55; ++n) {
+				int x = (n * 137 + 29) % Math.max(1, this.width);
+				int y = (n * 71 + 11) % Math.max(1, this.height);
+				drawRect(x, y, x + 2, y + 2, 0xBFE8F5FF);
+			}
+		} else if (style == 2) {
+			for (int n = 0; n < 110; ++n) {
+				int x = (n * 97 + 17) % Math.max(1, this.width);
+				int y = (n * 53 + 9) % Math.max(1, this.height);
+				int size = (n % 9 == 0 && (time / 500L) % 2L == 0L) ? 3 : 1;
+				drawRect(x, y, x + size, y + size, n % 3 == 0 ? 0xFFE7D9FF : 0xFFC9D9F0);
+			}
+			drawRect(this.width - 100, 75, this.width - 72, 103, 0x55FFFFFF);
+			drawRect(this.width - 94, 69, this.width - 78, 109, 0x55FFFFFF);
+		} else if (style == 3) {
+			for (int n = 0; n < this.height; n += 5) {
+				float t = n / (float)Math.max(1, this.height);
+				int red = (int)(35 + 170 * t);
+				int green = (int)(30 + 75 * (1.0F - t));
+				int blue = (int)(90 + 65 * (1.0F - t));
+				drawRect(0, n, this.width, n + 5, 0x33000000 | red << 16 | green << 8 | blue);
+			}
+			for (int n = 0; n < 34; ++n) {
+				int x = (n * 83 + 13) % Math.max(1, this.width);
+				int y = (n * 41 + 23) % Math.max(1, this.height);
+				drawRect(x, y, x + 2, y + 2, 0xCCFFE0C2);
+			}
+		} else if (style == 4) {
+			for (int x = 0; x < this.width; x += 24) drawRect(x, 0, x + 1, this.height, 0x2238D9C5);
+			for (int y = 0; y < this.height; y += 24) drawRect(0, y, this.width, y + 1, 0x2238D9C5);
+			for (int n = 0; n < 42; ++n) {
+				int x = (n * 67 + (int)(time / 18L)) % Math.max(1, this.width);
+				int y = (n * 47 + (int)(time / 27L)) % Math.max(1, this.height);
+				drawRect(x, y, x + 3, y + 3, 0xAA45E6D2);
+			}
+		} else {
+			for (int n = 0; n < 90; ++n) {
+				int x = (n * 113 + 19) % Math.max(1, this.width);
+				int y = (n * 61 + 31) % Math.max(1, this.height);
+				int size = n % 7 == 0 ? 4 : 2;
+				drawRect(x, y, x + size, y + size, n % 2 == 0 ? 0x887B63D9 : 0x8874A9E8);
+			}
 		}
-
-		// Small pixel snowman in the lower-right corner.
-		int sx = this.width - 58;
-		int sy = Math.max(118, this.height - 72);
-		drawRect(sx + 4, sy + 24, sx + 22, sy + 42, 0xFFF4F7FA);
-		drawRect(sx + 6, sy + 12, sx + 20, sy + 28, 0xFFF4F7FA);
-		drawRect(sx + 8, sy + 2, sx + 18, sy + 15, 0xFFF4F7FA);
-		drawRect(sx + 7, sy - 3, sx + 19, sy + 2, 0xFFB52D32);
-		drawRect(sx + 7, sy - 8, sx + 19, sy - 3, 0xFF20242C);
-		drawRect(sx + 8, sy + 17, sx + 20, sy + 20, 0xFFB52D32);
-		drawRect(sx + 12, sy + 7, sx + 14, sy + 9, 0xFF252A32);
-		drawRect(sx + 12, sy + 14, sx + 14, sy + 16, 0xFF252A32);
-		drawRect(sx + 12, sy + 25, sx + 14, sy + 27, 0xFF252A32);
-		drawRect(sx + 12, sy + 31, sx + 14, sy + 33, 0xFF252A32);
-
 		String username = this.mc.getSession().getProfile().getName();
 		int nameWidth = Math.min(150, this.fontRendererObj.getStringWidth(username));
-		int chipLeft = this.width - nameWidth - 39;
+		int chipLeft = this.width - nameWidth - 25;
 		drawRect(chipLeft, 12, this.width - 10, 35, 0xC810141C);
-		this.mc.getTextureManager().bindTexture(EaglerProfile.getActiveSkinResourceLocation());
-		this.drawScaledCustomSizeModalRect(chipLeft + 5, 16, 8.0F, 8.0F, 8, 8, 16, 16, 64.0F, 64.0F);
-		this.drawScaledCustomSizeModalRect(chipLeft + 5, 16, 40.0F, 8.0F, 8, 8, 16, 16, 64.0F, 64.0F);
-		// Tiny Santa hat above the player's skin head.
-		drawRect(chipLeft + 7, 13, chipLeft + 19, 16, 0xFFF4F5F7);
-		drawRect(chipLeft + 9, 9, chipLeft + 17, 14, 0xFFB52D32);
-		drawRect(chipLeft + 14, 7, chipLeft + 18, 11, 0xFFF4F5F7);
-		this.fontRendererObj.drawString(username, chipLeft + 26, 20, 0xFFFFFFFF);
-	}
+		this.fontRendererObj.drawString(username, chipLeft + 8, 20, 0xFFFFFFFF);
 
+		// Render the selected Eagler skin using its real model (Steve/Alex/high-poly).
+		int avatarX = this.width - 42;
+		int avatarY = Math.max(150, this.height - 70);
+		drawRect(avatarX - 30, avatarY - 92, avatarX + 30, avatarY + 8, 0x6610141C);
+		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
+				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
+	}
 	/**
 	 * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
 	 */
