@@ -34,6 +34,20 @@ public class ClickGuiScreen extends GuiScreen {
 
     private final ArrayList<Panel> panels = new ArrayList<>();
     private Module listeningForKeybind = null;
+    private String searchText = "";
+    private boolean searchFocused = false;
+
+    private ArrayList<Module> getVisibleModules(Category category) {
+        ArrayList<Module> visible = new ArrayList<>();
+        String query = searchText.trim().toLowerCase();
+        for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+            if (query.isEmpty() || module.getName().toLowerCase().contains(query)
+                    || module.getDescription().toLowerCase().contains(query)) {
+                visible.add(module);
+            }
+        }
+        return visible;
+    }
 
     public ClickGuiScreen() {
         int x = 1;
@@ -101,6 +115,14 @@ public class ClickGuiScreen extends GuiScreen {
 
         this.drawDefaultBackground();
 
+        int searchWidth = Math.min(260, this.width - 24);
+        int searchX = (this.width - searchWidth) / 2;
+        drawRect(searchX - 1, 8, searchX + searchWidth + 1, 27, 0xFFB88A3B);
+        drawRect(searchX, 9, searchX + searchWidth, 26, 0xF0121722);
+        String searchLabel = searchText.isEmpty() ? "Search modules..." : searchText;
+        fontRendererObj.drawString((searchFocused ? "> " : "") + searchLabel + (searchFocused ? "_" : ""), searchX + 7, 14,
+                searchText.isEmpty() ? 0xFF8E9AAA : 0xFFFFC45C);
+
         for (Panel panel : panels) {
             panel.draw(mouseX, mouseY);
         }
@@ -134,6 +156,14 @@ public class ClickGuiScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 
+        int searchWidth = Math.min(260, this.width - 24);
+        int searchX = (this.width - searchWidth) / 2;
+        if (mouseButton == 0 && mouseY >= 8 && mouseY <= 27 && mouseX >= searchX && mouseX <= searchX + searchWidth) {
+            searchFocused = true;
+            return;
+        }
+        searchFocused = false;
+
         if (mouseButton == 0 || mouseButton == 1) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.65F));
         }
@@ -160,6 +190,15 @@ public class ClickGuiScreen extends GuiScreen {
                 listeningForKeybind.setKeybind((keyCode == 14 || keyCode == 211) ? 0 : keyCode);
                 listeningForKeybind = null;
             }
+            return;
+        }
+        if (searchFocused) {
+            if (keyCode == KeyboardConstants.KEY_ESCAPE) { searchFocused = false; return; }
+            if (keyCode == 14) {
+                if (!searchText.isEmpty()) searchText = searchText.substring(0, searchText.length() - 1);
+                return;
+            }
+            if (typedChar >= 32 && typedChar <= 126 && searchText.length() < 32) searchText += typedChar;
             return;
         }
         if (keyCode == KeyboardConstants.KEY_ESCAPE || keyCode == 54) {
