@@ -90,15 +90,26 @@ public class GuiButtonWithStupidIcons extends GuiButton {
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
-			this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2,
-					46 + i * 20, this.width / 2, this.height);
+            boolean kyzxxMenu = mc.currentScreen instanceof GuiMainMenu
+                    || mc.currentScreen instanceof GuiIngameMenu;
+            if (kyzxxMenu) {
+                int topColor = !this.enabled ? 0xAA17202B : (this.hovered ? 0xEE1D4961 : 0xDD121F2C);
+                int bottomColor = !this.enabled ? 0xAA111923 : (this.hovered ? 0xEE15364C : 0xDD0C1520);
+                this.drawGradientRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, topColor, bottomColor);
+                this.drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + 1, this.hovered ? 0xFF62D5FA : 0xFF29465A);
+                this.drawRect(this.xPosition, this.yPosition, this.xPosition + 2, this.yPosition + this.height, 0xFF36B9E8);
+                this.drawRect(this.xPosition, this.yPosition + this.height - 1, this.xPosition + this.width, this.yPosition + this.height, 0x8836B9E8);
+            } else {
+                this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
+                this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2,
+                        46 + i * 20, this.width / 2, this.height);
+            }
 			this.mouseDragged(mc, mouseX, mouseY);
-			int j = 14737632;
+			int j = 0xFFE3EDF5;
 			if (!this.enabled) {
-				j = 10526880;
+				j = 0xFF718294;
 			} else if (this.hovered) {
-				j = 16777120;
+				j = 0xFFBDEFFF;
 			}
 
 			int strWidth = fontrenderer.getStringWidth(displayString);

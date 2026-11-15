@@ -955,9 +955,12 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 				if (b) {
 					GlStateManager.disableLighting();
 					GlStateManager.enableBlend();
-					if (Minecraft.isFancyGraphicsEnabled()) {
-						this.mc.ingameGUI.renderVignette(this.mc.player.getBrightness(), scaledresolution);
-					}
+					if (Minecraft.isFancyGraphicsEnabled()
+                            && (com.isacofff.clientbase.Client.manager == null
+                            || com.isacofff.clientbase.Client.manager.getModule(com.isacofff.clientbase.modules.features.NoVignette.class) == null
+                            || !com.isacofff.clientbase.Client.manager.getModule(com.isacofff.clientbase.modules.features.NoVignette.class).isEnabled())) {
+                        this.mc.ingameGUI.renderVignette(this.mc.player.getBrightness(), scaledresolution);
+                    }
 					GlStateManager.enableBlend();
 					GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 					this.mc.ingameGUI.renderAttackIndicator(partialTicks, scaledresolution);

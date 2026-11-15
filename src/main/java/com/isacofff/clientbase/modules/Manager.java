@@ -9,6 +9,13 @@ import com.isacofff.clientbase.modules.features.NoBob;
 import com.isacofff.clientbase.modules.features.NoHurtCam;
 import com.isacofff.clientbase.modules.features.Perspective;
 import com.isacofff.clientbase.modules.features.SmoothCamera;
+import com.isacofff.clientbase.modules.features.NoPumpkinOverlay;
+import com.isacofff.clientbase.modules.features.NoPortalOverlay;
+import com.isacofff.clientbase.modules.features.NoBossBar;
+import com.isacofff.clientbase.modules.features.NoPotionHUD;
+import com.isacofff.clientbase.modules.features.NoScoreboard;
+import com.isacofff.clientbase.modules.features.NoVignette;
+import com.isacofff.clientbase.modules.features.CustomFOV;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -28,6 +35,13 @@ public class Manager {
         modules.add(new NoHurtCam());
         modules.add(new Perspective());
         modules.add(new SmoothCamera());
+        modules.add(new NoPumpkinOverlay());
+        modules.add(new NoPortalOverlay());
+        modules.add(new NoBossBar());
+        modules.add(new NoPotionHUD());
+        modules.add(new NoScoreboard());
+        modules.add(new NoVignette());
+        modules.add(new CustomFOV());
     }
 
     public void onKey(int key) {

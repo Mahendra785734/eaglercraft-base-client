@@ -19,6 +19,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import com.isacofff.clientbase.Client;
 import com.isacofff.clientbase.modules.features.KyzxxHUD;
+import com.isacofff.clientbase.modules.Module;
+import com.isacofff.clientbase.modules.features.NoPumpkinOverlay;
+import com.isacofff.clientbase.modules.features.NoPortalOverlay;
+import com.isacofff.clientbase.modules.features.NoBossBar;
+import com.isacofff.clientbase.modules.features.NoPotionHUD;
+import com.isacofff.clientbase.modules.features.NoScoreboard;
 import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.chat.NormalChatListener;
@@ -168,11 +174,12 @@ public class GuiIngame extends Gui {
 
 		ItemStack itemstack = this.mc.player.inventory.armorItemInSlot(3);
 
-		if (this.mc.gameSettings.thirdPersonView == 0 && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
+		if (this.mc.gameSettings.thirdPersonView == 0 && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)
+                && !isKyzxxModuleEnabled(NoPumpkinOverlay.class)) {
 			this.renderPumpkinOverlay(scaledresolution);
 		}
 
-		if (!this.mc.player.isPotionActive(MobEffects.NAUSEA)) {
+		if (!this.mc.player.isPotionActive(MobEffects.NAUSEA) && !isKyzxxModuleEnabled(NoPortalOverlay.class)) {
 			float f = this.mc.player.prevTimeInPortal
 					+ (this.mc.player.timeInPortal - this.mc.player.prevTimeInPortal) * partialTicks;
 
@@ -322,7 +329,7 @@ public class GuiIngame extends Gui {
 		ScoreObjective scoreobjective1 = scoreobjective != null ? scoreobjective
 				: scoreboard.getObjectiveInDisplaySlot(1);
 
-		if (scoreobjective1 != null) {
+		if (scoreobjective1 != null && !isKyzxxModuleEnabled(NoScoreboard.class)) {
 			this.renderScoreboard(scoreobjective1, scaledresolution);
 		}
 
@@ -376,6 +383,21 @@ public class GuiIngame extends Gui {
                     drawHudKey(fontrenderer, "S", 24, ky + 15, this.mc.gameSettings.keyBindBack.isKeyDown());
                     drawHudKey(fontrenderer, "D", 42, ky + 15, this.mc.gameSettings.keyBindRight.isKeyDown());
                 }
+                if (hud.moduleList.getValue()) {
+                    int moduleY = 6;
+                    for (Module activeModule : Client.manager.getModules()) {
+                        if (activeModule.isEnabled() && activeModule != hud
+                                && !activeModule.getName().equalsIgnoreCase("ClickGUI")) {
+                            String moduleName = activeModule.getName();
+                            int moduleWidth = fontrenderer.getStringWidth(moduleName);
+                            int moduleX = i - moduleWidth - 10;
+                            drawRect(moduleX - 5, moduleY - 2, i - 4, moduleY + 10, 0xAA101820);
+                            fontrenderer.drawStringWithShadow(moduleName, moduleX, moduleY, 0xFFBFEFFF);
+                            moduleY += 12;
+                        }
+                    }
+                }
+
             }
         }
 }

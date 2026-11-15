@@ -35,38 +35,6 @@ public class ClickGuiScreen extends GuiScreen {
     private final ArrayList<Panel> panels = new ArrayList<>();
     private Module bindingModule = null;
 
-    private ClickGui getClickGuiModule() {
-        return Client.manager == null ? null : Client.manager.getModule(ClickGui.class);
-    }
-
-    private boolean isMeteorTheme() {
-        ClickGui module = getClickGuiModule();
-        return module != null && "Meteor".equalsIgnoreCase(module.getThemeName());
-    }
-
-    private int panelOutlineColor() { return isMeteorTheme() ? 0xFF454545 : 0xFF36B8E8; }
-    private int moduleEnabledColor() { return isMeteorTheme() ? 0xFF33302D : 0xFF173D58; }
-    private int moduleDisabledColor() { return isMeteorTheme() ? 0xCC252525 : 0xCC172536; }
-    private int accentColor() { return isMeteorTheme() ? 0xFFFF8A3D : 0xFF39C8F2; }
-    private int headerStartColor() { return isMeteorTheme() ? 0xFF292929 : 0xFF102A45; }
-    private int headerEndColor() { return isMeteorTheme() ? 0xFF191919 : 0xFF145A83; }
-    private int overlayColor() { return isMeteorTheme() ? 0x99000000 : 0x88030B18; }
-
-    private int themeButtonX() {
-        ClickGui module = getClickGuiModule();
-        String value = "STYLE: " + (module == null ? "LUNAR" : module.getThemeName().toUpperCase());
-        return width - fontRendererObj.getStringWidth(value) - 22;
-    }
-
-    private void drawThemeButton() {
-        ClickGui module = getClickGuiModule();
-        String value = "STYLE: " + (module == null ? "LUNAR" : module.getThemeName().toUpperCase());
-        int x = themeButtonX();
-        drawGradientRect(x, 7, width - 10, 26, headerStartColor(), headerEndColor());
-        drawOutline(x, 7, width - 10, 26, panelOutlineColor());
-        fontRendererObj.drawStringWithShadow(value, x + 6, 13, TEXT_COLOR);
-    }
-
     public ClickGuiScreen() {
         for (Category cat : Category.values()) {
             panels.add(new Panel(cat, 0, 34));
@@ -128,12 +96,10 @@ public class ClickGuiScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
         this.drawDefaultBackground();
-        drawRect(0, 0, width, height, overlayColor());
 
         String brand = "KYZXX CLIENT";
         fontRendererObj.drawStringWithShadow(brand, (width - fontRendererObj.getStringWidth(brand)) / 2, 12, 0xFFFFFFFF);
-        fontRendererObj.drawStringWithShadow("Right-click a category to collapse  |  ESC to close", 10, height - 14, 0xFFB8C7D9);
-        drawThemeButton();
+        fontRendererObj.drawStringWithShadow("Right-click module to bind  |  Gear: settings  |  ESC to close", 10, height - 14, 0xFFB8C7D9);
 
         for (Panel panel : panels) {
             panel.draw(mouseX, mouseY);
@@ -163,12 +129,6 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-
-        if (mouseButton == 0 && mouseY >= 7 && mouseY <= 26 && mouseX >= themeButtonX() && mouseX <= width - 10) {
-            ClickGui module = getClickGuiModule();
-            if (module != null) module.cycleTheme();
-            return;
-        }
 
         for (Panel panel : panels) {
             panel.mouseClicked(mouseX, mouseY, mouseButton);
@@ -275,12 +235,12 @@ public class ClickGuiScreen extends GuiScreen {
             }
 
             if (open) {
-                drawOutline(x, y, x + width, y + getTotalHeight(), panelOutlineColor());
+                drawOutline(x, y, x + width, y + getTotalHeight(), PANEL_OUTLINE);
             } else {
-                drawOutline(x, y, x + width, y + height, panelOutlineColor());
+                drawOutline(x, y, x + width, y + height, PANEL_OUTLINE);
             }
 
-            drawGradientRect(x, y, x + width, y + height, headerStartColor(), headerEndColor());
+            drawRect(x, y, x + width, y + height, PANEL_BG);
 
             fontRendererObj.drawStringWithShadow(fontRendererObj.trimStringToWidth(category.name().toUpperCase(), width - 8), x + 5, y + 5, TEXT_COLOR);
 
@@ -290,15 +250,13 @@ public class ClickGuiScreen extends GuiScreen {
 
                 for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
 
-                    drawRect(x, y + offset, x + width, y + offset + 14, module.isEnabled() ? moduleEnabledColor() : moduleDisabledColor());
-                    drawRect(x, y + offset, x + 2, y + offset + 14, module.isEnabled() ? accentColor() : panelOutlineColor());
+                    drawRect(x, y + offset, x + width, y + offset + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
+                    drawRect(x, y + offset, x + 2, y + offset + 14, module.isEnabled() ? ACCENT_COLOR : PANEL_OUTLINE);
 
                     String symbol = module.open ? "-" : "+";
-                    fontRendererObj.drawString(symbol, x + width - 10, y + offset + 4, accentColor());
-                    String moduleLabel = fontRendererObj.trimStringToWidth(module.getName(), width - 48);
+                    fontRendererObj.drawString(symbol, x + width - 10, y + offset + 4, ACCENT_COLOR);
+                    String moduleLabel = fontRendererObj.trimStringToWidth(module.getName(), width - 20);
                     fontRendererObj.drawString(moduleLabel, x + 5, y + offset + 4, TEXT_COLOR);
-                    String keyLabel = module.getKey() == 0 ? "-" : "K" + module.getKey();
-                    fontRendererObj.drawString(keyLabel, x + width - 31, y + offset + 4, accentColor());
 
                     offset += 14;
 
@@ -403,17 +361,12 @@ public class ClickGuiScreen extends GuiScreen {
                             return;
                         }
 
-                        if (mouseButton == 2) {
+                        if (mouseButton == 1) {
                             bindingModule = module;
                             return;
                         }
-
                         if (mouseButton == 0) {
                             module.toggle();
-                        }
-
-                        if (mouseButton == 1 || (hasSettings(module) && mouseX >= x + width - 12)) {
-                            module.open = !module.open;
                         }
 
                         return;

@@ -188,31 +188,25 @@ public class GuiIngameMenu extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
-		String titleStr = I18n.format("menu.game", new Object[0]);
-		int titleStrWidth = fontRendererObj.getStringWidth(titleStr);
-		this.drawString(this.fontRendererObj, titleStr, (this.width - titleStrWidth) / 2, 40, 16777215);
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		if (PauseMenuCustomizeState.icon_title_L != null) {
-			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(
-					(this.width - titleStrWidth) / 2 - 6 - 16 * PauseMenuCustomizeState.icon_title_L_aspect, 16, 0.0f);
-			float f2 = 16.0f / 256.0f;
-			GlStateManager.scale(f2 * PauseMenuCustomizeState.icon_title_L_aspect, f2, f2);
-			this.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			GlStateManager.popMatrix();
-		}
-		if (PauseMenuCustomizeState.icon_title_R != null) {
-			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((this.width - titleStrWidth) / 2 + titleStrWidth + 6, 16, 0.0f);
-			float f2 = 16.0f / 256.0f;
-			GlStateManager.scale(f2 * PauseMenuCustomizeState.icon_title_R_aspect, f2, f2);
-			this.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			GlStateManager.popMatrix();
-		}
-	}
+        this.drawDefaultBackground();
+        this.drawGradientRect(0, 0, this.width, this.height, 0x7706101A, 0xB8070D16);
+
+        int panelWidth = Math.min(292, Math.max(244, this.width - 16));
+        int panelLeft = (this.width - panelWidth) / 2;
+        int panelRight = panelLeft + panelWidth;
+        int panelTop = 18;
+        int panelBottom = Math.min(this.height - 18, this.height / 4 + 156);
+
+        this.drawGradientRect(panelLeft, panelTop, panelRight, panelBottom, 0xED101A28, 0xE90A1420);
+        this.drawRect(panelLeft, panelTop, panelRight, panelTop + 3, 0xFF36B9E8);
+        this.drawRect(panelLeft, panelTop + 3, panelLeft + 1, panelBottom, 0x7736B9E8);
+        this.drawRect(panelRight - 1, panelTop + 3, panelRight, panelBottom, 0x5536B9E8);
+        this.fontRendererObj.drawStringWithShadow("KYZXX CLIENT", panelLeft + 18, 34, 0xFFFFFFFF);
+        this.fontRendererObj.drawStringWithShadow("PAUSED", panelLeft + 18, 50, 0xFF49C8F2);
+        this.fontRendererObj.drawString("GAME MENU", panelLeft + 18, 70, 0xFF8196AA);
+        this.drawRect(panelLeft + 18, 84, panelRight - 18, 85, 0x664E91B0);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
 	
 	@Override
 	protected boolean isPartOfPauseMenu() {

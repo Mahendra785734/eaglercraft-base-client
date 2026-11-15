@@ -450,56 +450,37 @@ public class GuiMainMenu extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.panoramaTimer += partialTicks;
-		GlStateManager.disableAlpha();
-		this.renderSkybox(mouseX, mouseY, partialTicks);
-		GlStateManager.enableAlpha();
-		int i = 274;
-		int j = this.width / 2 - 137;
-		int k = 30;
-		this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
-		this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-		this.mc.getTextureManager().bindTexture(MINECRAFT_TITLE_TEXTURES);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.panoramaTimer += partialTicks;
+        GlStateManager.disableAlpha();
+        this.renderSkybox(mouseX, mouseY, partialTicks);
+        GlStateManager.enableAlpha();
+        this.drawGradientRect(0, 0, this.width, this.height, 0xB806101B, 0xE8070D16);
 
-		if ((double) this.updateCounter < 1.0E-4D) {
-			this.drawTexturedModalRect(j + 0, 30, 0, 0, 99, 44);
-			this.drawTexturedModalRect(j + 99, 30, 129, 0, 27, 44);
-			this.drawTexturedModalRect(j + 99 + 26, 30, 126, 0, 3, 44);
-			this.drawTexturedModalRect(j + 99 + 26 + 3, 30, 99, 0, 26, 44);
-			this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-		} else {
-			this.drawTexturedModalRect(j + 0, 30, 0, 0, 155, 44);
-			this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-		}
+        int panelWidth = Math.min(320, Math.max(244, this.width - 16));
+        int panelLeft = (this.width - panelWidth) / 2;
+        int panelRight = panelLeft + panelWidth;
+        int buttonTop = this.height / 4 + 48;
+        int panelBottom = Math.min(this.height - 18, buttonTop + 112);
+        if (panelBottom < 180) panelBottom = this.height - 10;
 
-		this.mc.getTextureManager().bindTexture(field_194400_H);
+        this.drawGradientRect(panelLeft, 18, panelRight, panelBottom, 0xED101A28, 0xE90A1420);
+        this.drawRect(panelLeft, 18, panelRight, 21, 0xFF36B9E8);
+        this.drawRect(panelLeft, 21, panelLeft + 1, panelBottom, 0x7736B9E8);
+        this.drawRect(panelRight - 1, 21, panelRight, panelBottom, 0x5536B9E8);
 
-		drawModalRectWithCustomSizedTexture(j + 88, 67, 0.0F, 0.0F, 98, 14, 128.0F, 16.0F);
+        this.fontRendererObj.drawStringWithShadow("KYZXX", panelLeft + 18, 36, 0xFFFFFFFF);
+        this.fontRendererObj.drawStringWithShadow("CLIENT", panelLeft + 18 + this.fontRendererObj.getStringWidth("KYZXX") + 5, 36, 0xFF49C8F2);
+        this.fontRendererObj.drawString("EAGLERCRAFT 1.12.2  •  CLIENT EDITION", panelLeft + 18, 51, 0xFF9BAFC2);
+        this.drawRect(panelLeft + 18, 68, panelRight - 18, 69, 0x664E91B0);
+        this.fontRendererObj.drawStringWithShadow("PLAY", panelLeft + 18, buttonTop - 17, 0xFFBFEFFF);
+        this.fontRendererObj.drawString("Choose a mode to continue", panelLeft + 18, buttonTop - 6, 0xFF8196AA);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate((float) (this.width / 2 + 90), 70.0F, 0.0F);
-		GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
-		float f = 1.8F - MathHelper.abs(
-				MathHelper.sin((float) (Minecraft.getSystemTime() % 1000L) / 1000.0F * ((float) Math.PI * 2F)) * 0.1F);
-		f = f * 100.0F / (float) (this.fontRendererObj.getStringWidth(this.splashText) + 32);
-		GlStateManager.scale(f, f, f);
-		this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
-		GlStateManager.popMatrix();
-		String s = "Minecraft 1.12.2";
-
-		if (this.mc.isDemo()) {
-			s = s + " Demo";
-		}
-
-		this.drawString(this.fontRendererObj, s, 2, this.height - 20, -1);
-		this.drawString(this.fontRendererObj, "Eaglercraft 1.12.2 (" + EaglercraftVersion.projectOriginVersion + ")", 2,
-				this.height - 10, -1);
-		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N, this.height - 10,
-				-1);
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
-	}
+        this.drawRect(panelLeft + 18, panelBottom - 25, panelRight - 18, panelBottom - 24, 0x554E91B0);
+        this.fontRendererObj.drawString("KYZXX CLIENT  •  READY", panelLeft + 18, panelBottom - 17, 0xFF7FA9C2);
+        this.fontRendererObj.drawString("Eaglercraft 1.12.2 (" + EaglercraftVersion.projectOriginVersion + ")", 4, this.height - 20, 0xFFCAD4DE);
+        this.fontRendererObj.drawString("Resources copyright Mojang AB", this.field_193979_N, this.height - 10, 0xFF9BAFC2);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
 
 	/**
 	 * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
