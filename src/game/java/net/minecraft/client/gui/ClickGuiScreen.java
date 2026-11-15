@@ -11,6 +11,8 @@ import net.lax1dude.eaglercraft.Keyboard;
 import net.lax1dude.eaglercraft.KeyboardConstants;
 import net.lax1dude.eaglercraft.Mouse;
 import java.io.IOException;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 import java.util.ArrayList;
 
 public class ClickGuiScreen extends GuiScreen {
@@ -87,6 +89,10 @@ public class ClickGuiScreen extends GuiScreen {
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        drawRect(6, this.height - 19, this.width - 6, this.height - 5, 0xB810141C);
+        fontRendererObj.drawString("KYZXX CLIENT  |  RIGHT CLICK A PANEL TO COLLAPSE", 12, this.height - 15, 0xFFFFC45C);
+        fontRendererObj.drawString("RSHIFT: GUI", this.width - 78, this.height - 15, 0xFFD7DCE5);
+
         String descriptionn = null;
 
         for (int panelSize = panels.size() - 1; panelSize >= 0; panelSize--) {
@@ -104,6 +110,10 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+
+        if (mouseButton == 0 || mouseButton == 1) {
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.65F));
+        }
 
         for (Panel panel : panels) {
             panel.mouseClicked(mouseX, mouseY, mouseButton);
