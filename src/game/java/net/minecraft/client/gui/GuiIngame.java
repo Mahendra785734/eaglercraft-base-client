@@ -1141,7 +1141,8 @@ public class GuiIngame extends Gui {
 	/**
 	 * Renders a Vignette arount the entire screen that changes with light level.
 	 */
-	public void renderVignette(float lightLevel, ScaledResolution scaledRes) {\n\t\tif (isKyzxxModuleEnabled("HideVignette")) return;
+	public void renderVignette(float lightLevel, ScaledResolution scaledRes) {
+		if (isKyzxxModuleEnabled("HideVignette")) return;
 		lightLevel = 1.0F - lightLevel;
 		lightLevel = MathHelper.clamp(lightLevel, 0.0F, 1.0F);
 		WorldBorder worldborder = this.mc.world.getWorldBorder();
