@@ -10,6 +10,7 @@ public class Manager {
     public void init() {
         modules.add(new ClickGui());
         modules.add(new KeySounds());
+        modules.add(new KyzxxMusic());
         modules.add(new FullBright());
         modules.add(new AutoSprint());
         modules.add(new Zoom());
