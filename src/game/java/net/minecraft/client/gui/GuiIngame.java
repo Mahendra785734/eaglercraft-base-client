@@ -366,6 +366,7 @@ public class GuiIngame extends Gui {
 				drawKyzxxKey("S", bx + 25, by + 22, this.mc.gameSettings.keyBindBack.isKeyDown());
 				drawKyzxxKey("D", bx + 50, by + 22, this.mc.gameSettings.keyBindRight.isKeyDown());
 				drawKyzxxKey("SPACE", bx, by + 45, this.mc.gameSettings.keyBindJump.isKeyDown(), 75);
+				drawKyzxxKey("SHIFT", bx + 78, by + 45, this.mc.gameSettings.keyBindSneak.isKeyDown(), 46);
 			}
 
 			com.isacofff.clientbase.modules.Module fps = Client.manager.getModuleByName("FPS");
