@@ -431,7 +431,7 @@ public class GuiIngame extends Gui {
 				if (com.isacofff.clientbase.modules.features.ActiveModulesHud.editing) {
 					drawRect(listX - 6, listY - 5, listX + 150, listY + Math.max(1, row) * 12 + 3, 0x44FFFFFF);
 				}
-			}}
+			}
 		}
 	}
 
