@@ -267,7 +267,8 @@ public class ClickGuiScreen extends GuiScreen {
         }
 
         public String getHoveredDescription(int mouseX, int mouseY) {
-            if (!open) return null;
+            if (!open || mouseY > ClickGuiScreen.this.height - 24) return null;
+            clampScrollOffset();
 
             int offset = height - scrollOffset;
 
@@ -292,6 +293,7 @@ public class ClickGuiScreen extends GuiScreen {
         }
 
         public void draw(int mouseX, int mouseY) {
+            clampScrollOffset();
 
             if (!Mouse.isButtonDown(0)) {
                 dragging = false;
@@ -319,9 +321,9 @@ public class ClickGuiScreen extends GuiScreen {
 
                 for (Module module : getVisibleModules(category)) {
                     int rowY = y + offset;
-                    if (rowY + 14 >= y + height && rowY <= visibleBottom) {
+                    if (rowY + 14 >= y + height && rowY + 14 <= visibleBottom) {
                         drawRect(x, rowY, x + width, rowY + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
-                        String symbol = module.open ? "-" : "+";
+                        String symbol = hasSettings(module) ? (module.open ? "-" : "+") : "";
                         fontRendererObj.drawString(symbol, x + width - 10, rowY + 4, ACCENT_COLOR);
                         String bindLabel = listeningForKeybind == module ? "..." : (module.getKeybind() == 0 ? "K" : Keyboard.getKeyName(module.getKeybind()));
                         fontRendererObj.drawString(bindLabel, x + width - 34, rowY + 4, listeningForKeybind == module ? ACCENT_COLOR : 0xFFD7DCE5);
@@ -332,7 +334,7 @@ public class ClickGuiScreen extends GuiScreen {
                     if (module.open && hasSettings(module)) {
                         for (Setting<?> setting : module.getSettings()) {
                             int settingY = y + offset;
-                            if (settingY + 14 >= y + height && settingY <= visibleBottom) {
+                            if (settingY + 14 >= y + height && settingY + 14 <= visibleBottom) {
                                 drawRect(x, settingY, x + width, settingY + 14, MODULE_DISABLED);
                                 drawSetting(setting, x, settingY);
                             }
@@ -346,18 +348,21 @@ public class ClickGuiScreen extends GuiScreen {
         private void drawSetting(Setting<?> s, int x, int y) {
 
             if (s instanceof BooleanSetting bs) {
-                fontRendererObj.drawString(bs.getName() + " : " + bs.getValue(), x + 4, y + 4, TEXT_COLOR);
+                String label = bs.getName() + " : " + bs.getValue();
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(label, width - 8), x + 4, y + 4, TEXT_COLOR);
                 return;
             }
 
             if (s instanceof ModeSetting ms) {
-                fontRendererObj.drawString(ms.getName() + " : " + ms.getValue() + " ...", x + 4, y + 4, TEXT_COLOR);
+                String label = ms.getName() + " : " + ms.getValue() + " ...";
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(label, width - 8), x + 4, y + 4, TEXT_COLOR);
                 return;
             }
 
             if (s instanceof NumberSetting number) {
                 drawRect(x, y, x + width, y + 14, MODULE_DISABLED);
-                fontRendererObj.drawString(number.getName() + " : " + number.getValue(), x + 4, y + 4, TEXT_COLOR);
+                String label = number.getName() + " : " + number.getValue();
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(label, width - 8), x + 4, y + 4, TEXT_COLOR);
                 int barX = x + 4;
                 int barY = y + 12;
                 int barW = width - 8;
@@ -411,6 +416,8 @@ public class ClickGuiScreen extends GuiScreen {
                 return;
             }
 
+            if (mouseY > ClickGuiScreen.this.height - 24) return;
+
             if (open) {
 
                 int offset = height - scrollOffset;
@@ -426,6 +433,11 @@ public class ClickGuiScreen extends GuiScreen {
                         boolean overGear = mouseX >= gearX && mouseX <= gearX + gearSize && mouseY >= gearY && mouseY <= gearY + gearSize;
                         boolean overKeybind = mouseX >= x + width - 38 && mouseX < gearX && mouseY >= y + offset && mouseY <= y + offset + 14;
 
+                        if (mouseButton == 1) {
+                            if (hasSettings(module)) module.open = !module.open;
+                            return;
+                        }
+
                         if (overKeybind && mouseButton == 0) {
                             listeningForKeybind = module;
                             return;
@@ -438,10 +450,6 @@ public class ClickGuiScreen extends GuiScreen {
 
                         if (mouseButton == 0) {
                             module.toggle();
-                        }
-
-                        if (mouseButton == 1 || (hasSettings(module) && mouseX >= x + width - 12)) {
-                            module.open = !module.open;
                         }
 
                         return;
@@ -496,26 +504,32 @@ public class ClickGuiScreen extends GuiScreen {
             return mx >= x && mx <= x + w && my >= y && my <= y + h;
         }
 
-        public void scroll(int wheel) {
-            if (!open || wheel == 0) return;
+        private int getContentHeight() {
             int total = height;
             for (Module module : getVisibleModules(category)) {
                 total += 14;
                 if (module.open && hasSettings(module)) total += module.getSettings().size() * 14;
             }
-            int maxScroll = Math.max(0, total - Math.max(0, ClickGuiScreen.this.height - 24 - y));
-            scrollOffset = Math.max(0, Math.min(maxScroll, scrollOffset + (wheel > 0 ? -28 : 28)));
+            return total;
+        }
+
+        private int getMaxScroll() {
+            int available = Math.max(0, ClickGuiScreen.this.height - 24 - y);
+            return Math.max(0, getContentHeight() - available);
+        }
+
+        private void clampScrollOffset() {
+            scrollOffset = Math.max(0, Math.min(getMaxScroll(), scrollOffset));
+        }
+
+        public void scroll(int wheel) {
+            if (!open || wheel == 0) return;
+            scrollOffset = Math.max(0, Math.min(getMaxScroll(), scrollOffset + (wheel > 0 ? -28 : 28)));
         }
 
         private int getTotalHeight() {
-            int total = height;
-            for (Module module : getVisibleModules(category)) {
-                total += 14;
-                if (module.open && hasSettings(module)) {
-                    total += module.getSettings().size() * 14;
-                }
-            }
-            return Math.min(total, Math.max(height, ClickGuiScreen.this.height - 24 - y));
+            clampScrollOffset();
+            return Math.min(getContentHeight(), Math.max(height, ClickGuiScreen.this.height - 24 - y));
         }
     }
 
