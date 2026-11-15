@@ -3,6 +3,12 @@ package com.isacofff.clientbase.modules;
 import com.isacofff.clientbase.modules.features.ClickGui;
 import com.isacofff.clientbase.modules.features.FullBright;
 import com.isacofff.clientbase.modules.features.ToggleSprint;
+import com.isacofff.clientbase.modules.features.KyzxxHUD;
+import com.isacofff.clientbase.modules.features.Zoom;
+import com.isacofff.clientbase.modules.features.NoBob;
+import com.isacofff.clientbase.modules.features.NoHurtCam;
+import com.isacofff.clientbase.modules.features.Perspective;
+import com.isacofff.clientbase.modules.features.SmoothCamera;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -16,6 +22,12 @@ public class Manager {
         modules.add(new ClickGui());
         modules.add(new FullBright());
         modules.add(new ToggleSprint());
+        modules.add(new KyzxxHUD());
+        modules.add(new Zoom());
+        modules.add(new NoBob());
+        modules.add(new NoHurtCam());
+        modules.add(new Perspective());
+        modules.add(new SmoothCamera());
     }
 
     public void onKey(int key) {
