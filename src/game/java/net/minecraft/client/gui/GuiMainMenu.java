@@ -159,7 +159,6 @@ public class GuiMainMenu extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiScreenFirstLoad(this.mc.gameSettings));
 			return;
 		}
-
 		viewportTexture = new MainMenuSkyboxTexture(256, 256);
 		this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
 		viewportTexture2 = new MainMenuSkyboxTexture(256, 256);
@@ -168,7 +167,6 @@ public class GuiMainMenu extends GuiScreen {
 		this.field_193979_N = this.width - this.field_193978_M - 2;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new Date());
-
 		if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24) {
 			this.splashText = I18n.format("eaglercraft.splashes.xmas");
 		} else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1) {
@@ -176,20 +174,23 @@ public class GuiMainMenu extends GuiScreen {
 		} else if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31) {
 			this.splashText = I18n.format("eaglercraft.splashes.halloween");
 		}
-
-		int i = 24;
-		int j = this.height / 4 + 48;
-
-		if (this.mc.isDemo()) {
-			this.addDemoButtons(j, 24);
-		} else {
-			this.addSingleplayerMultiplayerButtons(j, 24);
+		int menuX = Math.max(22, this.width / 2 - 270);
+		int menuY = this.height / 2 - 48;
+		if (this.mc.isDemo()) this.addDemoButtons(menuY, 36);
+		else this.addSingleplayerMultiplayerButtons(menuY, 36);
+		for (int n = 0; n < this.buttonList.size(); ++n) {
+			GuiButton b = (GuiButton)this.buttonList.get(n);
+			if (b.id == 1 || b.id == 2 || b.id == 14 || b.id == 11 || b.id == 12) {
+				int order = b.id == 1 || b.id == 11 ? 0 : (b.id == 2 || b.id == 12 ? 1 : 2);
+				b.xPosition = menuX;
+				b.yPosition = menuY + order * 38;
+				b.width = 218;
+				b.height = 30;
+			}
 		}
-
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
-		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("Profile & Cosmetics")));
-		this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
-		this.buttonList.add(new GuiButton(15, this.width - 112, 44, 102, 20, "BG: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle]));
+		this.buttonList.add(new GuiButton(0, menuX, menuY + 126, 104, 26, I18n.format("menu.options")));
+		this.buttonList.add(new GuiButton(4, menuX + 114, menuY + 126, 104, 26, "Cosmetics"));
+		this.buttonList.add(new GuiButtonLanguage(5, 12, this.height - 28));
 	}
 
 	/**
@@ -462,42 +463,24 @@ public class GuiMainMenu extends GuiScreen {
 		GlStateManager.disableAlpha();
 		this.renderSkybox(mouseX, mouseY, partialTicks);
 		GlStateManager.enableAlpha();
-		int i = 274;
-		int j = this.width / 2 - 137;
-		int k = 30;
-		this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
-		this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-		// KYZXX winter menu: expanded branding panel, animated snowfall and profile chip.
-		this.drawKyzxxWinterOverlay();
-		drawRect(this.width / 2 - 165, 18, this.width / 2 + 165, 106, 0xD810141C);
-		drawRect(this.width / 2 - 165, 18, this.width / 2 + 165, 21, 0xFFFFB84D);
-		drawRect(this.width / 2 - 165, 103, this.width / 2 + 165, 106, 0xFF8C642D);
-		this.drawCenteredString(this.fontRendererObj, "KYZXX", this.width / 2, 34, 0xFFFFC45C);
-		this.drawCenteredString(this.fontRendererObj, "CLIENT", this.width / 2, 52, 0xFFFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "EAGLERCRAFT 1.12.2  |  WINTER EDITION", this.width / 2, 72, 0xFFB8C0CC);
-		this.drawCenteredString(this.fontRendererObj, "CUSTOM FEATURES  •  CLEAN PERFORMANCE", this.width / 2, 89, 0xFFFFD58A);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate((float) (this.width / 2 + 142), 112.0F, 0.0F);
-		GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
-		float f = 1.8F - MathHelper.abs(
-				MathHelper.sin((float) (Minecraft.getSystemTime() % 1000L) / 1000.0F * ((float) Math.PI * 2F)) * 0.1F);
-		f = f * 100.0F / (float) (this.fontRendererObj.getStringWidth(this.splashText) + 32);
-		GlStateManager.scale(f, f, f);
-		this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
-		GlStateManager.popMatrix();
-		String s = "Minecraft 1.12.2";
-
-		if (this.mc.isDemo()) {
-			s = s + " Demo";
-		}
-
-		this.drawString(this.fontRendererObj, s, 2, this.height - 20, -1);
-		this.drawString(this.fontRendererObj, "Eaglercraft 1.12.2 (" + EaglercraftVersion.projectOriginVersion + ")", 2,
-				this.height - 10, -1);
-		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N, this.height - 10,
-				-1);
-
+		this.drawGradientRect(0, 0, this.width, this.height, 0x44101825, 0xCC080B12);
+		this.drawGradientRect(0, 0, this.width, this.height, 0x00000000, 0x99000000);
+		int menuX = Math.max(22, this.width / 2 - 270);
+		int menuY = this.height / 2 - 92;
+		drawRect(menuX - 18, menuY - 18, menuX + 236, menuY + 190, 0xC910141D);
+		drawRect(menuX - 18, menuY - 18, menuX + 236, menuY - 15, 0xFFFFC15A);
+		drawRect(menuX - 18, menuY + 187, menuX + 236, menuY + 190, 0xFF79552E);
+		this.drawString(this.fontRendererObj, "KYZXX", menuX, menuY, 0xFFFFC15A);
+		this.drawString(this.fontRendererObj, "CLIENT", menuX + 43, menuY, 0xFFF2F4F8);
+		this.drawString(this.fontRendererObj, "Welcome back, " + this.mc.getSession().getProfile().getName(), menuX, menuY + 17, 0xFFB8C1CE);
+		this.drawString(this.fontRendererObj, "PLAY", menuX, menuY + 43, 0xFF858F9E);
+		int avatarX = Math.min(this.width - 82, this.width / 2 + 210);
+		int avatarY = this.height / 2 + 72;
+		drawRect(avatarX - 58, avatarY - 118, avatarX + 58, avatarY + 12, 0x5510141D);
+		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
+				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
+		this.drawString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", 12, this.height - 12, 0xFFB8C1CE);
+		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N, this.height - 10, -1);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
