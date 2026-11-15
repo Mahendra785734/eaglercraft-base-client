@@ -1,7 +1,6 @@
 package com.isacofff.clientbase.modules;
 
 import com.isacofff.clientbase.modules.features.ClickGui;
-import com.isacofff.clientbase.modules.features.ExampleModule;
 import com.isacofff.clientbase.modules.features.FullBright;
 import com.isacofff.clientbase.modules.features.AutoSprint;
 import com.isacofff.clientbase.modules.features.Zoom;
@@ -19,7 +18,6 @@ public class Manager {
     public void init() {
     modules.add(new ClickGui());
     modules.add(new FullBright());
-    modules.add(new ExampleModule());
     modules.add(new AutoSprint());
     modules.add(new Zoom());
     modules.add(new NoHurtCam());
