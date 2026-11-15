@@ -63,6 +63,8 @@ public class Manager {
         modules.add(new HudFeatures.HideVignette());
         registerCatalogModules();
         // Defaults for the two most-used toggles.
+        Module clickGui = getModuleByName("ClickGUI");
+        if (clickGui != null) clickGui.setKeybind(54); // Right Shift
         Module fullBright = getModuleByName("FullBright");
         if (fullBright != null) fullBright.setKeybind(net.lax1dude.eaglercraft.KeyboardConstants.KEY_F);
         Module sprint = getModuleByName("Sprint");
