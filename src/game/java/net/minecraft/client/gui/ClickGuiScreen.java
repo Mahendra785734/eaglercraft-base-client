@@ -32,6 +32,7 @@ public class ClickGuiScreen extends GuiScreen {
     private static final int PANEL_GAP = 8;
     private static final int PANEL_MARGIN = 10;
     private final ArrayList<Panel> panels = new ArrayList<>();
+    private Module bindingModule = null;
 
     public ClickGuiScreen() {
         for (Category cat : Category.values()) {
@@ -118,6 +119,11 @@ public class ClickGuiScreen extends GuiScreen {
         if (descriptionn != null) {
             drawDescription(descriptionn, mouseX, mouseY);
         }
+        if (bindingModule != null) {
+            String prompt = "Press a key for " + bindingModule.getName() + " (ESC to clear)";
+            drawRect(0, height - 34, width, height, 0xCC101820);
+            fontRendererObj.drawStringWithShadow(prompt, (width - fontRendererObj.getStringWidth(prompt)) / 2, height - 22, 0xFFFFFFFF);
+        }
     }
 
     @Override
@@ -132,6 +138,11 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
+        if (bindingModule != null) {
+            bindingModule.setKey(keyCode == KeyboardConstants.KEY_ESCAPE ? 0 : keyCode);
+            bindingModule = null;
+            return;
+        }
         if (keyCode == KeyboardConstants.KEY_ESCAPE) {
             mc.displayGuiScreen(null);
         }
@@ -236,8 +247,10 @@ public class ClickGuiScreen extends GuiScreen {
 
                     String symbol = module.open ? "-" : "+";
                     fontRendererObj.drawString(symbol, x + width - 10, y + offset + 4, ACCENT_COLOR);
-                    String moduleLabel = fontRendererObj.trimStringToWidth(module.getName(), width - 24);
+                    String moduleLabel = fontRendererObj.trimStringToWidth(module.getName(), width - 48);
                     fontRendererObj.drawString(moduleLabel, x + 5, y + offset + 4, TEXT_COLOR);
+                    String keyLabel = "K" + module.getKey();
+                    fontRendererObj.drawString(keyLabel, x + width - 31, y + offset + 4, ACCENT_COLOR);
 
                     offset += 14;
 
@@ -340,6 +353,11 @@ public class ClickGuiScreen extends GuiScreen {
 
                         if (overGear && mouseButton == 0) {
                             module.open = !module.open;
+                            return;
+                        }
+
+                        if (mouseButton == 2) {
+                            bindingModule = module;
                             return;
                         }
 
