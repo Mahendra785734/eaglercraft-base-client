@@ -23,6 +23,8 @@ public class ClickGui extends Module {
     @Override
     public void onDisable() {
             super.onDisable();
-            Minecraft.getMinecraft().displayGuiScreen(null);
+            if (Minecraft.getMinecraft().currentScreen instanceof ClickGuiScreen) {
+                Minecraft.getMinecraft().displayGuiScreen(null);
+            }
     }
 }
