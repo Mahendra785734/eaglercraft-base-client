@@ -29,16 +29,30 @@ public class ClickGuiScreen extends GuiScreen {
     private static final int SLIDER_FILL = 0x667799BB;
     private static final int SLIDER_KNOB = -1;
 
+    private static final int PANEL_GAP = 8;
+    private static final int PANEL_MARGIN = 10;
     private final ArrayList<Panel> panels = new ArrayList<>();
 
     public ClickGuiScreen() {
-        int x = 1;
-        int y = 1;
-
         for (Category cat : Category.values()) {
-            //Cat :3
-            panels.add(new Panel(cat, x, y));
-            x += 91;
+            panels.add(new Panel(cat, 0, 34));
+        }
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        int count = panels.size();
+        int available = Math.max(0, width - PANEL_MARGIN * 2 - PANEL_GAP * (count - 1));
+        int panelWidth = Math.max(86, Math.min(132, available / Math.max(1, count)));
+        int totalWidth = count * panelWidth + (count - 1) * PANEL_GAP;
+        int startX = Math.max(PANEL_MARGIN, (width - totalWidth) / 2);
+
+        for (int i = 0; i < count; i++) {
+            Panel panel = panels.get(i);
+            panel.width = panelWidth;
+            panel.x = startX + i * (panelWidth + PANEL_GAP);
+            panel.y = 34;
         }
     }
 
@@ -80,6 +94,10 @@ public class ClickGuiScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
         this.drawDefaultBackground();
+
+        String brand = "KYZXX CLIENT";
+        fontRendererObj.drawStringWithShadow(brand, (width - fontRendererObj.getStringWidth(brand)) / 2, 12, 0xFFFFFFFF);
+        fontRendererObj.drawStringWithShadow("Right-click a category to collapse  |  ESC to close", 10, height - 14, 0xFFB8C7D9);
 
         for (Panel panel : panels) {
             panel.draw(mouseX, mouseY);
@@ -145,7 +163,7 @@ public class ClickGuiScreen extends GuiScreen {
 
     public class Panel {
         public Category category;
-        public int x, y, width = 90, height = 16;
+        public int x, y, width = 120, height = 18;
         public boolean dragging = false;
         public int dragX, dragY;
         public boolean open = true;
@@ -206,7 +224,7 @@ public class ClickGuiScreen extends GuiScreen {
 
             drawRect(x, y, x + width, y + height, PANEL_BG);
 
-            fontRendererObj.drawString(category.name(), x + 4, y + 4, TEXT_COLOR);
+            fontRendererObj.drawStringWithShadow(fontRendererObj.trimStringToWidth(category.name().toUpperCase(), width - 8), x + 5, y + 5, TEXT_COLOR);
 
             if (open) {
 
@@ -218,7 +236,8 @@ public class ClickGuiScreen extends GuiScreen {
 
                     String symbol = module.open ? "-" : "+";
                     fontRendererObj.drawString(symbol, x + width - 10, y + offset + 4, ACCENT_COLOR);
-                    fontRendererObj.drawString(module.getName(), x + 4, y + offset + 4, TEXT_COLOR);
+                    String moduleLabel = fontRendererObj.trimStringToWidth(module.getName(), width - 24);
+                    fontRendererObj.drawString(moduleLabel, x + 5, y + offset + 4, TEXT_COLOR);
 
                     offset += 14;
 
@@ -238,24 +257,25 @@ public class ClickGuiScreen extends GuiScreen {
         private void drawSetting(Setting<?> s, int x, int y) {
 
             if (s instanceof BooleanSetting bs) {
-                fontRendererObj.drawString(bs.getName() + " : " + bs.getValue(), x + 4, y + 4, TEXT_COLOR);
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(bs.getName() + " : " + bs.getValue(), width - 8), x + 5, y + 4, TEXT_COLOR);
                 return;
             }
 
             if (s instanceof ModeSetting ms) {
-                fontRendererObj.drawString(ms.getName() + " : " + ms.getValue() + " ...", x + 4, y + 4, TEXT_COLOR);
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(ms.getName() + " : " + ms.getValue() + " ...", width - 8), x + 5, y + 4, TEXT_COLOR);
                 return;
             }
 
             if (s instanceof NumberSetting number) {
                 drawRect(x, y, x + width, y + 14, MODULE_DISABLED);
-                fontRendererObj.drawString(number.getName() + " : " + number.getValue(), x + 4, y + 4, TEXT_COLOR);
+                fontRendererObj.drawString(fontRendererObj.trimStringToWidth(number.getName() + " : " + number.getValue(), width - 8), x + 5, y + 4, TEXT_COLOR);
                 int barX = x + 4;
                 int barY = y + 12;
                 int barW = width - 8;
                 int barH = 2;
                 drawRect(barX, barY, barX + barW, barY + barH, SLIDER_BG);
-                double percent = (number.getValue() - number.getMin()) / (number.getMax() - number.getMin());
+                double range = number.getMax() - number.getMin();
+                double percent = range <= 0.0 ? 0.0 : (number.getValue() - number.getMin()) / range;
                 int fillW = (int)(percent * barW);
                 drawRect(barX, barY, barX + fillW, barY + barH, SLIDER_FILL);
                 int knobX = barX + fillW;
@@ -270,7 +290,8 @@ public class ClickGuiScreen extends GuiScreen {
                 double rawValue = draggingSlider.getMin() + percent * (draggingSlider.getMax() - draggingSlider.getMin());
                 double increment = draggingSlider.getIncrement();
                 if (increment > 0) {
-                    double steps = (rawValue - draggingSlider.getMin()) / increment;
+                    if (increment <= 0.0) return rawValue;
+            double steps = (rawValue - draggingSlider.getMin()) / increment;
                     double snapped = draggingSlider.getMin() + Math.round(steps) * increment;
                     snapped = Math.round(snapped * 10000.0) / 10000.0;
                     snapped = Math.max(draggingSlider.getMin(), Math.min(draggingSlider.getMax(), snapped));
