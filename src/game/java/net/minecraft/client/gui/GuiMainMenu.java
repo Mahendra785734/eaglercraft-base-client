@@ -465,23 +465,66 @@ public class GuiMainMenu extends GuiScreen {
 		GlStateManager.enableAlpha();
 		this.drawGradientRect(0, 0, this.width, this.height, 0x44101825, 0xCC080B12);
 		this.drawGradientRect(0, 0, this.width, this.height, 0x00000000, 0x99000000);
+		this.drawKyzxxWinterOverlay();
+
 		int menuX = Math.max(22, this.width / 2 - 270);
 		int menuY = this.height / 2 - 92;
-		drawRect(menuX - 18, menuY - 18, menuX + 236, menuY + 190, 0xC910141D);
-		drawRect(menuX - 18, menuY - 18, menuX + 236, menuY - 15, 0xFFFFC15A);
-		drawRect(menuX - 18, menuY + 187, menuX + 236, menuY + 190, 0xFF79552E);
+		int panelBottom = menuY + 214;
+		drawRect(menuX - 20, menuY - 20, menuX + 238, panelBottom, 0xD10D121B);
+		drawRect(menuX - 20, menuY - 20, menuX + 238, menuY - 16, 0xFFFFC15A);
+		drawRect(menuX - 20, menuY - 16, menuX - 18, panelBottom, 0xFF8B6538);
+		drawRect(menuX + 236, menuY - 16, menuX + 238, panelBottom, 0xFF343D4A);
+		drawRect(menuX - 20, panelBottom - 3, menuX + 238, panelBottom, 0xFF79552E);
+
 		this.drawString(this.fontRendererObj, "KYZXX", menuX, menuY, 0xFFFFC15A);
 		this.drawString(this.fontRendererObj, "CLIENT", menuX + 43, menuY, 0xFFF2F4F8);
-		this.drawString(this.fontRendererObj, "Welcome back, " + this.mc.getSession().getProfile().getName(), menuX, menuY + 17, 0xFFB8C1CE);
-		this.drawString(this.fontRendererObj, "PLAY", menuX, menuY + 43, 0xFF858F9E);
+		this.drawString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", menuX + 1, menuY + 13, 0xFF8F9AAA);
+		this.drawString(this.fontRendererObj, "Welcome back, " + this.mc.getSession().getProfile().getName(),
+				menuX, menuY + 31, 0xFFCBD3DF);
+		this.drawString(this.fontRendererObj, "PLAY", menuX, menuY + 52, 0xFFFFC15A);
+		this.drawString(this.fontRendererObj, "Choose where you want to play", menuX + 36, menuY + 52,
+				0xFF8994A4);
+
 		int avatarX = Math.min(this.width - 82, this.width / 2 + 210);
 		int avatarY = this.height / 2 + 72;
-		drawRect(avatarX - 58, avatarY - 118, avatarX + 58, avatarY + 12, 0x5510141D);
+		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY + 18, 0x7510141D);
+		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY - 130, 0xAAFFC15A);
+		this.drawCenteredString(this.fontRendererObj, "PLAYER PROFILE", avatarX, avatarY - 120, 0xFFE7B66B);
 		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
 				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
-		this.drawString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", 12, this.height - 12, 0xFFB8C1CE);
-		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N, this.height - 10, -1);
+		this.drawCenteredString(this.fontRendererObj, this.mc.getSession().getProfile().getName(),
+				avatarX, avatarY + 4, 0xFFF2F4F8);
+
+		this.drawString(this.fontRendererObj, "KYZXX CLIENT  •  EAGLERCRAFT 1.12.2", 12,
+				this.height - 12, 0xFFB8C1CE);
+		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N,
+				this.height - 10, -1);
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		for (int i = 0; i < this.buttonList.size(); ++i) {
+			GuiButton button = (GuiButton) this.buttonList.get(i);
+			if (button.id == 1 || button.id == 2 || button.id == 14 || button.id == 11
+					|| button.id == 12 || button.id == 0 || button.id == 4) {
+				this.drawKyzxxMenuButton(button, mouseX, mouseY);
+			}
+		}
+	}
+
+	private void drawKyzxxMenuButton(GuiButton button, int mouseX, int mouseY) {
+		if (!button.visible) return;
+		boolean hovered = mouseX >= button.xPosition && mouseY >= button.yPosition
+				&& mouseX < button.xPosition + button.width && mouseY < button.yPosition + button.height;
+		int background = !button.enabled ? 0xB8141922 : (hovered ? 0xF0443825 : 0xE51A222E);
+		int accent = !button.enabled ? 0xFF59616D : (hovered ? 0xFFFFD17C : 0xFFB88643);
+		int text = !button.enabled ? 0xFF7D8795 : (hovered ? 0xFFFFDFA8 : 0xFFF0F3F8);
+		drawRect(button.xPosition, button.yPosition, button.xPosition + button.width,
+				button.yPosition + button.height, background);
+		drawRect(button.xPosition, button.yPosition, button.xPosition + 3,
+				button.yPosition + button.height, accent);
+		drawRect(button.xPosition + 4, button.yPosition, button.xPosition + button.width,
+				button.yPosition + 1, 0x24FFFFFF);
+		this.drawCenteredString(this.fontRendererObj, button.displayString,
+				button.xPosition + button.width / 2, button.yPosition + (button.height - 8) / 2, text);
 	}
 
 	private void drawKyzxxWinterOverlay() {
