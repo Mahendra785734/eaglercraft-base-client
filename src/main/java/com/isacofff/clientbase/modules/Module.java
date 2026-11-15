@@ -45,7 +45,7 @@ public abstract class Module {
         return settings;
     }
 
-    public String description = "- - -";
+    public String description = "";
 
 
 
