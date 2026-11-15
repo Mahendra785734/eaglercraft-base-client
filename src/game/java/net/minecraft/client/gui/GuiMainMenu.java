@@ -190,6 +190,8 @@ public class GuiMainMenu extends GuiScreen {
 		}
 		this.buttonList.add(new GuiButton(0, menuX, menuY + 126, 104, 26, I18n.format("menu.options")));
 		this.buttonList.add(new GuiButton(4, menuX + 114, menuY + 126, 104, 26, "Cosmetics"));
+		this.buttonList.add(new GuiButton(15, menuX, menuY + 164, 218, 26,
+				"BACKGROUND: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle]));
 		this.buttonList.add(new GuiButtonLanguage(5, 12, this.height - 28));
 	}
 
@@ -266,7 +268,7 @@ public class GuiMainMenu extends GuiScreen {
 
 		if (button.id == 15) {
 			kyzxxBackgroundStyle = (kyzxxBackgroundStyle + 1) % KYZXX_BACKGROUNDS.length;
-			button.displayString = "BG: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle];
+			button.displayString = "BACKGROUND: " + KYZXX_BACKGROUNDS[kyzxxBackgroundStyle];
 		}
 	}
 
@@ -487,13 +489,20 @@ public class GuiMainMenu extends GuiScreen {
 
 		int avatarX = Math.min(this.width - 82, this.width / 2 + 210);
 		int avatarY = this.height / 2 + 72;
-		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY + 18, 0x7510141D);
+		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY + 42, 0x7510141D);
 		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY - 130, 0xAAFFC15A);
 		this.drawCenteredString(this.fontRendererObj, "PLAYER PROFILE", avatarX, avatarY - 120, 0xFFE7B66B);
+		SkinModel activeSkinModel = EaglerProfile.getActiveSkinModel();
+		if (activeSkinModel == null) activeSkinModel = SkinModel.STEVE;
+		ResourceLocation activeSkinTexture = EaglerProfile.getActiveSkinResourceLocation();
 		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
-				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
+				activeSkinModel, activeSkinTexture, null);
 		this.drawCenteredString(this.fontRendererObj, this.mc.getSession().getProfile().getName(),
-				avatarX, avatarY + 4, 0xFFF2F4F8);
+				avatarX, avatarY + 22, 0xFFF2F4F8);
+		String activeModelName = activeSkinModel.highPoly != null && !this.mc.gameSettings.enableFNAWSkins
+				? "STEVE FALLBACK" : activeSkinModel.name().replace('_', ' ');
+		this.drawCenteredString(this.fontRendererObj, "MODEL: " + activeModelName,
+				avatarX, avatarY + 33, 0xFFE7B66B);
 
 		this.drawString(this.fontRendererObj, "KYZXX CLIENT  •  EAGLERCRAFT 1.12.2", 12,
 				this.height - 12, 0xFFB8C1CE);
@@ -504,7 +513,7 @@ public class GuiMainMenu extends GuiScreen {
 		for (int i = 0; i < this.buttonList.size(); ++i) {
 			GuiButton button = (GuiButton) this.buttonList.get(i);
 			if (button.id == 1 || button.id == 2 || button.id == 14 || button.id == 11
-					|| button.id == 12 || button.id == 0 || button.id == 4) {
+					|| button.id == 12 || button.id == 0 || button.id == 4 || button.id == 15) {
 				this.drawKyzxxMenuButton(button, mouseX, mouseY);
 			}
 		}
@@ -603,12 +612,7 @@ public class GuiMainMenu extends GuiScreen {
 		drawRect(chipLeft, 12, this.width - 10, 35, 0xC810141C);
 		this.fontRendererObj.drawString(username, chipLeft + 8, 20, 0xFFFFFFFF);
 
-		// Render the selected Eagler skin using its real model (Steve/Alex/high-poly).
-		int avatarX = this.width - 42;
-		int avatarY = Math.max(150, this.height - 70);
-		drawRect(avatarX - 30, avatarY - 92, avatarX + 30, avatarY + 8, 0x6610141C);
-		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
-				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
+
 	}
 	/**
 	 * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
