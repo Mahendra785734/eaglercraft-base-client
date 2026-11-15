@@ -473,7 +473,7 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("DirectionHUD")) lines.add("Facing: " + net.minecraft.util.EnumFacing.fromAngle(player.rotationYaw).getName().toUpperCase());
 		if (isKyzxxModuleEnabled("ItemCounter")) {
 			ItemStack held = player.inventory.getCurrentItem();
-			lines.add("Item Count: " + (held.func_190926_b() ? 0 : held.stackSize));
+			lines.add("Item Count: " + (held.func_190926_b() ? 0 : held.func_190916_E()));
 		}
 		if (isKyzxxModuleEnabled("ClockHUD")) lines.add("Local: " + new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()));
 		if (isKyzxxModuleEnabled("BiomeHUD")) lines.add("Biome: " + this.mc.world.getBiome(player.getPosition()).getBiomeName());
@@ -507,7 +507,7 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("ArmorValue")) lines.add("Armor: " + player.getTotalArmorValue());
 		if (isKyzxxModuleEnabled("TargetHUD") && this.mc.pointedEntity != null) lines.add("Target: " + this.mc.pointedEntity.getName());
 		if (isKyzxxModuleEnabled("EntityCount")) lines.add("Entities: " + this.mc.world.loadedEntityList.size());
-		if (isKyzxxModuleEnabled("DimensionHUD")) lines.add("Dimension: " + this.mc.world.provider.getDimension());
+		if (isKyzxxModuleEnabled("DimensionHUD")) lines.add("Dimension: " + this.mc.world.provider.getDimensionType().getName());
 		if (isKyzxxModuleEnabled("PlayerNameHUD")) lines.add("Player: " + player.getName());
 		if (isKyzxxModuleEnabled("SaturationHUD")) lines.add(String.format(java.util.Locale.ROOT, "Saturation: %.1f", player.getFoodStats().getSaturationLevel()));
 		if (isKyzxxModuleEnabled("AirHUD")) lines.add("Air: " + player.getAir() + "/300");
@@ -542,7 +542,7 @@ public class GuiIngame extends Gui {
 	private int countKyzxxItem(Item item) {
 		int total = 0;
 		for (ItemStack stack : this.mc.player.inventory.mainInventory) {
-			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.stackSize;
+			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.func_190916_E();
 		}
 		for (ItemStack stack : this.mc.player.inventory.offHandInventory) {
 			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.stackSize;
