@@ -1,0 +1,39 @@
+name: Build KYZXX Offline Client
+
+on:
+  push:
+    branches:
+      - kyzxx-client-winter-features
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-offline-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build assets and TeaVM client
+        run: |
+          chmod +x gradlew CompileEPK.sh CompileJS.sh MakeOfflineDownload.sh
+          ./CompileEPK.sh
+          ./CompileJS.sh
+          ./MakeOfflineDownload.sh
+      - name: Verify offline HTML output
+        run: |
+          test -s javascript/Eaglercraft_1.12_Offline_en_US.html
+          grep -q 'KYZXX CLIENT' javascript/Eaglercraft_1.12_Offline_en_US.html || true
+          ls -lh javascript/Eaglercraft_1.12_Offline_en_US.html
+      - name: Upload compiled offline client
+        uses: actions/upload-artifact@v4
+        with:
+          name: KYZXX-Eaglercraft-Offline-HTML
+          path: javascript/Eaglercraft_1.12_Offline_en_US.html
+          if-no-files-found: error
