@@ -459,23 +459,12 @@ public class GuiMainMenu extends GuiScreen {
 		int k = 30;
 		this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
 		this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-		this.mc.getTextureManager().bindTexture(MINECRAFT_TITLE_TEXTURES);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-		if ((double) this.updateCounter < 1.0E-4D) {
-			this.drawTexturedModalRect(j + 0, 30, 0, 0, 99, 44);
-			this.drawTexturedModalRect(j + 99, 30, 129, 0, 27, 44);
-			this.drawTexturedModalRect(j + 99 + 26, 30, 126, 0, 3, 44);
-			this.drawTexturedModalRect(j + 99 + 26 + 3, 30, 99, 0, 26, 44);
-			this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-		} else {
-			this.drawTexturedModalRect(j + 0, 30, 0, 0, 155, 44);
-			this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-		}
-
-		this.mc.getTextureManager().bindTexture(field_194400_H);
-
-		drawModalRectWithCustomSizedTexture(j + 88, 67, 0.0F, 0.0F, 98, 14, 128.0F, 16.0F);
+		// KYZXX Client branding (the vanilla panorama and menu buttons remain intact).
+		drawRect(this.width / 2 - 126, 24, this.width / 2 + 126, 91, 0xB810141C);
+		drawRect(this.width / 2 - 126, 24, this.width / 2 + 126, 26, 0xFFFFB84D);
+		this.drawCenteredString(this.fontRendererObj, "KYZXX", this.width / 2, 42, 0xFFFFC45C);
+		this.drawCenteredString(this.fontRendererObj, "CLIENT", this.width / 2, 59, 0xFFFFFFFF);
+		this.drawCenteredString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", this.width / 2, 77, 0xFFB8C0CC);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) (this.width / 2 + 90), 70.0F, 0.0F);
