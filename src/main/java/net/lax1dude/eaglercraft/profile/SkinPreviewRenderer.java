@@ -46,6 +46,7 @@ public class SkinPreviewRenderer {
 	}
 
 	public static void renderPreview(int x, int y, int mx, int my, boolean capeMode, SkinModel skinModel, ResourceLocation skinTexture, ResourceLocation capeTexture) {
+		if (skinModel == null) skinModel = SkinModel.STEVE;
 		ModelBiped model;
 		switch(skinModel) {
 		case STEVE:
