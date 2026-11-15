@@ -26,7 +26,7 @@ public class Zoom extends Module {
     @Override
     public void onUpdate() {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player == null) {
+        if (mc.player == null || mc.currentScreen != null) {
             return;
         }
 
