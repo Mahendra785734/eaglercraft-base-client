@@ -168,11 +168,11 @@ public class GuiIngame extends Gui {
 
 		ItemStack itemstack = this.mc.player.inventory.armorItemInSlot(3);
 
-		if (this.mc.gameSettings.thirdPersonView == 0 && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
+		if (!isKyzxxModuleEnabled("HidePumpkin") && this.mc.gameSettings.thirdPersonView == 0 && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
 			this.renderPumpkinOverlay(scaledresolution);
 		}
 
-		if (!this.mc.player.isPotionActive(MobEffects.NAUSEA)) {
+		if (!isKyzxxModuleEnabled("HidePortal") && !this.mc.player.isPotionActive(MobEffects.NAUSEA)) {
 			float f = this.mc.player.prevTimeInPortal
 					+ (this.mc.player.timeInPortal - this.mc.player.prevTimeInPortal) * partialTicks;
 
@@ -184,14 +184,14 @@ public class GuiIngame extends Gui {
 		if (this.mc.playerController.isSpectator()) {
 			this.spectatorGui.renderTooltip(scaledresolution, partialTicks);
 		} else {
-			this.renderHotbar(scaledresolution, partialTicks);
+			if (!isKyzxxModuleEnabled("HideHotbar")) this.renderHotbar(scaledresolution, partialTicks);
 		}
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(ICONS);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(RealOpenGLEnums.GL_SRC_ALPHA, RealOpenGLEnums.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-		this.overlayBoss.renderBossHealth();
+		if (!isKyzxxModuleEnabled("HideBossBar")) this.overlayBoss.renderBossHealth();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(ICONS);
 
@@ -237,7 +237,7 @@ public class GuiIngame extends Gui {
 			this.renderDemo(scaledresolution);
 		}
 
-		this.renderPotionEffects(scaledresolution);
+		if (!isKyzxxModuleEnabled("HidePotionEffects")) this.renderPotionEffects(scaledresolution);
 
 		this.overlayDebug.renderDebugInfo(scaledresolution);
 
@@ -268,9 +268,9 @@ public class GuiIngame extends Gui {
 			}
 		}
 
-		this.overlaySubtitle.renderSubtitles(scaledresolution);
+		if (!isKyzxxModuleEnabled("HideSubtitles")) this.overlaySubtitle.renderSubtitles(scaledresolution);
 
-		if (this.titlesTimer > 0) {
+		if (this.titlesTimer > 0 && !isKyzxxModuleEnabled("HideTitles")) {
 			float f3 = (float) this.titlesTimer - partialTicks;
 			int i2 = 255;
 
@@ -336,7 +336,7 @@ public class GuiIngame extends Gui {
 		GlStateManager.popMatrix();
 		scoreobjective1 = scoreboard.getObjectiveInDisplaySlot(0);
 
-		if (!this.mc.gameSettings.keyBindPlayerList.isKeyDown() || this.mc.isIntegratedServerRunning()
+		if (isKyzxxModuleEnabled("HidePlayerList") || !this.mc.gameSettings.keyBindPlayerList.isKeyDown() || this.mc.isIntegratedServerRunning()
 				&& this.mc.player.connection.getPlayerInfoMap().size() <= 1 && scoreobjective1 == null) {
 			this.overlayPlayerList.updatePlayerList(false);
 		} else {
@@ -386,15 +386,37 @@ public class GuiIngame extends Gui {
 			}
 
 			com.isacofff.clientbase.modules.Module armorModule = Client.manager.getModuleByName("ArmorStatus");
-			if (armorModule != null && armorModule.isEnabled()) {
-				int armorY = j - 76;
+			if (armorModule instanceof com.isacofff.clientbase.modules.features.ArmorStatus && armorModule.isEnabled()) {
+				com.isacofff.clientbase.modules.features.ArmorStatus armorSettings =
+						(com.isacofff.clientbase.modules.features.ArmorStatus) armorModule;
+				int armorX = i / 2 - 42;
+				int armorY = j - 58;
 				for (int slot = 3; slot >= 0; --slot) {
 					net.minecraft.item.ItemStack armor = this.mc.player.inventory.armorItemInSlot(slot);
-					if (!armor.func_190926_b() && armor.getMaxDamage() > 0) {
-						int remaining = armor.getMaxDamage() - armor.getItemDamage();
-						String armorText = armor.getDisplayName() + ": " + remaining;
-						this.getFontRenderer().drawStringWithShadow(armorText, 5.0F, armorY, 0xFFFFFFFF);
-						armorY += 11;
+					int itemX = armorX + (3 - slot) * 22;
+					if (!armor.func_190926_b()) {
+						if (armorSettings.showBackground.getValue()) drawRect(itemX - 2, armorY - 2, itemX + 20, armorY + 31, 0xB810141C);
+						this.itemRenderer.renderItemAndEffectIntoGUI(this.mc.player, armor, itemX, armorY);
+						this.itemRenderer.renderItemOverlays(this.mc.fontRendererObj, armor, itemX, armorY);
+						if (armor.isItemStackDamageable()) {
+							int max = armor.getMaxDamage();
+							int remaining = Math.max(0, max - armor.getItemDamage());
+						float ratio = max <= 0 ? 1.0F : remaining / (float) max;
+							drawRect(itemX, armorY + 18, itemX + 16, armorY + 20, 0xFF343A44);
+							drawRect(itemX, armorY + 18, itemX + Math.round(16.0F * ratio), armorY + 20,
+									ratio > 0.5F ? 0xFF55D68B : (ratio > 0.2F ? 0xFFFFC45C : 0xFFFF5B5B));
+							if (armorSettings.showDurability.getValue()) {
+								String durability = armorSettings.showPercent.getValue()
+										? Math.round(ratio * 100.0F) + "%" : String.valueOf(remaining);
+								int tw = this.getFontRenderer().getStringWidth(durability);
+								this.getFontRenderer().drawStringWithShadow(durability, itemX + (16 - tw) / 2.0F, armorY + 22, 0xFFFFFFFF);
+							}
+						}
+						if (armorSettings.showName.getValue()) {
+							String label = armor.getDisplayName();
+							int tw = this.getFontRenderer().getStringWidth(label);
+							this.getFontRenderer().drawStringWithShadow(label, itemX + (16 - tw) / 2.0F, armorY + 32, 0xFFE8EDF5);
+						}
 					}
 				}
 			}
@@ -432,7 +454,98 @@ public class GuiIngame extends Gui {
 					drawRect(listX - 6, listY - 5, listX + 150, listY + Math.max(1, row) * 12 + 3, 0x44FFFFFF);
 				}
 			}
+			renderKyzxxExtraHud(i);
 		}
+	}
+
+	private boolean isKyzxxModuleEnabled(String name) {
+		if (Client.manager == null) return false;
+		com.isacofff.clientbase.modules.Module module = Client.manager.getModuleByName(name);
+		return module != null && module.isEnabled();
+	}
+
+	private void renderKyzxxExtraHud(int screenWidth) {
+		if (this.mc.player == null || this.mc.world == null || Client.manager == null) return;
+		EntityPlayer player = this.mc.player;
+		java.util.ArrayList<String> lines = new java.util.ArrayList<String>();
+		if (isKyzxxModuleEnabled("DirectionHUD")) lines.add("Facing: " + net.minecraft.util.EnumFacing.fromAngle(player.rotationYaw).getName().toUpperCase());
+		if (isKyzxxModuleEnabled("ItemCounter")) {
+			ItemStack held = player.inventory.getCurrentItem();
+			lines.add("Item Count: " + (held.func_190926_b() ? 0 : held.stackSize));
+		}
+		if (isKyzxxModuleEnabled("ClockHUD")) lines.add("Local: " + new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()));
+		if (isKyzxxModuleEnabled("BiomeHUD")) lines.add("Biome: " + this.mc.world.getBiome(player.getPosition()).getBiomeName());
+		if (isKyzxxModuleEnabled("SpeedHUD")) lines.add(String.format(java.util.Locale.ROOT, "Speed: %.2f m/s", Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ) * 20.0D));
+		if (isKyzxxModuleEnabled("HeldDurability")) {
+			ItemStack held = player.inventory.getCurrentItem();
+			if (!held.func_190926_b() && held.isItemStackDamageable()) lines.add("Held Durability: " + Math.max(0, held.getMaxDamage() - held.getItemDamage()) + "/" + held.getMaxDamage());
+		}
+		if (isKyzxxModuleEnabled("TotemCounter")) lines.add("Totems: " + countKyzxxItem(net.minecraft.init.Items.TOTEM_OF_UNDYING));
+		if (isKyzxxModuleEnabled("ArrowCounter")) lines.add("Arrows: " + (countKyzxxItem(net.minecraft.init.Items.ARROW) + countKyzxxItem(net.minecraft.init.Items.SPECTRAL_ARROW) + countKyzxxItem(net.minecraft.init.Items.TIPPED_ARROW)));
+		if (isKyzxxModuleEnabled("DayCounter")) lines.add("Day: " + (this.mc.world.getWorldTime() / 24000L + 1L));
+		if (isKyzxxModuleEnabled("PingHUD") && this.mc.getConnection() != null) {
+			net.minecraft.client.network.NetworkPlayerInfo info = this.mc.getConnection().getPlayerInfo(player.getUniqueID());
+			if (info != null) lines.add("Ping: " + info.getResponseTime() + " ms");
+		}
+		if (isKyzxxModuleEnabled("FoodHUD")) lines.add("Food: " + player.getFoodStats().getFoodLevel() + "/20");
+		if (isKyzxxModuleEnabled("XPDisplay")) lines.add("XP: " + player.experienceLevel + " (" + Math.round(player.experience * 100.0F) + "%)");
+		if (isKyzxxModuleEnabled("HealthHUD")) lines.add(String.format(java.util.Locale.ROOT, "Health: %.1f/%.1f", player.getHealth(), player.getMaxHealth()));
+		if (isKyzxxModuleEnabled("WorldTime")) {
+			long t = this.mc.world.getWorldTime() % 24000L;
+			lines.add(String.format(java.util.Locale.ROOT, "World Time: %02d:%02d", (t / 1000L + 6L) % 24L, (t % 1000L) * 60L / 1000L));
+		}
+		if (isKyzxxModuleEnabled("RotationHUD")) lines.add("Yaw/Pitch: " + Math.round(player.rotationYaw) + " / " + Math.round(player.rotationPitch));
+		if (isKyzxxModuleEnabled("ChunkHUD")) lines.add("Chunk: " + (player.getPosition().getX() >> 4) + ", " + (player.getPosition().getZ() >> 4));
+		if (isKyzxxModuleEnabled("LightLevel")) lines.add("Light: " + this.mc.world.getLight(player.getPosition()));
+		if (isKyzxxModuleEnabled("InventoryCount")) {
+			int used = 0;
+			for (ItemStack stack : player.inventory.mainInventory) if (!stack.func_190926_b()) ++used;
+			lines.add("Inventory: " + used + "/36 slots");
+		}
+		if (isKyzxxModuleEnabled("ArmorValue")) lines.add("Armor: " + player.getTotalArmorValue());
+		if (isKyzxxModuleEnabled("TargetHUD") && this.mc.pointedEntity != null) lines.add("Target: " + this.mc.pointedEntity.getName());
+		if (isKyzxxModuleEnabled("EntityCount")) lines.add("Entities: " + this.mc.world.loadedEntityList.size());
+		if (isKyzxxModuleEnabled("DimensionHUD")) lines.add("Dimension: " + this.mc.world.provider.getDimension());
+		if (isKyzxxModuleEnabled("PlayerNameHUD")) lines.add("Player: " + player.getName());
+		if (isKyzxxModuleEnabled("SaturationHUD")) lines.add(String.format(java.util.Locale.ROOT, "Saturation: %.1f", player.getFoodStats().getSaturationLevel()));
+		if (isKyzxxModuleEnabled("AirHUD")) lines.add("Air: " + player.getAir() + "/300");
+		if (isKyzxxModuleEnabled("ArmorCount")) {
+			int count = 0;
+			for (int slot = 0; slot < 4; ++slot) if (!player.inventory.armorItemInSlot(slot).func_190926_b()) ++count;
+			lines.add("Armor Pieces: " + count + "/4");
+		}
+		if (isKyzxxModuleEnabled("HeldItemHUD")) {
+			ItemStack held = player.inventory.getCurrentItem();
+			lines.add("Held: " + (held.func_190926_b() ? "Empty" : held.getDisplayName()));
+		}
+		if (isKyzxxModuleEnabled("SelectedSlotHUD")) lines.add("Hotbar Slot: " + (player.inventory.currentItem + 1) + "/9");
+		if (isKyzxxModuleEnabled("WorldNameHUD")) lines.add("World: " + this.mc.world.getWorldInfo().getWorldName());
+		if (isKyzxxModuleEnabled("LocalDifficultyHUD")) lines.add("Difficulty: " + this.mc.world.getDifficulty().getDifficultyId());
+		if (isKyzxxModuleEnabled("PotionHUD")) {
+			for (PotionEffect effect : player.getActivePotionEffects()) {
+				String potion = net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F);
+				lines.add(net.minecraft.util.text.TextFormatting.getTextWithoutFormattingCodes(effect.getEffectName()) + " " + potion);
+			}
+		}
+		for (int n = 0; n < lines.size(); ++n) {
+			String line = lines.get(n);
+			int x = screenWidth - this.getFontRenderer().getStringWidth(line) - 10;
+			int y = 60 + n * 12;
+			if (y > this.mc.scaledResolution.getScaledHeight() - 12) break;
+			if (com.isacofff.clientbase.modules.features.ActiveModulesHud.background) drawRect(x - 4, y - 2, screenWidth - 5, y + 10, 0xA810141C);
+			this.getFontRenderer().drawStringWithShadow(line, x, y, com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(n));
+		}
+	}
+
+	private int countKyzxxItem(Item item) {
+		int total = 0;
+		for (ItemStack stack : this.mc.player.inventory.mainInventory) {
+			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.stackSize;
+		}
+		for (ItemStack stack : this.mc.player.inventory.offHandInventory) {
+			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.stackSize;
+		}
+		return total;
 	}
 
 	private void drawKyzxxKey(String label, int x, int y, boolean pressed) {
@@ -451,7 +564,7 @@ public class GuiIngame extends Gui {
 		this.mc.getTextureManager().bindTexture(ICONS);
 		GameSettings gamesettings = this.mc.gameSettings;
 
-		if (gamesettings.thirdPersonView == 0) {
+		if (gamesettings.thirdPersonView == 0 && !isKyzxxModuleEnabled("HideCrosshair")) {
 			if (this.mc.playerController.isSpectator() && this.mc.pointedEntity == null) {
 				RayTraceResult raytraceresult = this.mc.objectMouseOver;
 
@@ -1026,7 +1139,7 @@ public class GuiIngame extends Gui {
 	/**
 	 * Renders a Vignette arount the entire screen that changes with light level.
 	 */
-	public void renderVignette(float lightLevel, ScaledResolution scaledRes) {
+	public void renderVignette(float lightLevel, ScaledResolution scaledRes) {\n\t\tif (isKyzxxModuleEnabled("HideVignette")) return;
 		lightLevel = 1.0F - lightLevel;
 		lightLevel = MathHelper.clamp(lightLevel, 0.0F, 1.0F);
 		WorldBorder worldborder = this.mc.world.getWorldBorder();
