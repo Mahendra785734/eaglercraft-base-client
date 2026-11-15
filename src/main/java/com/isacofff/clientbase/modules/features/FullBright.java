@@ -11,7 +11,7 @@ public class FullBright extends Module {
     private float previousGamma = 1.0F;
 
     public FullBright() {
-        super("Fullbright", Category.Render);
+        super("FullBright", Category.Render);
         this.description = "Keeps the world bright while enabled.";
         settings.add(gamma);
     }
