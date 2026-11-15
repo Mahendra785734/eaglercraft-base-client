@@ -403,9 +403,11 @@ public class GuiIngame extends Gui {
 							int max = armor.getMaxDamage();
 							int remaining = Math.max(0, max - armor.getItemDamage());
 						float ratio = max <= 0 ? 1.0F : remaining / (float) max;
-							drawRect(itemX, armorY + 18, itemX + 16, armorY + 20, 0xFF343A44);
-							drawRect(itemX, armorY + 18, itemX + Math.round(16.0F * ratio), armorY + 20,
-									ratio > 0.5F ? 0xFF55D68B : (ratio > 0.2F ? 0xFFFFC45C : 0xFFFF5B5B));
+							if (armorSettings.showBar.getValue()) {
+								drawRect(itemX, armorY + 18, itemX + 16, armorY + 20, 0xFF343A44);
+								drawRect(itemX, armorY + 18, itemX + Math.round(16.0F * ratio), armorY + 20,
+										ratio > 0.5F ? 0xFF55D68B : (ratio > 0.2F ? 0xFFFFC45C : 0xFFFF5B5B));
+							}
 							if (armorSettings.showDurability.getValue()) {
 								String durability = armorSettings.showPercent.getValue()
 										? Math.round(ratio * 100.0F) + "%" : String.valueOf(remaining);
@@ -442,13 +444,13 @@ public class GuiIngame extends Gui {
 				for (com.isacofff.clientbase.modules.Module active : activeModules) {
 					String activeName = active.getName();
 					int textWidth = this.getFontRenderer().getStringWidth(activeName);
-					if (com.isacofff.clientbase.modules.features.ActiveModulesHud.background) {
-						drawRect(listX - 4, listY + row * 12 - 3, listX + textWidth + 5, listY + row * 12 + 9, 0xB810141C);
-					}
-					if (com.isacofff.clientbase.modules.features.ActiveModulesHud.leftAccent) {
-						drawRect(listX - 4, listY + row * 12 - 3, listX - 3, listY + row * 12 + 9,
-								com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
-					}
+					int rowTop = listY + row * 12 - 3;
+					int rowBottom = rowTop + 12;
+					int rowLeft = listX - 4;
+					int rowRight = listX + textWidth + 5;
+					drawKyzxxHudPanelBackground(rowLeft, rowTop, rowRight, rowBottom);
+					drawKyzxxModuleAccent(rowLeft, rowTop, rowRight, rowBottom,
+							com.isacofff.clientbase.modules.features.ActiveModulesHud.getAccentColor(row));
 					this.getFontRenderer().drawStringWithShadow(activeName, (float) listX, (float) (listY + row * 12),
 							com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
 					++row;
@@ -465,6 +467,28 @@ public class GuiIngame extends Gui {
 		if (Client.manager == null) return false;
 		com.isacofff.clientbase.modules.Module module = Client.manager.getModuleByName(name);
 		return module != null && module.isEnabled();
+	}
+
+	private void drawKyzxxHudPanelBackground(int left, int top, int right, int bottom) {
+		if (!com.isacofff.clientbase.modules.features.ActiveModulesHud.background) return;
+		String style = com.isacofff.clientbase.modules.features.ActiveModulesHud.backgroundStyle;
+		if ("OUTLINE".equalsIgnoreCase(style)) {
+			drawRect(left, top, right, bottom, 0x3310141C);
+			drawRect(left, top, right, top + 1, 0xCCB88A3B);
+			drawRect(left, bottom - 1, right, bottom, 0xCCB88A3B);
+			drawRect(left, top, left + 1, bottom, 0xCCB88A3B);
+			drawRect(right - 1, top, right, bottom, 0xCCB88A3B);
+		} else {
+			drawRect(left, top, right, bottom, "GLASS".equalsIgnoreCase(style) ? 0x7010141C : 0xB810141C);
+		}
+	}
+
+	private void drawKyzxxModuleAccent(int left, int top, int right, int bottom, int color) {
+		String mode = com.isacofff.clientbase.modules.features.ActiveModulesHud.accentMode;
+		if ("LEFT".equalsIgnoreCase(mode)) drawRect(left, top, left + 2, bottom, color);
+		else if ("TOP".equalsIgnoreCase(mode)) drawRect(left, top, right, top + 2, color);
+		else if ("RIGHT".equalsIgnoreCase(mode)) drawRect(right - 2, top, right, bottom, color);
+		else if ("BOTTOM".equalsIgnoreCase(mode)) drawRect(left, bottom - 2, right, bottom, color);
 	}
 
 	private void renderKyzxxExtraHud(int screenWidth) {
@@ -535,7 +559,7 @@ public class GuiIngame extends Gui {
 			int x = screenWidth - this.getFontRenderer().getStringWidth(line) - 10;
 			int y = 60 + n * 12;
 			if (y > this.mc.scaledResolution.getScaledHeight() - 12) break;
-			if (com.isacofff.clientbase.modules.features.ActiveModulesHud.background) drawRect(x - 4, y - 2, screenWidth - 5, y + 10, 0xA810141C);
+			drawKyzxxHudPanelBackground(x - 4, y - 2, screenWidth - 5, y + 10);
 			this.getFontRenderer().drawStringWithShadow(line, x, y, com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(n));
 		}
 	}
