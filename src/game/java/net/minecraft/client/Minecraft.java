@@ -1432,6 +1432,12 @@ public class Minecraft implements IThreadListener {
                 boolean flag1 = false;
 
                 if (this.currentScreen == null) {
+                    if (i == 54) {
+                        com.isacofff.clientbase.modules.Module clickGui = com.isacofff.clientbase.Client.INSTANCE.manager.getModuleByName("ClickGUI");
+                        if (clickGui != null && !clickGui.isEnabled()) {
+                            clickGui.toggle();
+                        }
+                    }
                     if (i == 1 /* || (i > -1 && i == this.gameSettings.keyBindClose.getKeyCode()) */) {
                         this.displayInGameMenu();
                     }
