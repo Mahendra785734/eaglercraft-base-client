@@ -260,7 +260,7 @@ public class ClickGuiScreen extends GuiScreen {
 
             int offset = height - scrollOffset;
 
-            for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+            for (Module module : getVisibleModules(category)) {
 
                 if (isHover(mouseX, mouseY, x, y + offset, width, 14)) {
                     return module.getDescription();
@@ -306,7 +306,7 @@ public class ClickGuiScreen extends GuiScreen {
                 int offset = height - scrollOffset;
                 int visibleBottom = ClickGuiScreen.this.height - 24;
 
-                for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+                for (Module module : getVisibleModules(category)) {
                     int rowY = y + offset;
                     if (rowY + 14 >= y + height && rowY <= visibleBottom) {
                         drawRect(x, rowY, x + width, rowY + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
@@ -404,7 +404,7 @@ public class ClickGuiScreen extends GuiScreen {
 
                 int offset = height - scrollOffset;
 
-                for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+                for (Module module : getVisibleModules(category)) {
 
                     if (isHover(mouseX, mouseY, x, y + offset, width, 14)) {
 
@@ -488,7 +488,7 @@ public class ClickGuiScreen extends GuiScreen {
         public void scroll(int wheel) {
             if (!open || wheel == 0) return;
             int total = height;
-            for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+            for (Module module : getVisibleModules(category)) {
                 total += 14;
                 if (module.open && hasSettings(module)) total += module.getSettings().size() * 14;
             }
@@ -498,7 +498,7 @@ public class ClickGuiScreen extends GuiScreen {
 
         private int getTotalHeight() {
             int total = height;
-            for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+            for (Module module : getVisibleModules(category)) {
                 total += 14;
                 if (module.open && hasSettings(module)) {
                     total += module.getSettings().size() * 14;
