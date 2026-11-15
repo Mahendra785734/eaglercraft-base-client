@@ -3,6 +3,11 @@ package com.isacofff.clientbase.modules;
 import com.isacofff.clientbase.modules.features.ClickGui;
 import com.isacofff.clientbase.modules.features.ExampleModule;
 import com.isacofff.clientbase.modules.features.FullBright;
+import com.isacofff.clientbase.modules.features.AutoSprint;
+import com.isacofff.clientbase.modules.features.Zoom;
+import com.isacofff.clientbase.modules.features.NoHurtCam;
+import com.isacofff.clientbase.modules.features.Keystrokes;
+import com.isacofff.clientbase.modules.features.Coordinates;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -15,6 +20,11 @@ public class Manager {
     modules.add(new ClickGui());
     modules.add(new FullBright());
     modules.add(new ExampleModule());
+    modules.add(new AutoSprint());
+    modules.add(new Zoom());
+    modules.add(new NoHurtCam());
+    modules.add(new Keystrokes());
+    modules.add(new Coordinates());
     }
 
     public void onTick() {
