@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - kyzxx-client-development
+      - kyzxx-client-winter-features
   workflow_dispatch:
 
 permissions:
