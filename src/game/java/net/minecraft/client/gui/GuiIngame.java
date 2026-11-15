@@ -399,21 +399,39 @@ public class GuiIngame extends Gui {
 				}
 			}
 
-			com.isacofff.clientbase.modules.Module moduleList = Client.manager.getModuleByName("ModuleList");
+			com.isacofff.clientbase.modules.Module moduleList = Client.manager.getModuleByName("ActiveModules");
 			if (moduleList != null && moduleList.isEnabled()) {
-				int listY = 5;
+				java.util.ArrayList<com.isacofff.clientbase.modules.Module> activeModules = new java.util.ArrayList<>();
 				for (com.isacofff.clientbase.modules.Module active : Client.manager.getModules()) {
 					if (active.isEnabled() && !"ClickGUI".equalsIgnoreCase(active.getName())
-							&& !"ModuleList".equalsIgnoreCase(active.getName())) {
-						String activeName = active.getName();
-						int textWidth = this.getFontRenderer().getStringWidth(activeName);
-						drawRect(i - textWidth - 13, listY - 1, i - 4, listY + 10, 0xB810141C);
-						this.getFontRenderer().drawStringWithShadow(activeName, (float) (i - textWidth - 9),
-								(float) listY, 0xFFFFC45C);
-						listY += 12;
+							&& !"ActiveModules".equalsIgnoreCase(active.getName())) {
+						activeModules.add(active);
 					}
 				}
-			}
+				java.util.Collections.sort(activeModules, new java.util.Comparator<com.isacofff.clientbase.modules.Module>() {
+					public int compare(com.isacofff.clientbase.modules.Module a, com.isacofff.clientbase.modules.Module b) {
+						return Integer.compare(getFontRenderer().getStringWidth(b.getName()), getFontRenderer().getStringWidth(a.getName()));
+					}
+				});
+				int listY = com.isacofff.clientbase.modules.features.ActiveModulesHud.y;
+				int listX = com.isacofff.clientbase.modules.features.ActiveModulesHud.x;
+				int row = 0;
+				for (com.isacofff.clientbase.modules.Module active : activeModules) {
+					String activeName = active.getName();
+					int textWidth = this.getFontRenderer().getStringWidth(activeName);
+					if (com.isacofff.clientbase.modules.features.ActiveModulesHud.background) {
+						drawRect(listX - 4, listY + row * 12 - 3, listX + textWidth + 5, listY + row * 12 + 9, 0xB810141C);
+					}
+					drawRect(listX - 4, listY + row * 12 - 3, listX - 3, listY + row * 12 + 9,
+							com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
+					this.getFontRenderer().drawStringWithShadow(activeName, (float) listX, (float) (listY + row * 12),
+							com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
+					++row;
+				}
+				if (com.isacofff.clientbase.modules.features.ActiveModulesHud.editing) {
+					drawRect(listX - 6, listY - 5, listX + 150, listY + Math.max(1, row) * 12 + 3, 0x44FFFFFF);
+				}
+			}}
 		}
 	}
 
