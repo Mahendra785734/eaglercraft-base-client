@@ -175,6 +175,7 @@ public class ClickGuiScreen extends GuiScreen {
         private NumberSetting draggingSlider = null;
         private int sliderX = 0;
         private int sliderWidth = 0;
+        private int scrollOffset = 0;
         public Panel(Category category, int x, int y) {
             this.category = category;
             this.x = x;
@@ -188,7 +189,7 @@ public class ClickGuiScreen extends GuiScreen {
         public String getHoveredDescription(int mouseX, int mouseY) {
             if (!open) return null;
 
-            int offset = height;
+            int offset = height - scrollOffset;
 
             for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
 
@@ -233,24 +234,26 @@ public class ClickGuiScreen extends GuiScreen {
 
             if (open) {
 
-                int offset = height;
+                int offset = height - scrollOffset;
+                int visibleBottom = ClickGuiScreen.this.height - 24;
 
                 for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
-
-                    drawRect(x, y + offset, x + width, y + offset + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
-
-                    String symbol = module.open ? "-" : "+";
-                    fontRendererObj.drawString(symbol, x + width - 10, y + offset + 4, ACCENT_COLOR);
-                    fontRendererObj.drawString(module.getName(), x + 4, y + offset + 4, TEXT_COLOR);
-
+                    int rowY = y + offset;
+                    if (rowY + 14 >= y + height && rowY <= visibleBottom) {
+                        drawRect(x, rowY, x + width, rowY + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
+                        String symbol = module.open ? "-" : "+";
+                        fontRendererObj.drawString(symbol, x + width - 10, rowY + 4, ACCENT_COLOR);
+                        fontRendererObj.drawString(module.getName(), x + 4, rowY + 4, TEXT_COLOR);
+                    }
                     offset += 14;
 
                     if (module.open && hasSettings(module)) {
                         for (Setting<?> setting : module.getSettings()) {
-
-                            drawRect(x, y + offset, x + width, y + offset + 14, MODULE_DISABLED);
-                            drawSetting(setting, x, y + offset);
-
+                            int settingY = y + offset;
+                            if (settingY + 14 >= y + height && settingY <= visibleBottom) {
+                                drawRect(x, settingY, x + width, settingY + 14, MODULE_DISABLED);
+                                drawSetting(setting, x, settingY);
+                            }
                             offset += 14;
                         }
                     }
@@ -328,7 +331,7 @@ public class ClickGuiScreen extends GuiScreen {
 
             if (open) {
 
-                int offset = height;
+                int offset = height - scrollOffset;
 
                 for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
 
@@ -405,6 +408,17 @@ public class ClickGuiScreen extends GuiScreen {
             return mx >= x && mx <= x + w && my >= y && my <= y + h;
         }
 
+        public void scroll(int wheel) {
+            if (!open || wheel == 0) return;
+            int total = height;
+            for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
+                total += 14;
+                if (module.open && hasSettings(module)) total += module.getSettings().size() * 14;
+            }
+            int maxScroll = Math.max(0, total - Math.max(0, ClickGuiScreen.this.height - 24 - y));
+            scrollOffset = Math.max(0, Math.min(maxScroll, scrollOffset + (wheel > 0 ? -28 : 28)));
+        }
+
         private int getTotalHeight() {
             int total = height;
             for (Module module : Client.INSTANCE.manager.getModulesByCategory(category)) {
@@ -413,7 +427,7 @@ public class ClickGuiScreen extends GuiScreen {
                     total += module.getSettings().size() * 14;
                 }
             }
-            return total;
+            return Math.min(total, Math.max(height, ClickGuiScreen.this.height - 24 - y));
         }
     }
 
