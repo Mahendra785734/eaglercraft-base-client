@@ -7,26 +7,34 @@ import net.minecraft.client.Minecraft;
 
 public class FullBright extends Module {
 
-    public Setting.NumberSetting gamma = new Setting.NumberSetting("Gamma", 1000,1,1000,1);
-
+    public Setting.NumberSetting gamma = new Setting.NumberSetting("Gamma", 1000, 1, 1000, 1);
+    private float previousGamma = 1.0F;
 
     public FullBright() {
         super("Fullbright", Category.Render);
-
-        this.description = "Changes the brightness of the world.";
-
+        this.description = "Keeps the world bright while enabled.";
         settings.add(gamma);
     }
 
-    @Override
-    public void onEnable() {
-        super.onEnable();
+    private void applyGamma() {
         Minecraft.getMinecraft().gameSettings.gammaSetting = gamma.getValue().floatValue();
     }
 
     @Override
+    public void onEnable() {
+        Minecraft mc = Minecraft.getMinecraft();
+        previousGamma = mc.gameSettings.gammaSetting;
+        applyGamma();
+    }
+
+    @Override
+    public void onUpdate() {
+        // Re-apply every tick so other settings updates do not silently turn it off.
+        applyGamma();
+    }
+
+    @Override
     public void onDisable() {
-        super.onDisable();
-        Minecraft.getMinecraft().gameSettings.gammaSetting = 1f;
+        Minecraft.getMinecraft().gameSettings.gammaSetting = previousGamma;
     }
 }
