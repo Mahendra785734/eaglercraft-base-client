@@ -526,7 +526,7 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("PotionHUD")) {
 			for (PotionEffect effect : player.getActivePotionEffects()) {
 				String potion = net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F);
-				lines.add(net.minecraft.util.text.net.minecraft.client.resources.I18n.format(effect.getEffectName()) + " " + potion);
+				lines.add(net.minecraft.client.resources.I18n.format(effect.getEffectName()) + " " + potion);
 			}
 		}
 		for (int n = 0; n < lines.size(); ++n) {
