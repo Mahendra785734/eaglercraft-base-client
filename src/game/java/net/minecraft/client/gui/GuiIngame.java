@@ -322,7 +322,7 @@ public class GuiIngame extends Gui {
 		ScoreObjective scoreobjective1 = scoreobjective != null ? scoreobjective
 				: scoreboard.getObjectiveInDisplaySlot(1);
 
-		if (scoreobjective1 != null) {
+		if (scoreobjective1 != null && !isKyzxxModuleEnabled("HideScoreboard")) {
 			this.renderScoreboard(scoreobjective1, scaledresolution);
 		}
 
@@ -444,8 +444,10 @@ public class GuiIngame extends Gui {
 					if (com.isacofff.clientbase.modules.features.ActiveModulesHud.background) {
 						drawRect(listX - 4, listY + row * 12 - 3, listX + textWidth + 5, listY + row * 12 + 9, 0xB810141C);
 					}
-					drawRect(listX - 4, listY + row * 12 - 3, listX - 3, listY + row * 12 + 9,
-							com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
+					if (com.isacofff.clientbase.modules.features.ActiveModulesHud.leftAccent) {
+						drawRect(listX - 4, listY + row * 12 - 3, listX - 3, listY + row * 12 + 9,
+								com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
+					}
 					this.getFontRenderer().drawStringWithShadow(activeName, (float) listX, (float) (listY + row * 12),
 							com.isacofff.clientbase.modules.features.ActiveModulesHud.getColor(row));
 					++row;
@@ -524,7 +526,7 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("PotionHUD")) {
 			for (PotionEffect effect : player.getActivePotionEffects()) {
 				String potion = net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F);
-				lines.add(net.minecraft.util.text.TextFormatting.getTextWithoutFormattingCodes(effect.getEffectName()) + " " + potion);
+				lines.add(net.minecraft.util.text.net.minecraft.client.resources.I18n.format(effect.getEffectName()) + " " + potion);
 			}
 		}
 		for (int n = 0; n < lines.size(); ++n) {
