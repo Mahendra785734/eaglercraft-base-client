@@ -144,7 +144,13 @@ public class ClickGuiScreen extends GuiScreen {
             return;
         }
         if (keyCode == KeyboardConstants.KEY_ESCAPE) {
-            mc.displayGuiScreen(null);
+            com.isacofff.clientbase.modules.features.ClickGui clickGui =
+                    Client.INSTANCE.manager.getModule(com.isacofff.clientbase.modules.features.ClickGui.class);
+            if (clickGui != null && clickGui.isEnabled()) {
+                clickGui.toggle();
+            } else {
+                mc.displayGuiScreen(null);
+            }
         }
     }
 
