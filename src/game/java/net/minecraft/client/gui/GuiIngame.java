@@ -545,7 +545,7 @@ public class GuiIngame extends Gui {
 			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.func_190916_E();
 		}
 		for (ItemStack stack : this.mc.player.inventory.offHandInventory) {
-			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.stackSize;
+			if (!stack.func_190926_b() && stack.getItem() == item) total += stack.func_190916_E();
 		}
 		return total;
 	}
