@@ -7,6 +7,10 @@ on:
       - kyzxx-client-winter-features
   workflow_dispatch:
 
+concurrency:
+  group: kyzxx-client-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
