@@ -2,17 +2,25 @@ package com.isacofff.clientbase.modules.features;
 
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
+import com.isacofff.clientbase.settings.Setting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ClickGuiScreen;
 
 public class ClickGui extends Module {
 
+    public final Setting.ModeSetting theme = new Setting.ModeSetting("Theme", "Lunar", "Lunar", "Meteor");
+
         public ClickGui() {
             super("ClickGUI", "Opens the KYZXX client menu.", Category.Client);
             setKey(54);
 
-            this.description = "Controls the client's gui.";
+            this.description = "Controls the KYZXX ClickGUI theme and layout.";
+            settings.add(theme);
         }
+
+        public String getThemeName() { return theme.getValue(); }
+
+        public void cycleTheme() { theme.cycle(); }
 
         @Override
     public void onEnable() {
