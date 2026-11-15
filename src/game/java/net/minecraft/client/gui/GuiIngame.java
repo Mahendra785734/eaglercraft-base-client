@@ -367,6 +367,53 @@ public class GuiIngame extends Gui {
 				drawKyzxxKey("D", bx + 50, by + 22, this.mc.gameSettings.keyBindRight.isKeyDown());
 				drawKyzxxKey("SPACE", bx, by + 45, this.mc.gameSettings.keyBindJump.isKeyDown(), 75);
 			}
+
+			com.isacofff.clientbase.modules.Module fps = Client.manager.getModuleByName("FPS");
+			if (fps != null && fps.isEnabled()) {
+				String fpsText = "FPS: " + Minecraft.getDebugFPS();
+				drawRect(5, 23, 12 + this.getFontRenderer().getStringWidth(fpsText), 37, 0xB810141C);
+				this.getFontRenderer().drawStringWithShadow(fpsText, 9.0F, 26.0F, 0xFFFFFFFF);
+			}
+
+			com.isacofff.clientbase.modules.Module cpsModule = Client.manager.getModuleByName("ClickCPS");
+			if (cpsModule instanceof com.isacofff.clientbase.modules.features.ClickCPS
+					&& cpsModule.isEnabled()) {
+				com.isacofff.clientbase.modules.features.ClickCPS cps =
+						(com.isacofff.clientbase.modules.features.ClickCPS) cpsModule;
+				String cpsText = "LMB " + cps.getLeftCps() + "  |  RMB " + cps.getRightCps();
+				drawRect(5, 41, 16 + this.getFontRenderer().getStringWidth(cpsText), 55, 0xB810141C);
+				this.getFontRenderer().drawStringWithShadow(cpsText, 9.0F, 44.0F, 0xFFFFD27A);
+			}
+
+			com.isacofff.clientbase.modules.Module armorModule = Client.manager.getModuleByName("ArmorStatus");
+			if (armorModule != null && armorModule.isEnabled()) {
+				int armorY = j - 76;
+				for (int slot = 3; slot >= 0; --slot) {
+					net.minecraft.item.ItemStack armor = this.mc.player.inventory.armorItemInSlot(slot);
+					if (!armor.func_190926_b() && armor.getMaxDamage() > 0) {
+						int remaining = armor.getMaxDamage() - armor.getItemDamage();
+						String armorText = armor.getDisplayName() + ": " + remaining;
+						this.getFontRenderer().drawStringWithShadow(armorText, 5.0F, armorY, 0xFFFFFFFF);
+						armorY += 11;
+					}
+				}
+			}
+
+			com.isacofff.clientbase.modules.Module moduleList = Client.manager.getModuleByName("ModuleList");
+			if (moduleList != null && moduleList.isEnabled()) {
+				int listY = 5;
+				for (com.isacofff.clientbase.modules.Module active : Client.manager.getModules()) {
+					if (active.isEnabled() && !"ClickGUI".equalsIgnoreCase(active.getName())
+							&& !"ModuleList".equalsIgnoreCase(active.getName())) {
+						String activeName = active.getName();
+						int textWidth = this.getFontRenderer().getStringWidth(activeName);
+						drawRect(i - textWidth - 13, listY - 1, i - 4, listY + 10, 0xB810141C);
+						this.getFontRenderer().drawStringWithShadow(activeName, (float) (i - textWidth - 9),
+								(float) listY, 0xFFFFC45C);
+						listY += 12;
+					}
+				}
+			}
 		}
 	}
 
