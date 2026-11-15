@@ -1,5 +1,7 @@
 package net.minecraft.client.gui;
 
+import com.isacofff.clientbase.Client;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -345,6 +347,39 @@ public class GuiIngame extends Gui {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableAlpha();
+
+		if (Client.manager != null && this.mc.player != null) {
+			com.isacofff.clientbase.modules.Module coordinates = Client.manager.getModuleByName("Coordinates");
+			if (coordinates != null && coordinates.isEnabled()) {
+				String position = "XYZ: " + (int) Math.floor(this.mc.player.posX) + "  "
+						+ (int) Math.floor(this.mc.player.posY) + "  " + (int) Math.floor(this.mc.player.posZ);
+				drawRect(5, 5, 12 + this.getFontRenderer().getStringWidth(position), 19, 0xB810141C);
+				this.getFontRenderer().drawStringWithShadow(position, 9.0F, 8.0F, 0xFFFFD27A);
+			}
+
+			com.isacofff.clientbase.modules.Module keys = Client.manager.getModuleByName("CreamyKeys");
+			if (keys != null && keys.isEnabled()) {
+				int bx = i - 82;
+				int by = j - 105;
+				drawKyzxxKey("W", bx + 25, by, this.mc.gameSettings.keyBindForward.isKeyDown());
+				drawKyzxxKey("A", bx, by + 22, this.mc.gameSettings.keyBindLeft.isKeyDown());
+				drawKyzxxKey("S", bx + 25, by + 22, this.mc.gameSettings.keyBindBack.isKeyDown());
+				drawKyzxxKey("D", bx + 50, by + 22, this.mc.gameSettings.keyBindRight.isKeyDown());
+				drawKyzxxKey("SPACE", bx, by + 45, this.mc.gameSettings.keyBindJump.isKeyDown(), 75);
+			}
+		}
+	}
+
+	private void drawKyzxxKey(String label, int x, int y, boolean pressed) {
+		drawKyzxxKey(label, x, y, pressed, 22);
+	}
+
+	private void drawKyzxxKey(String label, int x, int y, boolean pressed, int width) {
+		int background = pressed ? 0xE6A56B28 : 0xC8171D27;
+		drawRect(x, y, x + width, y + 19, background);
+		drawRect(x, y, x + width, y + 1, 0xFFFFC45C);
+		int textWidth = this.getFontRenderer().getStringWidth(label);
+		this.getFontRenderer().drawStringWithShadow(label, x + (width - textWidth) / 2.0F, y + 6.0F, 0xFFFFFFFF);
 	}
 
 	public void renderAttackIndicator(float p_184045_1_, ScaledResolution p_184045_2_) {
