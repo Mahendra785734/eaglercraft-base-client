@@ -162,6 +162,12 @@ public class GuiIngame extends Gui {
 		this.titleFadeOut = 20;
 	}
 
+	private boolean isKyzxxModuleEnabled(Class<? extends Module> moduleClass) {
+		if (Client.manager == null) return false;
+		Module module = Client.manager.getModule(moduleClass);
+		return module != null && module.isEnabled();
+	}
+
 	public void renderGameOverlay(float partialTicks) {
 		ScaledResolution scaledresolution = mc.scaledResolution;
 		int i = scaledresolution.getScaledWidth();

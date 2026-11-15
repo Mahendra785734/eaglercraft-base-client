@@ -90,8 +90,8 @@ public class GuiButtonWithStupidIcons extends GuiButton {
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            boolean kyzxxMenu = mc.currentScreen instanceof GuiMainMenu
-                    || mc.currentScreen instanceof GuiIngameMenu;
+            boolean kyzxxMenu = mc.currentScreen instanceof net.minecraft.client.gui.GuiMainMenu
+                    || mc.currentScreen instanceof net.minecraft.client.gui.GuiIngameMenu;
             if (kyzxxMenu) {
                 int topColor = !this.enabled ? 0xAA17202B : (this.hovered ? 0xEE1D4961 : 0xDD121F2C);
                 int bottomColor = !this.enabled ? 0xAA111923 : (this.hovered ? 0xEE15364C : 0xDD0C1520);
