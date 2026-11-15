@@ -511,7 +511,7 @@ public class GuiMainMenu extends GuiScreen {
 				int size = n % 6 == 0 ? 3 : 2;
 				drawRect(x, y, x + size, y + size, 0xDDEAF4FF);
 			}
-			int sx = this.width - 58;
+			int sx = 28;
 			int sy = Math.max(118, this.height - 72);
 			drawRect(sx + 4, sy + 24, sx + 22, sy + 42, 0xFFF4F7FA);
 			drawRect(sx + 6, sy + 12, sx + 20, sy + 28, 0xFFF4F7FA);
