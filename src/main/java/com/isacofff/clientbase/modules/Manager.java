@@ -7,6 +7,10 @@ import com.isacofff.clientbase.modules.features.Zoom;
 import com.isacofff.clientbase.modules.features.NoHurtCam;
 import com.isacofff.clientbase.modules.features.Keystrokes;
 import com.isacofff.clientbase.modules.features.Coordinates;
+import com.isacofff.clientbase.modules.features.ClickCPS;
+import com.isacofff.clientbase.modules.features.ArmorStatus;
+import com.isacofff.clientbase.modules.features.ModuleList;
+import com.isacofff.clientbase.modules.features.FPS;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -23,6 +27,10 @@ public class Manager {
     modules.add(new NoHurtCam());
     modules.add(new Keystrokes());
     modules.add(new Coordinates());
+    modules.add(new ClickCPS());
+    modules.add(new ArmorStatus());
+    modules.add(new ModuleList());
+    modules.add(new FPS());
     }
 
     public void onTick() {
