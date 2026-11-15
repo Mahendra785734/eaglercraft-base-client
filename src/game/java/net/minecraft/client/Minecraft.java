@@ -1427,8 +1427,7 @@ public class Minecraft implements IThreadListener {
 
             boolean flag = Keyboard.getEventKeyState();
 
-            if (flag && (this.currentScreen == null || this.currentScreen instanceof ClickGuiScreen)
-                    && com.isacofff.clientbase.Client.manager != null) {
+            if (flag && this.currentScreen == null && com.isacofff.clientbase.Client.manager != null) {
                 com.isacofff.clientbase.Client.manager.onKey(i);
             }
 
