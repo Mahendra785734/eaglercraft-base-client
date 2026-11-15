@@ -51,7 +51,7 @@ public class ClickGuiScreen extends GuiScreen {
 
     public ClickGuiScreen() {
         int x = 1;
-        int y = 1;
+        int y = 34;
 
         for (Category cat : Category.values()) {
             //Cat :3
@@ -114,6 +114,8 @@ public class ClickGuiScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
         this.drawDefaultBackground();
+        fontRendererObj.drawString("KYZXX", 12, 12, 0xFFFFC45C);
+        fontRendererObj.drawString("MODULES", 12, 23, 0xFFB8C1CF);
 
         int searchWidth = Math.min(260, this.width - 24);
         int searchX = (this.width - searchWidth) / 2;
