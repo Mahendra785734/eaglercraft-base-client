@@ -13,6 +13,7 @@ import net.lax1dude.eaglercraft.Mouse;
 import java.io.IOException;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.client.gui.HudEditorScreen;
 import java.util.ArrayList;
 
 public class ClickGuiScreen extends GuiScreen {
@@ -91,6 +92,7 @@ public class ClickGuiScreen extends GuiScreen {
 
         drawRect(6, this.height - 19, this.width - 6, this.height - 5, 0xB810141C);
         fontRendererObj.drawString("KYZXX CLIENT  |  RIGHT CLICK A PANEL TO COLLAPSE", 12, this.height - 15, 0xFFFFC45C);
+        fontRendererObj.drawString("EDIT HUD", this.width / 2 - 28, this.height - 15, 0xFFFFFFFF);
         fontRendererObj.drawString("RSHIFT: GUI", this.width - 78, this.height - 15, 0xFFD7DCE5);
 
         String descriptionn = null;
@@ -113,6 +115,12 @@ public class ClickGuiScreen extends GuiScreen {
 
         if (mouseButton == 0 || mouseButton == 1) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.65F));
+        }
+
+        if (mouseButton == 0 && mouseY >= this.height - 19 && mouseY <= this.height - 5
+                && mouseX >= this.width / 2 - 34 && mouseX <= this.width / 2 + 34) {
+            mc.displayGuiScreen(new HudEditorScreen());
+            return;
         }
 
         for (Panel panel : panels) {
