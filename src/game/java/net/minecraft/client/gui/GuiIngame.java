@@ -17,6 +17,8 @@ import net.lax1dude.eaglercraft.opengl.RealOpenGLEnums;
 import javax.annotation.Nullable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import com.isacofff.clientbase.Client;
+import com.isacofff.clientbase.modules.features.KyzxxHUD;
 import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.chat.NormalChatListener;
@@ -345,9 +347,47 @@ public class GuiIngame extends Gui {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableAlpha();
-	}
+	        if (!this.mc.gameSettings.hideGUI && this.mc.player != null && Client.manager != null) {
+            KyzxxHUD hud = Client.manager.getModule(KyzxxHUD.class);
+            if (hud != null && hud.isEnabled()) {
+                int hudY = 6;
+                int hudX = 6;
+                if (hud.watermark.getValue()) {
+                    drawRect(hudX - 3, hudY - 2, hudX + 94, hudY + 11, 0xAA101820);
+                    fontrenderer.drawStringWithShadow("KYZXX CLIENT", hudX, hudY, 0xFF39C8F2);
+                    hudY += 13;
+                }
+                if (hud.fps.getValue()) {
+                    String fpsText = "FPS: " + Minecraft.getDebugFPS();
+                    drawRect(hudX - 3, hudY - 2, hudX + fontrenderer.getStringWidth(fpsText) + 4, hudY + 11, 0xAA101820);
+                    fontrenderer.drawStringWithShadow(fpsText, hudX, hudY, 0xFFFFFFFF);
+                    hudY += 13;
+                }
+                if (hud.coordinates.getValue()) {
+                    String coords = "XYZ: " + (int)Math.floor(this.mc.player.posX) + " / "
+                            + (int)Math.floor(this.mc.player.posY) + " / " + (int)Math.floor(this.mc.player.posZ);
+                    drawRect(hudX - 3, hudY - 2, hudX + fontrenderer.getStringWidth(coords) + 4, hudY + 11, 0xAA101820);
+                    fontrenderer.drawStringWithShadow(coords, hudX, hudY, 0xFFFFFFFF);
+                }
+                if (hud.keystrokes.getValue()) {
+                    int ky = j - 37;
+                    drawHudKey(fontrenderer, "W", 24, ky, this.mc.gameSettings.keyBindForward.isKeyDown());
+                    drawHudKey(fontrenderer, "A", 6, ky + 15, this.mc.gameSettings.keyBindLeft.isKeyDown());
+                    drawHudKey(fontrenderer, "S", 24, ky + 15, this.mc.gameSettings.keyBindBack.isKeyDown());
+                    drawHudKey(fontrenderer, "D", 42, ky + 15, this.mc.gameSettings.keyBindRight.isKeyDown());
+                }
+            }
+        }
+}
 
-	public void renderAttackIndicator(float p_184045_1_, ScaledResolution p_184045_2_) {
+	    private void drawHudKey(FontRenderer font, String label, int x, int y, boolean pressed) {
+        int background = pressed ? 0xDD17628A : 0xCC111820;
+        drawRect(x, y, x + 16, y + 13, background);
+        drawRect(x, y, x + 16, y + 1, 0xFF39C8F2);
+        font.drawStringWithShadow(label, x + 5, y + 3, 0xFFFFFFFF);
+    }
+
+    public void renderAttackIndicator(float p_184045_1_, ScaledResolution p_184045_2_) {
 		this.mc.getTextureManager().bindTexture(ICONS);
 		GameSettings gamesettings = this.mc.gameSettings;
 
