@@ -2,6 +2,7 @@ package com.isacofff.clientbase.modules;
 
 import com.isacofff.clientbase.settings.Setting;
 import com.isacofff.clientbase.Category;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ public abstract class Module {
     private Category category;
     private boolean enabled;
     private int key = 0;
+    protected Minecraft mc = Minecraft.getMinecraft();
 
     public boolean open = false;
 
