@@ -308,9 +308,8 @@ public class ClickGuiScreen extends GuiScreen {
                 percent = Math.max(0.0, Math.min(1.0, percent));
                 double rawValue = draggingSlider.getMin() + percent * (draggingSlider.getMax() - draggingSlider.getMin());
                 double increment = draggingSlider.getIncrement();
-                if (increment > 0) {
-                    if (increment <= 0.0) return rawValue;
-            double steps = (rawValue - draggingSlider.getMin()) / increment;
+                if (increment > 0.0) {
+                    double steps = (rawValue - draggingSlider.getMin()) / increment;
                     double snapped = draggingSlider.getMin() + Math.round(steps) * increment;
                     snapped = Math.round(snapped * 10000.0) / 10000.0;
                     snapped = Math.max(draggingSlider.getMin(), Math.min(draggingSlider.getMax(), snapped));
@@ -412,10 +411,13 @@ public class ClickGuiScreen extends GuiScreen {
         }
 
         private double getSnapped(int mouseX) {
-            double percent = (mouseX - x) / (double) width;
+            double percent = width <= 0 ? 0.0 : (mouseX - x) / (double) width;
             percent = Math.max(0.0, Math.min(1.0, percent));
             double rawValue = draggingSlider.getMin() + percent * (draggingSlider.getMax() - draggingSlider.getMin());
             double increment = draggingSlider.getIncrement();
+            if (increment <= 0.0) {
+                return Math.max(draggingSlider.getMin(), Math.min(draggingSlider.getMax(), rawValue));
+            }
             double steps = (rawValue - draggingSlider.getMin()) / increment;
             double snapped = draggingSlider.getMin() + Math.round(steps) * increment;
             snapped = Math.round(snapped * 10000.0) / 10000.0;
