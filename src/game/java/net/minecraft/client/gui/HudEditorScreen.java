@@ -5,6 +5,8 @@ import net.lax1dude.eaglercraft.Mouse;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import com.isacofff.clientbase.modules.features.ActiveModulesHud;
+import com.isacofff.clientbase.Client;
+import com.isacofff.clientbase.modules.features.ModuleList;
 
 /**
  * Simple in-game editor for positioning and styling the ActiveModules HUD.
@@ -65,18 +67,32 @@ public class HudEditorScreen extends GuiScreen {
         drawRect(x - 5, y - 5, x + width + 6, y + height + 1, 0x66FFFFFF);
     }
 
+    private void syncModuleSettings(String color, Boolean background) {
+        if (Client.manager == null) return;
+        com.isacofff.clientbase.modules.Module found = Client.manager.getModuleByName("ActiveModules");
+        if (found instanceof ModuleList) {
+            ModuleList module = (ModuleList) found;
+            if (color != null) module.color.setValue(color);
+            if (background != null) module.background.setValue(background);
+        }
+    }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton != 0) return;
         int buttonY = this.height - 34;
         if (mouseY >= buttonY && mouseY <= buttonY + 22) {
             if (mouseX >= 12 && mouseX <= 112) {
-                ActiveModulesHud.rainbow = !ActiveModulesHud.rainbow;
+                String mode = ActiveModulesHud.rainbow ? "GOLD" : "RAINBOW";
+                ActiveModulesHud.setColorMode(mode);
+                syncModuleSettings(mode, null);
             } else if (mouseX >= 118 && mouseX <= 218) {
-                ActiveModulesHud.rainbow = false;
                 ActiveModulesHud.nextColor();
+                String[] modes = new String[] { "GOLD", "TEAL", "BLUE", "PINK", "PURPLE", "WHITE", "GREEN", "ORANGE" };
+                syncModuleSettings(modes[ActiveModulesHud.colorIndex], null);
             } else if (mouseX >= 224 && mouseX <= 336) {
                 ActiveModulesHud.background = !ActiveModulesHud.background;
+                syncModuleSettings(null, Boolean.valueOf(ActiveModulesHud.background));
             } else if (mouseX >= this.width - 94 && mouseX <= this.width - 12) {
                 this.mc.displayGuiScreen(null);
                 return;
