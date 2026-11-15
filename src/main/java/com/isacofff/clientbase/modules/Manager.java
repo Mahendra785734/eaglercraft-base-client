@@ -62,6 +62,11 @@ public class Manager {
         modules.add(new HudFeatures.HidePortal());
         modules.add(new HudFeatures.HideVignette());
         registerCatalogModules();
+        // Defaults for the two most-used toggles.
+        Module fullBright = getModuleByName("FullBright");
+        if (fullBright != null) fullBright.setKeybind(net.lax1dude.eaglercraft.KeyboardConstants.KEY_F);
+        Module sprint = getModuleByName("Sprint");
+        if (sprint != null) sprint.setKeybind(net.lax1dude.eaglercraft.KeyboardConstants.KEY_R);
     }
 
     private void registerCatalogModules() {
@@ -168,6 +173,13 @@ public class Manager {
 
     private void register(Module module) {
         if (getModuleByName(module.getName()) == null) modules.add(module);
+    }
+
+    public void onKeyPressed(int keyCode) {
+        if (keyCode == 0) return;
+        for (Module module : modules) {
+            if (module.getKeybind() == keyCode) module.toggle();
+        }
     }
 
     public void onTick() {
