@@ -7,6 +7,7 @@ import com.isacofff.clientbase.settings.Setting.BooleanSetting;
 import com.isacofff.clientbase.settings.Setting.ModeSetting;
 import com.isacofff.clientbase.settings.Setting.NumberSetting;
 import com.isacofff.clientbase.Category;
+import com.isacofff.clientbase.modules.features.ClickGui;
 import net.lax1dude.eaglercraft.Keyboard;
 import net.lax1dude.eaglercraft.KeyboardConstants;
 import net.lax1dude.eaglercraft.Mouse;
