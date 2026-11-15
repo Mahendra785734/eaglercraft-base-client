@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - kyzxx-client-winter-features
+      - kyzxx-lunar-client-rebuild
   workflow_dispatch:
 
 permissions:

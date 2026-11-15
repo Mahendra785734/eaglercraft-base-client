@@ -5,6 +5,7 @@ on:
     branches:
       - kyzxx-client-development
       - kyzxx-client-winter-features
+      - kyzxx-lunar-client-rebuild
   workflow_dispatch:
 
 concurrency:

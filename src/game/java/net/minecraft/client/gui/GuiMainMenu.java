@@ -155,45 +155,60 @@ public class GuiMainMenu extends GuiScreen {
 	 * beforehand.
 	 */
 	public void initGui() {
-		if (!this.mc.gameSettings.hasSeenFirstLoad) {
-			this.mc.displayGuiScreen(new GuiScreenFirstLoad(this.mc.gameSettings));
-			return;
-		}
-		viewportTexture = new MainMenuSkyboxTexture(256, 256);
-		this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
-		viewportTexture2 = new MainMenuSkyboxTexture(256, 256);
-		backgroundTexture2 = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture2);
-		this.field_193978_M = this.fontRendererObj.getStringWidth("Resources copyright Mojang AB");
-		this.field_193979_N = this.width - this.field_193978_M - 2;
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24) {
-			this.splashText = I18n.format("eaglercraft.splashes.xmas");
-		} else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1) {
-			this.splashText = I18n.format("eaglercraft.splashes.newyear");
-		} else if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31) {
-			this.splashText = I18n.format("eaglercraft.splashes.halloween");
-		}
-		int menuX = Math.max(22, this.width / 2 - 270);
-		int menuY = this.height / 2 - 48;
-		if (this.mc.isDemo()) this.addDemoButtons(menuY, 36);
-		else this.addSingleplayerMultiplayerButtons(menuY, 36);
-		for (int n = 0; n < this.buttonList.size(); ++n) {
-			GuiButton b = (GuiButton)this.buttonList.get(n);
-			if (b.id == 1 || b.id == 2 || b.id == 14 || b.id == 11 || b.id == 12) {
-				int order = b.id == 1 || b.id == 11 ? 0 : (b.id == 2 || b.id == 12 ? 1 : 2);
-				b.xPosition = menuX;
-				b.yPosition = menuY + order * 38;
-				b.width = 218;
-				b.height = 30;
-			}
-		}
-		this.buttonList.add(new GuiButton(0, menuX, menuY + 126, 104, 26, I18n.format("menu.options")));
-		this.buttonList.add(new GuiButton(4, menuX + 114, menuY + 126, 104, 26, "Cosmetics"));
-		this.buttonList.add(new GuiButtonLanguage(5, 12, this.height - 28));
-	}
+        if (!this.mc.gameSettings.hasSeenFirstLoad) {
+            this.mc.displayGuiScreen(new GuiScreenFirstLoad(this.mc.gameSettings));
+            return;
+        }
 
-	/**
+        viewportTexture = new MainMenuSkyboxTexture(256, 256);
+        this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
+        viewportTexture2 = new MainMenuSkyboxTexture(256, 256);
+        backgroundTexture2 = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture2);
+        this.field_193978_M = this.fontRendererObj.getStringWidth("Resources copyright Mojang AB");
+        this.field_193979_N = this.width - this.field_193978_M - 2;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24) {
+            this.splashText = I18n.format("eaglercraft.splashes.xmas");
+        } else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1) {
+            this.splashText = I18n.format("eaglercraft.splashes.newyear");
+        } else if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31) {
+            this.splashText = I18n.format("eaglercraft.splashes.halloween");
+        }
+
+        int navX = 18;
+        int buttonX = navX + 16;
+        int buttonY = 132;
+        if (this.mc.isDemo()) this.addDemoButtons(buttonY, 38);
+        else this.addSingleplayerMultiplayerButtons(buttonY, 38);
+
+        for (int n = 0; n < this.buttonList.size(); ++n) {
+            GuiButton button = (GuiButton) this.buttonList.get(n);
+            if (button.id == 1 || button.id == 11) {
+                button.xPosition = buttonX;
+                button.yPosition = buttonY;
+                button.width = 160;
+                button.height = 32;
+            } else if (button.id == 2 || button.id == 12) {
+                button.xPosition = buttonX;
+                button.yPosition = buttonY + 40;
+                button.width = 160;
+                button.height = 32;
+            } else if (button.id == 14) {
+                button.xPosition = buttonX;
+                button.yPosition = buttonY + 80;
+                button.width = 160;
+                button.height = 32;
+            }
+        }
+
+        this.buttonList.add(new GuiButton(0, buttonX, buttonY + 132, 76, 26, I18n.format("menu.options")));
+        this.buttonList.add(new GuiButton(4, buttonX + 84, buttonY + 132, 76, 26, "Cosmetics"));
+        this.buttonList.add(new GuiButtonLanguage(5, navX + 16, this.height - 40));
+    }
+
+    /**
 	 * Adds Singleplayer and Multiplayer buttons on Main Menu for players who have
 	 * bought the game.
 	 */
@@ -459,58 +474,92 @@ public class GuiMainMenu extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.panoramaTimer += partialTicks;
-		GlStateManager.disableAlpha();
-		this.renderSkybox(mouseX, mouseY, partialTicks);
-		GlStateManager.enableAlpha();
-		this.drawGradientRect(0, 0, this.width, this.height, 0x44101825, 0xCC080B12);
-		this.drawGradientRect(0, 0, this.width, this.height, 0x00000000, 0x99000000);
-		this.drawKyzxxWinterOverlay();
+        this.panoramaTimer += partialTicks;
+        GlStateManager.disableAlpha();
+        this.renderSkybox(mouseX, mouseY, partialTicks);
+        GlStateManager.enableAlpha();
 
-		int menuX = Math.max(22, this.width / 2 - 270);
-		int menuY = this.height / 2 - 48;
-		int panelBottom = menuY + 214;
-		drawRect(menuX - 20, menuY - 20, menuX + 238, panelBottom, 0xD10D121B);
-		drawRect(menuX - 20, menuY - 20, menuX + 238, menuY - 16, 0xFFFFC15A);
-		drawRect(menuX - 20, menuY - 16, menuX - 18, panelBottom, 0xFF8B6538);
-		drawRect(menuX + 236, menuY - 16, menuX + 238, panelBottom, 0xFF343D4A);
-		drawRect(menuX - 20, panelBottom - 3, menuX + 238, panelBottom, 0xFF79552E);
+        this.drawGradientRect(0, 0, this.width, this.height, 0x55101825, 0xDD070B12);
+        this.drawGradientRect(0, 0, this.width, this.height, 0x00000000, 0x99000000);
+        this.drawKyzxxWinterOverlay();
 
-		this.drawString(this.fontRendererObj, "KYZXX", menuX, menuY, 0xFFFFC15A);
-		this.drawString(this.fontRendererObj, "CLIENT", menuX + 43, menuY, 0xFFF2F4F8);
-		this.drawString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", menuX + 1, menuY + 13, 0xFF8F9AAA);
-		this.drawString(this.fontRendererObj, "Welcome back, " + this.mc.getSession().getProfile().getName(),
-				menuX, menuY + 31, 0xFFCBD3DF);
-		this.drawString(this.fontRendererObj, "PLAY", menuX, menuY + 52, 0xFFFFC15A);
-		this.drawString(this.fontRendererObj, "Choose where you want to play", menuX + 36, menuY + 52,
-				0xFF8994A4);
+        int sideX = 18;
+        int sideY = 48;
+        int sideRight = 194;
+        int bottom = this.height - 22;
+        int mainX = 208;
+        int mainRight = this.width - 18;
 
-		int avatarX = Math.min(this.width - 82, this.width / 2 + 210);
-		int avatarY = this.height / 2 + 72;
-		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY + 18, 0x7510141D);
-		drawRect(avatarX - 66, avatarY - 132, avatarX + 66, avatarY - 130, 0xAAFFC15A);
-		this.drawCenteredString(this.fontRendererObj, "PLAYER PROFILE", avatarX, avatarY - 120, 0xFFE7B66B);
-		SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
-				EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
-		this.drawCenteredString(this.fontRendererObj, this.mc.getSession().getProfile().getName(),
-				avatarX, avatarY + 4, 0xFFF2F4F8);
+        // Top client bar
+        drawRect(0, 0, this.width, 36, 0xF00A1019);
+        drawRect(0, 35, this.width, 37, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "KYZXX", 18, 12, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "CLIENT", 59, 12, 0xFFF2F4F8);
+        this.drawString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", 111, 12, 0xFF91A0B2);
+        this.drawString(this.fontRendererObj, "1.12.2", this.width - 58, 12, 0xFF91A0B2);
 
-		this.drawString(this.fontRendererObj, "KYZXX CLIENT  •  EAGLERCRAFT 1.12.2", 12,
-				this.height - 12, 0xFFB8C1CE);
-		this.drawString(this.fontRendererObj, "Resources copyright Mojang AB", this.field_193979_N,
-				this.height - 10, -1);
+        // Left navigation rail
+        drawRect(sideX, sideY, sideRight, bottom, 0xE90D141F);
+        drawRect(sideX, sideY, sideRight, sideY + 2, 0xFFFFC15A);
+        drawRect(sideX, sideY, sideX + 1, bottom, 0xFF8B6538);
+        this.drawString(this.fontRendererObj, "MAIN MENU", sideX + 16, sideY + 18, 0xFF9AA7B8);
+        this.drawString(this.fontRendererObj, "PLAY", sideX + 16, sideY + 68, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "Choose a game mode", sideX + 16, sideY + 82, 0xFF8794A5);
+        this.drawString(this.fontRendererObj, "SETTINGS", sideX + 16, sideY + 226, 0xFF9AA7B8);
+        drawRect(sideX + 14, sideY + 215, sideRight - 14, sideY + 216, 0xFF354154);
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		for (int i = 0; i < this.buttonList.size(); ++i) {
-			GuiButton button = (GuiButton) this.buttonList.get(i);
-			if (button.id == 1 || button.id == 2 || button.id == 14 || button.id == 11
-					|| button.id == 12 || button.id == 0 || button.id == 4) {
-				this.drawKyzxxMenuButton(button, mouseX, mouseY);
-			}
-		}
-	}
+        // Main content panel
+        drawRect(mainX, sideY, mainRight, bottom, 0xDD101925);
+        drawRect(mainX, sideY, mainRight, sideY + 2, 0xFF39485B);
+        this.drawString(this.fontRendererObj, "WELCOME BACK", mainX + 24, sideY + 22, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, this.mc.getSession().getProfile().getName(),
+                mainX + 24, sideY + 42, 0xFFF2F4F8);
+        this.drawString(this.fontRendererObj, "Your game is ready.", mainX + 24, sideY + 57, 0xFF9AA7B8);
 
-	private void drawKyzxxMenuButton(GuiButton button, int mouseX, int mouseY) {
+        int cardY = sideY + 94;
+        int profileX = Math.max(mainX + 250, mainRight - 184);
+        int textRight = profileX - 22;
+        drawRect(mainX + 20, cardY, textRight, bottom - 22, 0xB91A2533);
+        drawRect(mainX + 20, cardY, mainX + 22, bottom - 22, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "KYZXX CLIENT", mainX + 36, cardY + 22, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "A cleaner way to play Eaglercraft.", mainX + 36, cardY + 42, 0xFFE8EDF4);
+        this.drawString(this.fontRendererObj, "Select Singleplayer to enter your world,", mainX + 36, cardY + 70, 0xFF9AA7B8);
+        this.drawString(this.fontRendererObj, "or Multiplayer to connect to a server.", mainX + 36, cardY + 84, 0xFF9AA7B8);
+        drawRect(mainX + 36, cardY + 111, textRight - 16, cardY + 112, 0xFF354154);
+        this.drawString(this.fontRendererObj, "CLIENT FEATURES", mainX + 36, cardY + 126, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "Custom HUD  |  Cosmetics  |  Module GUI", mainX + 36, cardY + 145, 0xFFCBD4E0);
+
+        // Player card with the actual in-game skin renderer
+        int profileY = sideY + 94;
+        drawRect(profileX, profileY, mainRight - 18, bottom - 22, 0xB9141D29);
+        drawRect(profileX, profileY, mainRight - 18, profileY + 2, 0xFFB88643);
+        this.drawCenteredString(this.fontRendererObj, "PLAYER PROFILE",
+                (profileX + mainRight - 18) / 2, profileY + 15, 0xFFE7B66B);
+        int avatarX = (profileX + mainRight - 18) / 2;
+        int avatarY = profileY + 105;
+        SkinPreviewRenderer.renderPreview(avatarX, avatarY, avatarX, avatarY, false,
+                EaglerProfile.getActiveSkinModel(), EaglerProfile.getActiveSkinResourceLocation(), null);
+        this.drawCenteredString(this.fontRendererObj, this.mc.getSession().getProfile().getName(),
+                avatarX, profileY + 174, 0xFFF2F4F8);
+        this.drawCenteredString(this.fontRendererObj, "SKIN LOADED",
+                avatarX, profileY + 190, 0xFF54C58A);
+
+        this.drawString(this.fontRendererObj, "KYZXX CLIENT  /  EAGLERCRAFT 1.12.2",
+                sideX + 16, bottom - 20, 0xFFB8C1CE);
+        this.drawString(this.fontRendererObj, "Resources copyright Mojang AB",
+                this.field_193979_N, this.height - 10, -1);
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        for (int i = 0; i < this.buttonList.size(); ++i) {
+            GuiButton button = (GuiButton) this.buttonList.get(i);
+            if (button.id == 1 || button.id == 2 || button.id == 14 || button.id == 11
+                    || button.id == 12 || button.id == 0 || button.id == 4) {
+                this.drawKyzxxMenuButton(button, mouseX, mouseY);
+            }
+        }
+    }
+
+    private void drawKyzxxMenuButton(GuiButton button, int mouseX, int mouseY) {
 		if (!button.visible) return;
 		boolean hovered = mouseX >= button.xPosition && mouseY >= button.yPosition
 				&& mouseX < button.xPosition + button.width && mouseY < button.yPosition + button.height;
