@@ -472,11 +472,9 @@ public class GuiMainMenu extends GuiScreen {
         this.fontRendererObj.drawStringWithShadow("CLIENT", panelLeft + 18 + this.fontRendererObj.getStringWidth("KYZXX") + 5, 36, 0xFF49C8F2);
         this.fontRendererObj.drawString("EAGLERCRAFT 1.12.2  •  CLIENT EDITION", panelLeft + 18, 51, 0xFF9BAFC2);
         this.drawRect(panelLeft + 18, 68, panelRight - 18, 69, 0x664E91B0);
-        this.fontRendererObj.drawStringWithShadow("PLAY", panelLeft + 18, buttonTop - 17, 0xFFBFEFFF);
-        this.fontRendererObj.drawString("Choose a mode to continue", panelLeft + 18, buttonTop - 6, 0xFF8196AA);
+        this.fontRendererObj.drawStringWithShadow("PLAY", panelLeft + 18, buttonTop - 32, 0xFFBFEFFF);
+        this.fontRendererObj.drawString("Choose a mode to continue", panelLeft + 18, buttonTop - 19, 0xFF8196AA);
 
-        this.drawRect(panelLeft + 18, panelBottom - 25, panelRight - 18, panelBottom - 24, 0x554E91B0);
-        this.fontRendererObj.drawString("KYZXX CLIENT  •  READY", panelLeft + 18, panelBottom - 17, 0xFF7FA9C2);
         this.fontRendererObj.drawString("Eaglercraft 1.12.2 (" + EaglercraftVersion.projectOriginVersion + ")", 4, this.height - 20, 0xFFCAD4DE);
         this.fontRendererObj.drawString("Resources copyright Mojang AB", this.field_193979_N, this.height - 10, 0xFF9BAFC2);
         super.drawScreen(mouseX, mouseY, partialTicks);
