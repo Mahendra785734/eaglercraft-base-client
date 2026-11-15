@@ -80,6 +80,22 @@ public class ClickGuiScreen extends GuiScreen {
     }
 
     @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        int wheel = Mouse.getDWheel();
+        if (wheel != 0) {
+            int mouseX = Mouse.getX() * this.width / this.mc.displayWidth;
+            int mouseY = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
+            for (Panel panel : panels) {
+                if (mouseX >= panel.x && mouseX <= panel.x + panel.width
+                        && mouseY >= panel.y + panel.height && mouseY <= this.height - 24) {
+                    panel.scroll(wheel);
+                }
+            }
+        }
+    }
+
+    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
         this.drawDefaultBackground();
