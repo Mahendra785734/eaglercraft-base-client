@@ -18,15 +18,15 @@ public class ClickGuiScreen extends GuiScreen {
     //I won't go into too much detail here but if you need help contact me on discord, reach out to me.
     //Discord : isacofff
 
-    private static final int PANEL_BG = 0x6688AADD;
-    private static final int PANEL_OUTLINE = 0x66AAD4FF;
-    private static final int MODULE_ENABLED = 0x66AAD4FF;
-    private static final int MODULE_DISABLED = 0x6688AADD;
+    private static final int PANEL_BG = 0xE6121722;
+    private static final int PANEL_OUTLINE = 0xFFB88A3B;
+    private static final int MODULE_ENABLED = 0xFF73501F;
+    private static final int MODULE_DISABLED = 0xD9232B38;
     private static final int TEXT_COLOR = -1;
-    private static final int ACCENT_COLOR = 0x66CCE6FF;
+    private static final int ACCENT_COLOR = 0xFFFFC45C;
     private static final int PANEL_MOVE_SPEED = 15;
-    private static final int SLIDER_BG = 0x6699CCFF;
-    private static final int SLIDER_FILL = 0x667799BB;
+    private static final int SLIDER_BG = 0xFF414B59;
+    private static final int SLIDER_FILL = 0xFFFFB84D;
     private static final int SLIDER_KNOB = -1;
 
     private final ArrayList<Panel> panels = new ArrayList<>();
@@ -38,7 +38,7 @@ public class ClickGuiScreen extends GuiScreen {
         for (Category cat : Category.values()) {
             //Cat :3
             panels.add(new Panel(cat, x, y));
-            x += 91;
+            x += 112;
         }
     }
 
@@ -114,8 +114,13 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == KeyboardConstants.KEY_ESCAPE) {
-            mc.displayGuiScreen(null);
+        if (keyCode == KeyboardConstants.KEY_ESCAPE || keyCode == 54) {
+            Module clickGui = Client.INSTANCE.manager.getModuleByName("ClickGUI");
+            if (clickGui != null && clickGui.isEnabled()) {
+                clickGui.toggle();
+            } else {
+                mc.displayGuiScreen(null);
+            }
         }
     }
 
@@ -145,7 +150,7 @@ public class ClickGuiScreen extends GuiScreen {
 
     public class Panel {
         public Category category;
-        public int x, y, width = 90, height = 16;
+        public int x, y, width = 108, height = 18;
         public boolean dragging = false;
         public int dragX, dragY;
         public boolean open = true;
