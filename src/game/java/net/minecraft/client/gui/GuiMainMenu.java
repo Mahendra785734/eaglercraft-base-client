@@ -459,15 +459,18 @@ public class GuiMainMenu extends GuiScreen {
 		int k = 30;
 		this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
 		this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-		// KYZXX Client branding (the vanilla panorama and menu buttons remain intact).
-		drawRect(this.width / 2 - 126, 24, this.width / 2 + 126, 91, 0xB810141C);
-		drawRect(this.width / 2 - 126, 24, this.width / 2 + 126, 26, 0xFFFFB84D);
-		this.drawCenteredString(this.fontRendererObj, "KYZXX", this.width / 2, 42, 0xFFFFC45C);
-		this.drawCenteredString(this.fontRendererObj, "CLIENT", this.width / 2, 59, 0xFFFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "EAGLERCRAFT 1.12.2", this.width / 2, 77, 0xFFB8C0CC);
+		// KYZXX winter menu: expanded branding panel, animated snowfall and profile chip.
+		this.drawKyzxxWinterOverlay();
+		drawRect(this.width / 2 - 165, 18, this.width / 2 + 165, 106, 0xD810141C);
+		drawRect(this.width / 2 - 165, 18, this.width / 2 + 165, 21, 0xFFFFB84D);
+		drawRect(this.width / 2 - 165, 103, this.width / 2 + 165, 106, 0xFF8C642D);
+		this.drawCenteredString(this.fontRendererObj, "KYZXX", this.width / 2, 34, 0xFFFFC45C);
+		this.drawCenteredString(this.fontRendererObj, "CLIENT", this.width / 2, 52, 0xFFFFFFFF);
+		this.drawCenteredString(this.fontRendererObj, "EAGLERCRAFT 1.12.2  |  WINTER EDITION", this.width / 2, 72, 0xFFB8C0CC);
+		this.drawCenteredString(this.fontRendererObj, "CUSTOM FEATURES  •  CLEAN PERFORMANCE", this.width / 2, 89, 0xFFFFD58A);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate((float) (this.width / 2 + 90), 70.0F, 0.0F);
+		GlStateManager.translate((float) (this.width / 2 + 142), 112.0F, 0.0F);
 		GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
 		float f = 1.8F - MathHelper.abs(
 				MathHelper.sin((float) (Minecraft.getSystemTime() % 1000L) / 1000.0F * ((float) Math.PI * 2F)) * 0.1F);
@@ -488,6 +491,39 @@ public class GuiMainMenu extends GuiScreen {
 				-1);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
+	}
+
+	private void drawKyzxxWinterOverlay() {
+		long time = Minecraft.getSystemTime();
+		for (int n = 0; n < 52; ++n) {
+			int x = (int) ((n * 97L + time / 34L) % Math.max(1, this.width));
+			int y = (int) ((n * 53L + time / 23L) % Math.max(1, this.height));
+			int size = n % 5 == 0 ? 3 : 2;
+			drawRect(x, y, x + size, y + size, 0xDDEAF4FF);
+		}
+
+		// Small pixel snowman in the lower-right corner.
+		int sx = this.width - 58;
+		int sy = Math.max(118, this.height - 72);
+		drawRect(sx + 4, sy + 24, sx + 22, sy + 42, 0xFFF4F7FA);
+		drawRect(sx + 6, sy + 12, sx + 20, sy + 28, 0xFFF4F7FA);
+		drawRect(sx + 8, sy + 2, sx + 18, sy + 15, 0xFFF4F7FA);
+		drawRect(sx + 7, sy - 3, sx + 19, sy + 2, 0xFFB52D32);
+		drawRect(sx + 7, sy - 8, sx + 19, sy - 3, 0xFF20242C);
+		drawRect(sx + 8, sy + 17, sx + 20, sy + 20, 0xFFB52D32);
+		drawRect(sx + 12, sy + 7, sx + 14, sy + 9, 0xFF252A32);
+		drawRect(sx + 12, sy + 14, sx + 14, sy + 16, 0xFF252A32);
+		drawRect(sx + 12, sy + 25, sx + 14, sy + 27, 0xFF252A32);
+		drawRect(sx + 12, sy + 31, sx + 14, sy + 33, 0xFF252A32);
+
+		String username = this.mc.getSession().getProfile().getName();
+		int nameWidth = Math.min(150, this.fontRendererObj.getStringWidth(username));
+		int chipLeft = this.width - nameWidth - 39;
+		drawRect(chipLeft, 12, this.width - 10, 35, 0xC810141C);
+		drawRect(chipLeft + 5, 16, chipLeft + 21, 32, 0xFFFFC45C);
+		this.fontRendererObj.drawString(username.substring(0, Math.min(1, username.length())).toUpperCase(),
+				chipLeft + 10, 20, 0xFF171A20);
+		this.fontRendererObj.drawString(username, chipLeft + 26, 20, 0xFFFFFFFF);
 	}
 
 	/**
