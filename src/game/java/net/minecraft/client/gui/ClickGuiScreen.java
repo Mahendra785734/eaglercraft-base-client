@@ -66,7 +66,7 @@ public class ClickGuiScreen extends GuiScreen {
     private int contentBottom() { return this.height - 43; }
     private int listTop() { return contentTop() + 27; }
     private int listBottom() { return contentBottom(); }
-    private int settingsTop() { return contentTop() + 112; }
+    private int settingsTop() { return contentTop() + 137; }
     private int settingsBottom() { return contentBottom(); }
 
     private boolean isCatalog(Module module) {

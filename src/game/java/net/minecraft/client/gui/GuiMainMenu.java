@@ -505,7 +505,7 @@ public class GuiMainMenu extends GuiScreen {
         this.drawString(this.fontRendererObj, "MAIN MENU", sideX + 16, sideY + 18, 0xFF9AA7B8);
         this.drawString(this.fontRendererObj, "PLAY", sideX + 16, sideY + 68, 0xFFFFC15A);
         this.drawString(this.fontRendererObj, "Choose a game mode", sideX + 16, sideY + 82, 0xFF8794A5);
-        this.drawString(this.fontRendererObj, "SETTINGS", sideX + 16, sideY + 226, 0xFF9AA7B8);
+        this.drawString(this.fontRendererObj, "SETTINGS", sideX + 16, sideY + 205, 0xFF9AA7B8);
         drawRect(sideX + 14, sideY + 215, sideRight - 14, sideY + 216, 0xFF354154);
 
         // Main content panel
