@@ -1435,6 +1435,9 @@ public class Minecraft implements IThreadListener {
                 boolean flag1 = false;
 
                 if (this.currentScreen == null) {
+                    if (com.isacofff.clientbase.Client.INSTANCE != null && com.isacofff.clientbase.Client.manager != null) {
+                        com.isacofff.clientbase.Client.manager.onKeyPressed(i);
+                    }
                     if (i == 54) {
                         com.isacofff.clientbase.modules.Module clickGui = com.isacofff.clientbase.Client.INSTANCE.manager.getModuleByName("ClickGUI");
                         if (clickGui != null && !clickGui.isEnabled()) {
