@@ -8,7 +8,8 @@ import net.minecraft.client.gui.ClickGuiScreen;
 public class ClickGui extends Module {
 
         public ClickGui() {
-            super("ClickGUI", Category.Client);
+            super("ClickGUI", "Opens the KYZXX client menu.", Category.Client);
+            setKey(54);
 
             this.description = "Controls the client's gui.";
         }
