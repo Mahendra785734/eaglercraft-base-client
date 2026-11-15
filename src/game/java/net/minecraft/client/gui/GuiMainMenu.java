@@ -468,7 +468,7 @@ public class GuiMainMenu extends GuiScreen {
 		this.drawKyzxxWinterOverlay();
 
 		int menuX = Math.max(22, this.width / 2 - 270);
-		int menuY = this.height / 2 - 92;
+		int menuY = this.height / 2 - 48;
 		int panelBottom = menuY + 214;
 		drawRect(menuX - 20, menuY - 20, menuX + 238, panelBottom, 0xD10D121B);
 		drawRect(menuX - 20, menuY - 20, menuX + 238, menuY - 16, 0xFFFFC15A);
