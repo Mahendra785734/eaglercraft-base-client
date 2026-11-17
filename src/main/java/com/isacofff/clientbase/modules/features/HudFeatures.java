@@ -2,6 +2,7 @@ package com.isacofff.clientbase.modules.features;
 
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
+import com.isacofff.clientbase.settings.Setting;
 
 /**
  * Small, real HUD readouts. GuiIngame owns their rendering so all values are
@@ -28,7 +29,19 @@ public final class HudFeatures {
     public static class RotationHUD extends Module { public RotationHUD(){super("RotationHUD",Category.Render);description="Shows yaw and pitch.";}}
     public static class ChunkHUD extends Module { public ChunkHUD(){super("ChunkHUD",Category.Render);description="Shows your current chunk coordinates.";}}
     public static class LightLevel extends Module { public LightLevel(){super("LightLevel",Category.Render);description="Shows the block light level at your position.";}}
-    public static class InventoryCount extends Module { public InventoryCount(){super("InventoryCount",Category.Render);description="Counts occupied inventory slots.";}}
+    public static class InventoryCount extends Module {
+        public final Setting.BooleanSetting includeHotbar = new Setting.BooleanSetting("Include Hotbar", true);
+        public final Setting.BooleanSetting includeOffhand = new Setting.BooleanSetting("Include Offhand", false);
+        public final Setting.BooleanSetting showCapacity = new Setting.BooleanSetting("Show Capacity", true);
+
+        public InventoryCount() {
+            super("InventoryCount", Category.Render);
+            description = "Counts occupied inventory slots with optional hotbar and offhand slots.";
+            settings.add(includeHotbar);
+            settings.add(includeOffhand);
+            settings.add(showCapacity);
+        }
+    }
     public static class ArmorValue extends Module { public ArmorValue(){super("ArmorValue",Category.Render);description="Shows your total armor points.";}}
     public static class TargetHUD extends Module { public TargetHUD(){super("TargetHUD",Category.Render);description="Shows the name of the entity under your crosshair.";}}
     public static class EntityCount extends Module { public EntityCount(){super("EntityCount",Category.Render);description="Shows the number of loaded entities.";}}

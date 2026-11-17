@@ -524,10 +524,28 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("RotationHUD")) lines.add("Yaw/Pitch: " + Math.round(player.rotationYaw) + " / " + Math.round(player.rotationPitch));
 		if (isKyzxxModuleEnabled("ChunkHUD")) lines.add("Chunk: " + (player.getPosition().getX() >> 4) + ", " + (player.getPosition().getZ() >> 4));
 		if (isKyzxxModuleEnabled("LightLevel")) lines.add("Light: " + this.mc.world.getLight(player.getPosition()));
-		if (isKyzxxModuleEnabled("InventoryCount")) {
+		com.isacofff.clientbase.modules.Module inventoryModule = Client.manager.getModuleByName("InventoryCount");
+		if (inventoryModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.InventoryCount
+				&& inventoryModule.isEnabled()) {
+			com.isacofff.clientbase.modules.features.HudFeatures.InventoryCount inventorySettings =
+					(com.isacofff.clientbase.modules.features.HudFeatures.InventoryCount) inventoryModule;
 			int used = 0;
-			for (ItemStack stack : player.inventory.mainInventory) if (!stack.func_190926_b()) ++used;
-			lines.add("Inventory: " + used + "/36 slots");
+			int capacity = 0;
+			int firstSlot = inventorySettings.includeHotbar.getValue() ? 0 : 9;
+			for (int slot = firstSlot; slot < player.inventory.mainInventory.size(); ++slot) {
+				ItemStack stack = player.inventory.mainInventory.get(slot);
+				++capacity;
+				if (!stack.func_190926_b()) ++used;
+			}
+			if (inventorySettings.includeOffhand.getValue()) {
+				for (ItemStack stack : player.inventory.offHandInventory) {
+					++capacity;
+					if (!stack.func_190926_b()) ++used;
+				}
+			}
+			String count = inventorySettings.showCapacity.getValue()
+					? used + "/" + capacity + " slots" : used + " slots";
+			lines.add("Inventory: " + count);
 		}
 		if (isKyzxxModuleEnabled("ArmorValue")) lines.add("Armor: " + player.getTotalArmorValue());
 		if (isKyzxxModuleEnabled("TargetHUD") && this.mc.pointedEntity != null) lines.add("Target: " + this.mc.pointedEntity.getName());
