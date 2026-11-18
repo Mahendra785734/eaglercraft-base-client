@@ -35,10 +35,14 @@ public abstract class Module {
     public void setKey(int key) { this.key = key; }
 
     public void toggle() {
-        this.enabled = !this.enabled;
-        if (this.enabled) onEnable();
-        else onDisable();
+        setEnabled(!this.enabled);
+    }
 
+    public void setEnabled(boolean enabled) {
+        if (this.enabled == enabled) return;
+        this.enabled = enabled;
+        if (enabled) onEnable();
+        else onDisable();
     }
 
 
@@ -64,5 +68,6 @@ public abstract class Module {
     public void onEnable() {}
     public void onDisable() {}
     public void onUpdate() {}
+    public void onRender2D(float partialTicks) {}
 
 }
