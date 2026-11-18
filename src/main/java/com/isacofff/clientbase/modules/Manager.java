@@ -4,6 +4,7 @@ import com.isacofff.clientbase.modules.features.ClickGui;
 import com.isacofff.clientbase.modules.features.FullBright;
 import com.isacofff.clientbase.modules.features.ToggleSprint;
 import com.isacofff.clientbase.modules.features.KyzxxHUD;
+import com.isacofff.clientbase.modules.features.FPSDisplay;
 import com.isacofff.clientbase.modules.features.Zoom;
 import com.isacofff.clientbase.modules.features.NoBob;
 import com.isacofff.clientbase.modules.features.NoHurtCam;
@@ -30,6 +31,7 @@ public class Manager {
         modules.add(new FullBright());
         modules.add(new ToggleSprint());
         modules.add(new KyzxxHUD());
+        modules.add(new FPSDisplay());
         modules.add(new Zoom());
         modules.add(new NoBob());
         modules.add(new NoHurtCam());
