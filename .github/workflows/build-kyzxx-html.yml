@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - kyzxx-client-ui-fix
+      - kyzxx-module-system
   workflow_dispatch:
 
 permissions:
