@@ -6,17 +6,13 @@ import com.isacofff.clientbase.settings.Setting;
 
 public class KyzxxHUD extends Module {
     public final Setting.BooleanSetting watermark = new Setting.BooleanSetting("Watermark", true);
-    public final Setting.BooleanSetting fps = new Setting.BooleanSetting("FPS", true);
-    public final Setting.BooleanSetting coordinates = new Setting.BooleanSetting("Coordinates", true);
     public final Setting.BooleanSetting keystrokes = new Setting.BooleanSetting("Keystrokes", true);
     public final Setting.BooleanSetting moduleList = new Setting.BooleanSetting("Module List", true);
 
     public KyzxxHUD() {
-        super("HUD", "Shows a KYZXX watermark, FPS, coordinates and keystrokes.", Category.Render);
+        super("HUD", "Shows the KYZXX watermark, keystrokes and enabled module list.", Category.Render);
         setKey(35);
         settings.add(watermark);
-        settings.add(fps);
-        settings.add(coordinates);
         settings.add(keystrokes);
         settings.add(moduleList);
     }
