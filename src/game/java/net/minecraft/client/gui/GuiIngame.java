@@ -19,6 +19,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import com.isacofff.clientbase.Client;
 import com.isacofff.clientbase.modules.features.KyzxxHUD;
+import com.isacofff.clientbase.modules.features.FPSDisplay;
 import com.isacofff.clientbase.modules.Module;
 import com.isacofff.clientbase.modules.features.NoPumpkinOverlay;
 import com.isacofff.clientbase.modules.features.NoPortalOverlay;
@@ -361,6 +362,29 @@ public class GuiIngame extends Gui {
 		GlStateManager.disableLighting();
 		GlStateManager.enableAlpha();
 	        if (!this.mc.gameSettings.hideGUI && this.mc.player != null && Client.manager != null) {
+            FPSDisplay fpsDisplay = Client.manager.getModule(FPSDisplay.class);
+            if (fpsDisplay != null && fpsDisplay.isEnabled()) {
+                int fpsX = 6;
+                int fpsY = 6;
+                KyzxxHUD currentHud = Client.manager.getModule(KyzxxHUD.class);
+                if (currentHud != null && currentHud.isEnabled() && currentHud.watermark.getValue()) {
+                    fpsY += 13;
+                }
+
+                String fpsText = "FPS: " + Minecraft.getDebugFPS();
+                String coordsText = "XYZ: " + (int) Math.floor(this.mc.player.posX) + " / "
+                        + (int) Math.floor(this.mc.player.posY) + " / " + (int) Math.floor(this.mc.player.posZ);
+
+                drawRect(fpsX - 3, fpsY - 2, fpsX + fontrenderer.getStringWidth(fpsText) + 4,
+                        fpsY + 11, 0xAA101820);
+                fontrenderer.drawStringWithShadow(fpsText, fpsX, fpsY, 0xFFFFFFFF);
+
+                fpsY += 13;
+                drawRect(fpsX - 3, fpsY - 2, fpsX + fontrenderer.getStringWidth(coordsText) + 4,
+                        fpsY + 11, 0xAA101820);
+                fontrenderer.drawStringWithShadow(coordsText, fpsX, fpsY, 0xFFFFFFFF);
+            }
+
             KyzxxHUD hud = Client.manager.getModule(KyzxxHUD.class);
             if (hud != null && hud.isEnabled()) {
                 int hudY = 6;
@@ -369,18 +393,6 @@ public class GuiIngame extends Gui {
                     drawRect(hudX - 3, hudY - 2, hudX + 94, hudY + 11, 0xAA101820);
                     fontrenderer.drawStringWithShadow("KYZXX CLIENT", hudX, hudY, 0xFF39C8F2);
                     hudY += 13;
-                }
-                if (hud.fps.getValue()) {
-                    String fpsText = "FPS: " + Minecraft.getDebugFPS();
-                    drawRect(hudX - 3, hudY - 2, hudX + fontrenderer.getStringWidth(fpsText) + 4, hudY + 11, 0xAA101820);
-                    fontrenderer.drawStringWithShadow(fpsText, hudX, hudY, 0xFFFFFFFF);
-                    hudY += 13;
-                }
-                if (hud.coordinates.getValue()) {
-                    String coords = "XYZ: " + (int)Math.floor(this.mc.player.posX) + " / "
-                            + (int)Math.floor(this.mc.player.posY) + " / " + (int)Math.floor(this.mc.player.posZ);
-                    drawRect(hudX - 3, hudY - 2, hudX + fontrenderer.getStringWidth(coords) + 4, hudY + 11, 0xAA101820);
-                    fontrenderer.drawStringWithShadow(coords, hudX, hudY, 0xFFFFFFFF);
                 }
                 if (hud.keystrokes.getValue()) {
                     int ky = j - 37;
