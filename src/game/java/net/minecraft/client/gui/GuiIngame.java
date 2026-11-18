@@ -418,6 +418,10 @@ public class GuiIngame extends Gui {
 
             }
         }
+
+		if (this.mc.moduleManager != null) {
+			this.mc.moduleManager.onRender2D(partialTicks);
+		}
 }
 
 	    private void drawHudKey(FontRenderer font, String label, int x, int y, boolean pressed) {
