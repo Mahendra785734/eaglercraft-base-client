@@ -17,6 +17,11 @@ import com.isacofff.clientbase.modules.features.NoPotionHUD;
 import com.isacofff.clientbase.modules.features.NoScoreboard;
 import com.isacofff.clientbase.modules.features.NoVignette;
 import com.isacofff.clientbase.modules.features.CustomFOV;
+import com.isacofff.clientbase.modules.features.CoordinatesHUD;
+import com.isacofff.clientbase.modules.features.DirectionHUD;
+import com.isacofff.clientbase.modules.features.Speedometer;
+import com.isacofff.clientbase.modules.features.AutoWalk;
+import com.isacofff.clientbase.modules.features.ToggleSneak;
 import com.isacofff.clientbase.Category;
 
 import java.util.ArrayList;
@@ -44,6 +49,13 @@ public class Manager {
         modules.add(new NoScoreboard());
         modules.add(new NoVignette());
         modules.add(new CustomFOV());
+
+        // Additional KYZXX utility and HUD modules
+        modules.add(new CoordinatesHUD());
+        modules.add(new DirectionHUD());
+        modules.add(new Speedometer());
+        modules.add(new AutoWalk());
+        modules.add(new ToggleSneak());
     }
 
     public void onKey(int key) {
