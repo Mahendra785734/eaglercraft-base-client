@@ -566,10 +566,32 @@ public class GuiIngame extends Gui {
 		if (isKyzxxModuleEnabled("SelectedSlotHUD")) lines.add("Hotbar Slot: " + (player.inventory.currentItem + 1) + "/9");
 		if (isKyzxxModuleEnabled("WorldNameHUD")) lines.add("World: " + this.mc.world.getWorldInfo().getWorldName());
 		if (isKyzxxModuleEnabled("LocalDifficultyHUD")) lines.add("Difficulty: " + this.mc.world.getDifficulty().getDifficultyId());
-		if (isKyzxxModuleEnabled("PotionHUD")) {
-			for (PotionEffect effect : player.getActivePotionEffects()) {
-				String potion = net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F);
-				lines.add(net.minecraft.client.resources.I18n.format(effect.getEffectName()) + " " + potion);
+		com.isacofff.clientbase.modules.Module potionModule = Client.manager.getModuleByName("PotionHUD");
+		if (potionModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.PotionHUD
+				&& potionModule.isEnabled()) {
+			com.isacofff.clientbase.modules.features.HudFeatures.PotionHUD potionSettings =
+					(com.isacofff.clientbase.modules.features.HudFeatures.PotionHUD) potionModule;
+			java.util.ArrayList<PotionEffect> effects =
+					new java.util.ArrayList<PotionEffect>(player.getActivePotionEffects());
+			if (potionSettings.sortByDuration.getValue()) {
+				java.util.Collections.sort(effects, new java.util.Comparator<PotionEffect>() {
+					@Override
+					public int compare(PotionEffect first, PotionEffect second) {
+						return Integer.compare(first.getDuration(), second.getDuration());
+					}
+				});
+			}
+			int maxEffects = (int) Math.round(potionSettings.maxEffects.getValue());
+			for (int i = 0; i < effects.size() && i < maxEffects; ++i) {
+				PotionEffect effect = effects.get(i);
+				StringBuilder label = new StringBuilder(net.minecraft.client.resources.I18n.format(effect.getEffectName()));
+				if (potionSettings.showAmplifier.getValue() && effect.getAmplifier() > 0) {
+					label.append(" Lvl ").append(effect.getAmplifier() + 1);
+				}
+				if (potionSettings.showDuration.getValue()) {
+					label.append(" ").append(net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F));
+				}
+				lines.add(label.toString());
 			}
 		}
 		for (int n = 0; n < lines.size(); ++n) {
