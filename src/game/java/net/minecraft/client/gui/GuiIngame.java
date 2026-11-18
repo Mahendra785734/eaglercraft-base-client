@@ -419,8 +419,8 @@ public class GuiIngame extends Gui {
             }
         }
 
-		if (this.mc.moduleManager != null) {
-			this.mc.moduleManager.onRender2D(partialTicks);
+		if (Client.manager != null) {
+			Client.manager.onRender2D(partialTicks);
 		}
 }
 
