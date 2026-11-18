@@ -12,7 +12,21 @@ public final class HudFeatures {
     private HudFeatures() {}
 
     public static class DirectionHUD extends Module { public DirectionHUD(){super("DirectionHUD",Category.Render);description="Shows the direction you are facing.";}}
-    public static class PotionHUD extends Module { public PotionHUD(){super("PotionHUD",Category.Render);description="Lists active potion effects and remaining time.";}}
+    public static class PotionHUD extends Module {
+        public final Setting.BooleanSetting showDuration = new Setting.BooleanSetting("Show Duration", true);
+        public final Setting.BooleanSetting showAmplifier = new Setting.BooleanSetting("Show Amplifier", true);
+        public final Setting.BooleanSetting sortByDuration = new Setting.BooleanSetting("Sort by Duration", false);
+        public final Setting.NumberSetting maxEffects = new Setting.NumberSetting("Max Effects", 10.0D, 1.0D, 20.0D, 1.0D);
+
+        public PotionHUD() {
+            super("PotionHUD", Category.Render);
+            description = "Lists active effects with configurable labels, sorting, and a display limit.";
+            settings.add(showDuration);
+            settings.add(showAmplifier);
+            settings.add(sortByDuration);
+            settings.add(maxEffects);
+        }
+    }
     public static class ItemCounter extends Module { public ItemCounter(){super("ItemCounter",Category.Render);description="Shows the count of the selected hotbar stack.";}}
     public static class ClockHUD extends Module { public ClockHUD(){super("ClockHUD",Category.Render);description="Shows your local clock.";}}
     public static class BiomeHUD extends Module { public BiomeHUD(){super("BiomeHUD",Category.Render);description="Shows the biome at your current position.";}}
