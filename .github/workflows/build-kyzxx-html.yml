@@ -1,0 +1,37 @@
+name: Build KYZXX Eaglercraft HTML
+
+on:
+  push:
+    branches:
+      - kyzxx-client-ui-fix
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Make build scripts executable
+        run: chmod +x gradlew CompileEPK.sh MakeOfflineDownload.sh
+      - name: Compile assets
+        run: ./CompileEPK.sh
+      - name: Compile Java to JavaScript
+        run: ./gradlew generateJavaScript --no-daemon
+      - name: Package offline HTML
+        run: ./MakeOfflineDownload.sh
+      - name: Upload playable HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: KYZXX-Eaglercraft-1.12-HTML
+          path: |
+            javascript/Eaglercraft_1.12_Offline_en_US.html
+            javascript/Eaglercraft_1.12_Offline_International.html
+          if-no-files-found: error
+          retention-days: 14
