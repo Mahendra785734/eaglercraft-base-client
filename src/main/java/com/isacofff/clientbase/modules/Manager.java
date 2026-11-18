@@ -61,6 +61,14 @@ public class Manager {
         }
     }
 
+    public void onRender2D(float partialTicks) {
+        for (Module module : modules) {
+            if (module.isEnabled()) {
+                module.onRender2D(partialTicks);
+            }
+        }
+    }
+
     public ArrayList<Module> getModules() {
         return modules;
     }
