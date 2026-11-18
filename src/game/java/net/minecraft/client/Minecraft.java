@@ -38,6 +38,7 @@ import net.lax1dude.eaglercraft.opengl.ImageData;
 import net.lax1dude.eaglercraft.opengl.RealOpenGLEnums;
 
 import java.util.stream.Collectors;
+import net.eaglercraft.client.module.ModuleManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -202,6 +203,7 @@ public class Minecraft implements IThreadListener {
     private static Minecraft theMinecraft;
     private DataFixer dataFixer;
     public PlayerControllerMP playerController;
+    public ModuleManager moduleManager;
     private boolean fullscreen;
     private boolean enableGLErrorChecking = false;
     private boolean hasCrashed;
@@ -544,6 +546,7 @@ public class Minecraft implements IThreadListener {
 
         com.isacofff.clientbase.Client.INSTANCE = new com.isacofff.clientbase.Client();
         com.isacofff.clientbase.Client.INSTANCE.init();
+        this.moduleManager = new ModuleManager();
 
     }
 
@@ -1199,6 +1202,9 @@ public class Minecraft implements IThreadListener {
         if (com.isacofff.clientbase.Client.manager != null) {
             com.isacofff.clientbase.Client.manager.onTick();
         }
+        if (this.moduleManager != null) {
+            this.moduleManager.onTick();
+        }
         if (this.rightClickDelayTimer > 0) {
             --this.rightClickDelayTimer;
         }
@@ -1427,8 +1433,13 @@ public class Minecraft implements IThreadListener {
 
             boolean flag = Keyboard.getEventKeyState();
 
-            if (flag && this.currentScreen == null && com.isacofff.clientbase.Client.manager != null) {
-                com.isacofff.clientbase.Client.manager.onKey(i);
+            if (flag && this.currentScreen == null) {
+                if (com.isacofff.clientbase.Client.manager != null) {
+                    com.isacofff.clientbase.Client.manager.onKey(i);
+                }
+                if (this.moduleManager != null) {
+                    this.moduleManager.onKeyPress(i);
+                }
             }
 
             if (flag) {
