@@ -495,7 +495,22 @@ public class GuiIngame extends Gui {
 		if (this.mc.player == null || this.mc.world == null || Client.manager == null) return;
 		EntityPlayer player = this.mc.player;
 		java.util.ArrayList<String> lines = new java.util.ArrayList<String>();
-		if (isKyzxxModuleEnabled("DirectionHUD")) lines.add("Facing: " + net.minecraft.util.EnumFacing.fromAngle(player.rotationYaw).getName().toUpperCase());
+		if (isKyzxxModuleEnabled("DirectionHUD")) {
+			com.isacofff.clientbase.modules.Module directionModule = Client.manager.getModuleByName("DirectionHUD");
+			String facing = net.minecraft.util.EnumFacing.fromAngle(player.rotationYaw).getName().toUpperCase();
+			int yaw = Math.round(player.rotationYaw);
+			yaw = (yaw % 360 + 360) % 360;
+			String format = directionModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.DirectionHUD
+					? ((com.isacofff.clientbase.modules.features.HudFeatures.DirectionHUD) directionModule).format.getValue()
+					: "Cardinal";
+			if ("Degrees".equalsIgnoreCase(format)) {
+				lines.add("Yaw: " + yaw + " deg");
+			} else if ("Both".equalsIgnoreCase(format)) {
+				lines.add("Facing: " + facing + " (" + yaw + " deg)");
+			} else {
+				lines.add("Facing: " + facing);
+			}
+		}
 		if (isKyzxxModuleEnabled("ItemCounter")) {
 			ItemStack held = player.inventory.getCurrentItem();
 			lines.add("Item Count: " + (held.func_190926_b() ? 0 : held.func_190916_E()));

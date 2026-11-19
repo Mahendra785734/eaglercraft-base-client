@@ -11,7 +11,16 @@ import com.isacofff.clientbase.settings.Setting;
 public final class HudFeatures {
     private HudFeatures() {}
 
-    public static class DirectionHUD extends Module { public DirectionHUD(){super("DirectionHUD",Category.Render);description="Shows the direction you are facing.";}}
+    public static class DirectionHUD extends Module {
+        public final Setting.ModeSetting format =
+                new Setting.ModeSetting("Format", "Cardinal", "Cardinal", "Degrees", "Both");
+
+        public DirectionHUD() {
+            super("DirectionHUD", Category.Render);
+            description = "Shows your facing direction, yaw angle, or both.";
+            settings.add(format);
+        }
+    }
     public static class PotionHUD extends Module {
         public final Setting.BooleanSetting showDuration = new Setting.BooleanSetting("Show Duration", true);
         public final Setting.BooleanSetting showAmplifier = new Setting.BooleanSetting("Show Amplifier", true);
