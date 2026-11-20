@@ -513,7 +513,19 @@ public class GuiIngame extends Gui {
 		}
 		if (isKyzxxModuleEnabled("ItemCounter")) {
 			ItemStack held = player.inventory.getCurrentItem();
-			lines.add("Item Count: " + (held.func_190926_b() ? 0 : held.func_190916_E()));
+			int count = held.func_190926_b() ? 0 : held.func_190916_E();
+			String itemName = held.func_190926_b() ? "Empty" : held.getDisplayName();
+			com.isacofff.clientbase.modules.Module itemCounterModule = Client.manager.getModuleByName("ItemCounter");
+			String format = itemCounterModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.ItemCounter
+					? ((com.isacofff.clientbase.modules.features.HudFeatures.ItemCounter) itemCounterModule).format.getValue()
+					: "Count";
+			if ("Name + Count".equalsIgnoreCase(format)) {
+				lines.add("Item: " + itemName + " x" + count);
+			} else if ("Name".equalsIgnoreCase(format)) {
+				lines.add("Item: " + itemName);
+			} else {
+				lines.add("Item Count: " + count);
+			}
 		}
 		if (isKyzxxModuleEnabled("ClockHUD")) lines.add("Local: " + new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()));
 		if (isKyzxxModuleEnabled("BiomeHUD")) lines.add("Biome: " + this.mc.world.getBiome(player.getPosition()).getBiomeName());
