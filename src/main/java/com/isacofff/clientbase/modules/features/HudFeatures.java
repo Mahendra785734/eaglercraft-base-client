@@ -36,7 +36,16 @@ public final class HudFeatures {
             settings.add(maxEffects);
         }
     }
-    public static class ItemCounter extends Module { public ItemCounter(){super("ItemCounter",Category.Render);description="Shows the count of the selected hotbar stack.";}}
+    public static class ItemCounter extends Module {
+        public final Setting.ModeSetting format =
+                new Setting.ModeSetting("Format", "Count", "Count", "Name + Count", "Name");
+
+        public ItemCounter() {
+            super("ItemCounter", Category.Render);
+            description = "Shows the selected hotbar item name and/or stack count.";
+            settings.add(format);
+        }
+    }
     public static class ClockHUD extends Module { public ClockHUD(){super("ClockHUD",Category.Render);description="Shows your local clock.";}}
     public static class BiomeHUD extends Module { public BiomeHUD(){super("BiomeHUD",Category.Render);description="Shows the biome at your current position.";}}
     public static class SpeedHUD extends Module { public SpeedHUD(){super("SpeedHUD",Category.Render);description="Shows horizontal movement speed.";}}
