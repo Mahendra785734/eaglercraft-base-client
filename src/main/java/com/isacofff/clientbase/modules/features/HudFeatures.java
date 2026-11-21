@@ -46,7 +46,19 @@ public final class HudFeatures {
             settings.add(format);
         }
     }
-    public static class ClockHUD extends Module { public ClockHUD(){super("ClockHUD",Category.Render);description="Shows your local clock.";}}
+    public static class ClockHUD extends Module {
+        public final Setting.ModeSetting format =
+                new Setting.ModeSetting("Format", "24-hour", "24-hour", "12-hour");
+        public final Setting.BooleanSetting showSeconds =
+                new Setting.BooleanSetting("Show Seconds", true);
+
+        public ClockHUD() {
+            super("ClockHUD", Category.Render);
+            description = "Shows your local clock with a selectable 12/24-hour format and optional seconds.";
+            settings.add(format);
+            settings.add(showSeconds);
+        }
+    }
     public static class BiomeHUD extends Module { public BiomeHUD(){super("BiomeHUD",Category.Render);description="Shows the biome at your current position.";}}
     public static class SpeedHUD extends Module { public SpeedHUD(){super("SpeedHUD",Category.Render);description="Shows horizontal movement speed.";}}
     public static class HeldDurability extends Module { public HeldDurability(){super("HeldDurability",Category.Render);description="Shows remaining durability of the held item.";}}
