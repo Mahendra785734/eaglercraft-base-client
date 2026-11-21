@@ -527,7 +527,19 @@ public class GuiIngame extends Gui {
 				lines.add("Item Count: " + count);
 			}
 		}
-		if (isKyzxxModuleEnabled("ClockHUD")) lines.add("Local: " + new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()));
+		if (isKyzxxModuleEnabled("ClockHUD")) {
+			com.isacofff.clientbase.modules.Module clockModule = Client.manager.getModuleByName("ClockHUD");
+			String format = clockModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.ClockHUD
+					? ((com.isacofff.clientbase.modules.features.HudFeatures.ClockHUD) clockModule).format.getValue()
+					: "24-hour";
+			boolean showSeconds = !(clockModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.ClockHUD)
+					|| ((com.isacofff.clientbase.modules.features.HudFeatures.ClockHUD) clockModule).showSeconds.getValue();
+			boolean twelveHour = "12-hour".equalsIgnoreCase(format);
+			String pattern = twelveHour
+					? (showSeconds ? "h:mm:ss a" : "h:mm a")
+					: (showSeconds ? "HH:mm:ss" : "HH:mm");
+			lines.add("Local: " + new java.text.SimpleDateFormat(pattern, java.util.Locale.ROOT).format(new java.util.Date()));
+		}
 		if (isKyzxxModuleEnabled("BiomeHUD")) lines.add("Biome: " + this.mc.world.getBiome(player.getPosition()).getBiomeName());
 		if (isKyzxxModuleEnabled("SpeedHUD")) lines.add(String.format(java.util.Locale.ROOT, "Speed: %.2f m/s", Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ) * 20.0D));
 		if (isKyzxxModuleEnabled("HeldDurability")) {
