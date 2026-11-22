@@ -60,7 +60,14 @@ public final class HudFeatures {
         }
     }
     public static class BiomeHUD extends Module { public BiomeHUD(){super("BiomeHUD",Category.Render);description="Shows the biome at your current position.";}}
-    public static class SpeedHUD extends Module { public SpeedHUD(){super("SpeedHUD",Category.Render);description="Shows horizontal movement speed.";}}
+    public static class SpeedHUD extends Module {
+        public final Setting.ModeSetting units = new Setting.ModeSetting("Units", "m/s", "m/s", "km/h", "Blocks/tick");
+        public SpeedHUD() {
+            super("SpeedHUD", Category.Render);
+            description = "Shows horizontal movement speed with selectable units.";
+            settings.add(units);
+        }
+    }
     public static class HeldDurability extends Module { public HeldDurability(){super("HeldDurability",Category.Render);description="Shows remaining durability of the held item.";}}
     public static class TotemCounter extends Module { public TotemCounter(){super("TotemCounter",Category.Render);description="Counts totems in your inventory.";}}
     public static class ArrowCounter extends Module { public ArrowCounter(){super("ArrowCounter",Category.Render);description="Counts arrows in your inventory.";}}
