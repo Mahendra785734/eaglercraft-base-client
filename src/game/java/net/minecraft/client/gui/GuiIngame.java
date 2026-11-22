@@ -541,7 +541,22 @@ public class GuiIngame extends Gui {
 			lines.add("Local: " + new java.text.SimpleDateFormat(pattern, java.util.Locale.ROOT).format(new java.util.Date()));
 		}
 		if (isKyzxxModuleEnabled("BiomeHUD")) lines.add("Biome: " + this.mc.world.getBiome(player.getPosition()).getBiomeName());
-		if (isKyzxxModuleEnabled("SpeedHUD")) lines.add(String.format(java.util.Locale.ROOT, "Speed: %.2f m/s", Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ) * 20.0D));
+		if (isKyzxxModuleEnabled("SpeedHUD")) {
+            com.isacofff.clientbase.modules.Module speedModule = Client.manager.getModuleByName("SpeedHUD");
+            String units = speedModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.SpeedHUD
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.SpeedHUD) speedModule).units.getValue() : "m/s";
+            double blocksPerTick = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);
+            double speed = blocksPerTick;
+            String suffix = "blocks/tick";
+            if ("m/s".equalsIgnoreCase(units)) {
+                speed *= 20.0D;
+                suffix = "m/s";
+            } else if ("km/h".equalsIgnoreCase(units)) {
+                speed *= 72.0D;
+                suffix = "km/h";
+            }
+            lines.add(String.format(java.util.Locale.ROOT, "Speed: %.2f %s", speed, suffix));
+        }
 		if (isKyzxxModuleEnabled("HeldDurability")) {
 			ItemStack held = player.inventory.getCurrentItem();
 			if (!held.func_190926_b() && held.isItemStackDamageable()) lines.add("Held Durability: " + Math.max(0, held.getMaxDamage() - held.getItemDamage()) + "/" + held.getMaxDamage());
