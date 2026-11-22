@@ -1,0 +1,62 @@
+name: KYZXX Remote Gradle Build
+
+on:
+  push:
+    branches:
+      - kyzxx-client-winter-features
+  workflow_dispatch:
+
+concurrency:
+  group: kyzxx-gradle-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-html:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: kyzxx-client-winter-features
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle caching
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify Gradle environment
+        run: |
+          chmod +x gradlew CompileEPK.sh CompileJS.sh MakeOfflineDownload.sh
+          ./gradlew --version
+
+      - name: Build assets
+        run: ./CompileEPK.sh
+
+      - name: Compile TeaVM web client
+        run: ./CompileJS.sh
+
+      - name: Create offline HTML
+        run: ./MakeOfflineDownload.sh
+
+      - name: Verify generated files
+        run: |
+          test -s javascript/classes.js
+          test -s javascript/assets.epk
+          test -s javascript/Eaglercraft_1.12_Offline_en_US.html
+          file javascript/Eaglercraft_1.12_Offline_en_US.html
+          ls -lh javascript/Eaglercraft_1.12_Offline_en_US.html
+
+      - name: Upload playable HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: KYZXX-Offline-HTML
+          path: javascript/Eaglercraft_1.12_Offline_en_US.html
+          if-no-files-found: error
+          retention-days: 14
