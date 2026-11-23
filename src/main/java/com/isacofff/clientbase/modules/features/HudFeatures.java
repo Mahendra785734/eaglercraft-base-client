@@ -87,9 +87,30 @@ public final class HudFeatures {
         }
     }
     public static class PingHUD extends Module { public PingHUD(){super("PingHUD",Category.Render);description="Shows your connection ping when available.";}}
-    public static class FoodHUD extends Module { public FoodHUD(){super("FoodHUD",Category.Render);description="Shows your hunger level.";}}
-    public static class XPDisplay extends Module { public XPDisplay(){super("XPDisplay",Category.Render);description="Shows your experience level and progress.";}}
-    public static class HealthHUD extends Module { public HealthHUD(){super("HealthHUD",Category.Render);description="Shows current and maximum health.";}}
+    public static class FoodHUD extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Points", "Points", "Percent", "Both");
+        public FoodHUD() {
+            super("FoodHUD", Category.Render);
+            description = "Shows hunger as points, percentage, or both.";
+            settings.add(format);
+        }
+    }
+    public static class XPDisplay extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Both", "Both", "Level", "Progress");
+        public XPDisplay() {
+            super("XPDisplay", Category.Render);
+            description = "Shows experience level and/or progress toward the next level.";
+            settings.add(format);
+        }
+    }
+    public static class HealthHUD extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Points", "Points", "Hearts", "Both");
+        public HealthHUD() {
+            super("HealthHUD", Category.Render);
+            description = "Shows health in points, hearts, or both.";
+            settings.add(format);
+        }
+    }
     public static class WorldTime extends Module { public WorldTime(){super("WorldTime",Category.Render);description="Shows the in-game time.";}}
     public static class RotationHUD extends Module { public RotationHUD(){super("RotationHUD",Category.Render);description="Shows yaw and pitch.";}}
     public static class ChunkHUD extends Module { public ChunkHUD(){super("ChunkHUD",Category.Render);description="Shows your current chunk coordinates.";}}
