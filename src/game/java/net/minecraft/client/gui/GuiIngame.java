@@ -596,9 +596,47 @@ public class GuiIngame extends Gui {
 			net.minecraft.client.network.NetworkPlayerInfo info = this.mc.getConnection().getPlayerInfo(player.getUniqueID());
 			if (info != null) lines.add("Ping: " + info.getResponseTime() + " ms");
 		}
-		if (isKyzxxModuleEnabled("FoodHUD")) lines.add("Food: " + player.getFoodStats().getFoodLevel() + "/20");
-		if (isKyzxxModuleEnabled("XPDisplay")) lines.add("XP: " + player.experienceLevel + " (" + Math.round(player.experience * 100.0F) + "%)");
-		if (isKyzxxModuleEnabled("HealthHUD")) lines.add(String.format(java.util.Locale.ROOT, "Health: %.1f/%.1f", player.getHealth(), player.getMaxHealth()));
+		if (isKyzxxModuleEnabled("FoodHUD")) {
+            int food = player.getFoodStats().getFoodLevel();
+            int percent = Math.max(0, Math.min(100, food * 5));
+            com.isacofff.clientbase.modules.Module foodModule = Client.manager.getModuleByName("FoodHUD");
+            String format = foodModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.FoodHUD
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.FoodHUD) foodModule).format.getValue() : "Points";
+            if ("Percent".equalsIgnoreCase(format)) {
+                lines.add("Food: " + percent + "%");
+            } else if ("Both".equalsIgnoreCase(format)) {
+                lines.add("Food: " + food + "/20 (" + percent + "%)");
+            } else {
+                lines.add("Food: " + food + "/20");
+            }
+        }
+		if (isKyzxxModuleEnabled("XPDisplay")) {
+            int progress = Math.max(0, Math.min(100, Math.round(player.experience * 100.0F)));
+            com.isacofff.clientbase.modules.Module xpModule = Client.manager.getModuleByName("XPDisplay");
+            String format = xpModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.XPDisplay
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.XPDisplay) xpModule).format.getValue() : "Both";
+            if ("Level".equalsIgnoreCase(format)) {
+                lines.add("XP Level: " + player.experienceLevel);
+            } else if ("Progress".equalsIgnoreCase(format)) {
+                lines.add("XP Progress: " + progress + "%");
+            } else {
+                lines.add("XP: " + player.experienceLevel + " (" + progress + "%)");
+            }
+        }
+		if (isKyzxxModuleEnabled("HealthHUD")) {
+            float health = player.getHealth();
+            float maximum = player.getMaxHealth();
+            com.isacofff.clientbase.modules.Module healthModule = Client.manager.getModuleByName("HealthHUD");
+            String format = healthModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.HealthHUD
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.HealthHUD) healthModule).format.getValue() : "Points";
+            if ("Hearts".equalsIgnoreCase(format)) {
+                lines.add(String.format(java.util.Locale.ROOT, "Health: %.1f/%.1f hearts", health / 2.0F, maximum / 2.0F));
+            } else if ("Both".equalsIgnoreCase(format)) {
+                lines.add(String.format(java.util.Locale.ROOT, "Health: %.1f/%.1f HP (%.1f/%.1f hearts)", health, maximum, health / 2.0F, maximum / 2.0F));
+            } else {
+                lines.add(String.format(java.util.Locale.ROOT, "Health: %.1f/%.1f", health, maximum));
+            }
+        }
 		if (isKyzxxModuleEnabled("WorldTime")) {
 			long t = this.mc.world.getWorldTime() % 24000L;
 			lines.add(String.format(java.util.Locale.ROOT, "World Time: %02d:%02d", (t / 1000L + 6L) % 24L, (t % 1000L) * 60L / 1000L));
