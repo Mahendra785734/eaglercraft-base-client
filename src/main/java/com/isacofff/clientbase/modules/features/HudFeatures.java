@@ -68,10 +68,24 @@ public final class HudFeatures {
             settings.add(units);
         }
     }
-    public static class HeldDurability extends Module { public HeldDurability(){super("HeldDurability",Category.Render);description="Shows remaining durability of the held item.";}}
+    public static class HeldDurability extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Value", "Value", "Percent", "Both");
+        public HeldDurability() {
+            super("HeldDurability", Category.Render);
+            description = "Shows held-item durability as a value, percentage, or both.";
+            settings.add(format);
+        }
+    }
     public static class TotemCounter extends Module { public TotemCounter(){super("TotemCounter",Category.Render);description="Counts totems in your inventory.";}}
     public static class ArrowCounter extends Module { public ArrowCounter(){super("ArrowCounter",Category.Render);description="Counts arrows in your inventory.";}}
-    public static class DayCounter extends Module { public DayCounter(){super("DayCounter",Category.Render);description="Shows the current world day.";}}
+    public static class DayCounter extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Day", "Day", "Day + Time");
+        public DayCounter() {
+            super("DayCounter", Category.Render);
+            description = "Shows the current world day with optional in-game time.";
+            settings.add(format);
+        }
+    }
     public static class PingHUD extends Module { public PingHUD(){super("PingHUD",Category.Render);description="Shows your connection ping when available.";}}
     public static class FoodHUD extends Module { public FoodHUD(){super("FoodHUD",Category.Render);description="Shows your hunger level.";}}
     public static class XPDisplay extends Module { public XPDisplay(){super("XPDisplay",Category.Render);description="Shows your experience level and progress.";}}
@@ -93,7 +107,14 @@ public final class HudFeatures {
             settings.add(showCapacity);
         }
     }
-    public static class ArmorValue extends Module { public ArmorValue(){super("ArmorValue",Category.Render);description="Shows your total armor points.";}}
+    public static class ArmorValue extends Module {
+        public final Setting.ModeSetting format = new Setting.ModeSetting("Format", "Points", "Points", "Percent", "Both");
+        public ArmorValue() {
+            super("ArmorValue", Category.Render);
+            description = "Shows armor points, percentage of the 20-point scale, or both.";
+            settings.add(format);
+        }
+    }
     public static class TargetHUD extends Module { public TargetHUD(){super("TargetHUD",Category.Render);description="Shows the name of the entity under your crosshair.";}}
     public static class EntityCount extends Module { public EntityCount(){super("EntityCount",Category.Render);description="Shows the number of loaded entities.";}}
     public static class DimensionHUD extends Module { public DimensionHUD(){super("DimensionHUD",Category.Render);description="Shows the current dimension ID.";}}
