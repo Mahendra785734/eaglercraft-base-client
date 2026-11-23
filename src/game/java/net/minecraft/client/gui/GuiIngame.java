@@ -558,12 +558,40 @@ public class GuiIngame extends Gui {
             lines.add(String.format(java.util.Locale.ROOT, "Speed: %.2f %s", speed, suffix));
         }
 		if (isKyzxxModuleEnabled("HeldDurability")) {
-			ItemStack held = player.inventory.getCurrentItem();
-			if (!held.func_190926_b() && held.isItemStackDamageable()) lines.add("Held Durability: " + Math.max(0, held.getMaxDamage() - held.getItemDamage()) + "/" + held.getMaxDamage());
-		}
+            ItemStack held = player.inventory.getCurrentItem();
+            if (!held.func_190926_b() && held.isItemStackDamageable()) {
+                int maximum = held.getMaxDamage();
+                int remaining = Math.max(0, maximum - held.getItemDamage());
+                int percent = maximum > 0 ? Math.round(remaining * 100.0F / maximum) : 0;
+                com.isacofff.clientbase.modules.Module durabilityModule = Client.manager.getModuleByName("HeldDurability");
+                String format = durabilityModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.HeldDurability
+                        ? ((com.isacofff.clientbase.modules.features.HudFeatures.HeldDurability) durabilityModule).format.getValue() : "Value";
+                if ("Percent".equalsIgnoreCase(format)) {
+                    lines.add("Durability: " + percent + "%");
+                } else if ("Both".equalsIgnoreCase(format)) {
+                    lines.add("Durability: " + remaining + "/" + maximum + " (" + percent + "%)");
+                } else {
+                    lines.add("Held Durability: " + remaining + "/" + maximum);
+                }
+            }
+        }
 		if (isKyzxxModuleEnabled("TotemCounter")) lines.add("Totems: " + countKyzxxItem(net.minecraft.init.Items.TOTEM_OF_UNDYING));
 		if (isKyzxxModuleEnabled("ArrowCounter")) lines.add("Arrows: " + (countKyzxxItem(net.minecraft.init.Items.ARROW) + countKyzxxItem(net.minecraft.init.Items.SPECTRAL_ARROW) + countKyzxxItem(net.minecraft.init.Items.TIPPED_ARROW)));
-		if (isKyzxxModuleEnabled("DayCounter")) lines.add("Day: " + (this.mc.world.getWorldTime() / 24000L + 1L));
+		if (isKyzxxModuleEnabled("DayCounter")) {
+            long ticks = this.mc.world.getWorldTime();
+            long day = ticks / 24000L + 1L;
+            com.isacofff.clientbase.modules.Module dayModule = Client.manager.getModuleByName("DayCounter");
+            String format = dayModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.DayCounter
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.DayCounter) dayModule).format.getValue() : "Day";
+            if ("Day + Time".equalsIgnoreCase(format)) {
+                long time = ticks % 24000L;
+                int hours = (int) ((time / 1000L + 6L) % 24L);
+                int minutes = (int) ((time % 1000L) * 60L / 1000L);
+                lines.add(String.format(java.util.Locale.ROOT, "Day %d  %02d:%02d", day, hours, minutes));
+            } else {
+                lines.add("Day: " + day);
+            }
+        }
 		if (isKyzxxModuleEnabled("PingHUD") && this.mc.getConnection() != null) {
 			net.minecraft.client.network.NetworkPlayerInfo info = this.mc.getConnection().getPlayerInfo(player.getUniqueID());
 			if (info != null) lines.add("Ping: " + info.getResponseTime() + " ms");
@@ -601,7 +629,20 @@ public class GuiIngame extends Gui {
 					? used + "/" + capacity + " slots" : used + " slots";
 			lines.add("Inventory: " + count);
 		}
-		if (isKyzxxModuleEnabled("ArmorValue")) lines.add("Armor: " + player.getTotalArmorValue());
+		if (isKyzxxModuleEnabled("ArmorValue")) {
+            int armor = player.getTotalArmorValue();
+            int percent = Math.round(armor * 100.0F / 20.0F);
+            com.isacofff.clientbase.modules.Module armorModule = Client.manager.getModuleByName("ArmorValue");
+            String format = armorModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.ArmorValue
+                    ? ((com.isacofff.clientbase.modules.features.HudFeatures.ArmorValue) armorModule).format.getValue() : "Points";
+            if ("Percent".equalsIgnoreCase(format)) {
+                lines.add("Armor: " + percent + "%");
+            } else if ("Both".equalsIgnoreCase(format)) {
+                lines.add("Armor: " + armor + "/20 (" + percent + "%)");
+            } else {
+                lines.add("Armor: " + armor);
+            }
+        }
 		if (isKyzxxModuleEnabled("TargetHUD") && this.mc.pointedEntity != null) lines.add("Target: " + this.mc.pointedEntity.getName());
 		if (isKyzxxModuleEnabled("EntityCount")) lines.add("Entities: " + this.mc.world.loadedEntityList.size());
 		if (isKyzxxModuleEnabled("DimensionHUD")) lines.add("Dimension: " + this.mc.world.provider.getDimensionType().getName());
