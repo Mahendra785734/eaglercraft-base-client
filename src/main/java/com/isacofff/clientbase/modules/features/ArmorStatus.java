@@ -10,14 +10,16 @@ public class ArmorStatus extends Module {
     public final Setting.BooleanSetting showPercent = new Setting.BooleanSetting("Percent", true);
     public final Setting.BooleanSetting showName = new Setting.BooleanSetting("Item Names", false);
     public final Setting.BooleanSetting showBackground = new Setting.BooleanSetting("Background", true);
+    public final Setting.BooleanSetting showEmptySlots = new Setting.BooleanSetting("Empty Slots", false);
 
     public ArmorStatus() {
         super("ArmorStatus", Category.Player);
-        this.description = "Shows real armor icons, durability bars, and remaining durability.";
+        this.description = "Shows armor icons, durability, and optional empty-slot markers.";
         settings.add(showDurability);
         settings.add(showBar);
         settings.add(showPercent);
         settings.add(showName);
         settings.add(showBackground);
+        settings.add(showEmptySlots);
     }
 }

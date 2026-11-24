@@ -402,7 +402,7 @@ public class GuiIngame extends Gui {
 						if (armor.isItemStackDamageable()) {
 							int max = armor.getMaxDamage();
 							int remaining = Math.max(0, max - armor.getItemDamage());
-						float ratio = max <= 0 ? 1.0F : remaining / (float) max;
+							float ratio = max <= 0 ? 1.0F : remaining / (float) max;
 							if (armorSettings.showBar.getValue()) {
 								drawRect(itemX, armorY + 18, itemX + 16, armorY + 20, 0xFF343A44);
 								drawRect(itemX, armorY + 18, itemX + Math.round(16.0F * ratio), armorY + 20,
@@ -420,6 +420,16 @@ public class GuiIngame extends Gui {
 							int tw = this.getFontRenderer().getStringWidth(label);
 							this.getFontRenderer().drawStringWithShadow(label, itemX + (16 - tw) / 2.0F, armorY + 32, 0xFFE8EDF5);
 						}
+					} else if (armorSettings.showEmptySlots.getValue()) {
+						if (armorSettings.showBackground.getValue()) drawRect(itemX - 2, armorY - 2, itemX + 20, armorY + 20, 0x7010141C);
+						int edge = 0xFF596675;
+						drawRect(itemX + 2, armorY + 2, itemX + 14, armorY + 3, edge);
+						drawRect(itemX + 2, armorY + 13, itemX + 14, armorY + 14, edge);
+						drawRect(itemX + 2, armorY + 2, itemX + 3, armorY + 14, edge);
+						drawRect(itemX + 13, armorY + 2, itemX + 14, armorY + 14, edge);
+						String slotLabel = slot == 3 ? "H" : slot == 2 ? "C" : slot == 1 ? "L" : "B";
+						int labelWidth = this.getFontRenderer().getStringWidth(slotLabel);
+						this.getFontRenderer().drawStringWithShadow(slotLabel, itemX + (16 - labelWidth) / 2.0F, armorY + 5, 0xFF9EABB8);
 					}
 				}
 			}
