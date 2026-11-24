@@ -18,6 +18,8 @@ public class Manager {
         modules.add(new Keystrokes());
         modules.add(new Coordinates());
         modules.add(new ClickCPS());
+        modules.add(new HudFeatures.CombatSessionHUD());
+        modules.add(new HudFeatures.BlockInfoHUD());
         modules.add(new ArmorStatus());
         modules.add(new ModuleList());
         modules.add(new FPS());
