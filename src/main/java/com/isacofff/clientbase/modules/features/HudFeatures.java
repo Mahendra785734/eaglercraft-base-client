@@ -159,4 +159,57 @@ public final class HudFeatures {
     public static class HidePumpkin extends Module { public HidePumpkin(){super("HidePumpkin",Category.Render);description="Hides the pumpkin overlay.";}}
     public static class HidePortal extends Module { public HidePortal(){super("HidePortal",Category.Render);description="Hides the portal overlay.";}}
     public static class HideVignette extends Module { public HideVignette(){super("HideVignette",Category.Render);description="Hides the screen vignette.";}}
+    /** Tracks local combat-session clicks and elapsed time without automating gameplay. */
+    public static class CombatSessionHUD extends Module {
+        private int leftClicks;
+        private int rightClicks;
+        private long startedAt;
+        private boolean leftDown;
+        private boolean rightDown;
+
+        public CombatSessionHUD() {
+            super("CombatSessionHUD", Category.Combat);
+            description = "Local session timer and click totals; no automated actions.";
+        }
+
+        @Override
+        public void onEnable() {
+            leftClicks = 0;
+            rightClicks = 0;
+            startedAt = net.minecraft.client.Minecraft.getSystemTime();
+            leftDown = false;
+            rightDown = false;
+        }
+
+        @Override
+        public void onUpdate() {
+            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
+            if (mc.currentScreen != null || mc.player == null) {
+                leftDown = net.lax1dude.eaglercraft.Mouse.isButtonDown(0);
+                rightDown = net.lax1dude.eaglercraft.Mouse.isButtonDown(1);
+                return;
+            }
+            boolean l = net.lax1dude.eaglercraft.Mouse.isButtonDown(0);
+            boolean r = net.lax1dude.eaglercraft.Mouse.isButtonDown(1);
+            if (l && !leftDown) leftClicks++;
+            if (r && !rightDown) rightClicks++;
+            leftDown = l;
+            rightDown = r;
+        }
+
+        public int getLeftClicks() { return leftClicks; }
+        public int getRightClicks() { return rightClicks; }
+        public long getElapsedSeconds() {
+            return Math.max(0L, (net.minecraft.client.Minecraft.getSystemTime() - startedAt) / 1000L);
+        }
+    }
+
+    /** Displays the block currently under the crosshair and its local coordinates. */
+    public static class BlockInfoHUD extends Module {
+        public BlockInfoHUD() {
+            super("BlockInfoHUD", Category.World);
+            description = "Shows crosshair block name, coordinates, and distance.";
+        }
+    }
+
 }
