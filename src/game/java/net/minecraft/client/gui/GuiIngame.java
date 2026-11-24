@@ -737,6 +737,25 @@ public class GuiIngame extends Gui {
 				lines.add(label.toString());
 			}
 		}
+				if (isKyzxxModuleEnabled("CombatSessionHUD")) {
+			com.isacofff.clientbase.modules.Module combatModule = Client.manager.getModuleByName("CombatSessionHUD");
+			if (combatModule instanceof com.isacofff.clientbase.modules.features.HudFeatures.CombatSessionHUD) {
+				com.isacofff.clientbase.modules.features.HudFeatures.CombatSessionHUD stats =
+						(com.isacofff.clientbase.modules.features.HudFeatures.CombatSessionHUD) combatModule;
+				long seconds = stats.getElapsedSeconds();
+				lines.add(String.format(java.util.Locale.ROOT, "Combat Session: L %d | R %d | %02d:%02d",
+						stats.getLeftClicks(), stats.getRightClicks(), seconds / 60L, seconds % 60L));
+			}
+		}
+		if (isKyzxxModuleEnabled("BlockInfoHUD") && this.mc.objectMouseOver != null
+				&& this.mc.objectMouseOver.typeOfHit == net.minecraft.util.math.RayTraceResult.Type.BLOCK
+				&& this.mc.objectMouseOver.getBlockPos() != null) {
+			net.minecraft.util.math.BlockPos targetPos = this.mc.objectMouseOver.getBlockPos();
+			net.minecraft.block.Block targetBlock = this.mc.world.getBlockState(targetPos).getBlock();
+			double distance = player.getDistance(targetPos.getX() + 0.5D, targetPos.getY() + 0.5D, targetPos.getZ() + 0.5D);
+			lines.add(String.format(java.util.Locale.ROOT, "Block: %s | %d %d %d | %.1fm",
+					targetBlock.getLocalizedName(), targetPos.getX(), targetPos.getY(), targetPos.getZ(), distance));
+		}
 		for (int n = 0; n < lines.size(); ++n) {
 			String line = lines.get(n);
 			int x = screenWidth - this.getFontRenderer().getStringWidth(line) - 10;
