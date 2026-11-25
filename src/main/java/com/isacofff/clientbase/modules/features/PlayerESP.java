@@ -22,8 +22,6 @@ public class PlayerESP extends Module {
     private final Setting.BooleanSetting rainbow = new Setting.BooleanSetting("Rainbow", true);
     private final Setting.NumberSetting rainbowSpeed =
             new Setting.NumberSetting("Rainbow Speed", 4.0D, 1.0D, 10.0D, 0.5D);
-    private final Setting.NumberSetting lineWidth =
-            new Setting.NumberSetting("Line Width", 1.0D, 1.0D, 1.0D, 0.5D);
     private final Setting.NumberSetting red = new Setting.NumberSetting("Red", 255.0D, 0.0D, 255.0D, 1.0D);
     private final Setting.NumberSetting green = new Setting.NumberSetting("Green", 0.0D, 0.0D, 255.0D, 1.0D);
     private final Setting.NumberSetting blue = new Setting.NumberSetting("Blue", 0.0D, 0.0D, 255.0D, 1.0D);
@@ -35,7 +33,6 @@ public class PlayerESP extends Module {
         settings.add(invisibles);
         settings.add(rainbow);
         settings.add(rainbowSpeed);
-        settings.add(lineWidth);
         settings.add(red);
         settings.add(green);
         settings.add(blue);
