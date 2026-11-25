@@ -86,7 +86,6 @@ public class PlayerESP extends Module {
     }
 
     private void endRender() {
-        GlStateManager.glLineWidth(1.0F);
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
