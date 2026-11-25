@@ -6,6 +6,7 @@ import com.isacofff.clientbase.settings.Setting;
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.opengl.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
+import com.isacofff.clientbase.utils.ColorUtil;
 import net.minecraft.client.renderer.Tessellator;
 import net.lax1dude.eaglercraft.opengl.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -62,20 +63,9 @@ public class ChestESP extends Module {
 
     private float[] getColor(BlockPos pos, float red, float green, float blue) {
         if (!"Rainbow".equalsIgnoreCase(colorMode.getValue())) return new float[] { red, green, blue };
-        float hue = ((System.currentTimeMillis() % 4200L) / 4200.0F
-                + (float) (pos.hashCode() & 255) / 255.0F) % 1.0F;
-        float h = hue * 6.0F;
-        int sector = (int) h;
-        float f = h - sector;
-        float p = 0.18F, q = 1.0F - 0.82F * f, t = 0.18F + 0.82F * f;
-        switch (sector % 6) {
-        case 0: return new float[] { 1.0F, t, p };
-        case 1: return new float[] { q, 1.0F, p };
-        case 2: return new float[] { p, 1.0F, t };
-        case 3: return new float[] { p, q, 1.0F };
-        case 4: return new float[] { t, p, 1.0F };
-        default: return new float[] { 1.0F, p, q };
-        }
+        int rgb = ColorUtil.getRainbow(4.2F, 0.85F, 1.0F, (long) (pos.hashCode() & 255) * 150L);
+        return new float[] { ((rgb >> 16) & 255) / 255.0F,
+                ((rgb >> 8) & 255) / 255.0F, (rgb & 255) / 255.0F };
     }
 
     private void drawContainer(BlockPos pos, float red, float green, float blue, float alpha) {
@@ -90,6 +80,7 @@ public class ChestESP extends Module {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        RenderGlobal.renderFilledBox(box, red, green, blue, 0.13F);
         RenderGlobal.drawSelectionBoundingBox(box, red, green, blue, alpha);
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
