@@ -224,6 +224,8 @@ public class GuiIngameMenu extends GuiScreen {
         drawRect(panelX + panelWidth + 10, panelY - 15, panelX + panelWidth + 12, panelY + 180, 0xFF343D4A);
         this.drawString(this.fontRendererObj, "KYZXX CLIENT", panelX, panelY - 9, 0xFFFFC15A);
         this.drawString(this.fontRendererObj, "GAME MENU  |  EAGLERCRAFT 1.12.2", panelX, panelY + 5, 0xFFB8C1CE);
+        String titleStr = I18n.format("menu.game", new Object[0]);
+        int titleStrWidth = fontRendererObj.getStringWidth(titleStr);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		if (PauseMenuCustomizeState.icon_title_L != null) {
 			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
