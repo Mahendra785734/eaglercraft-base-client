@@ -18,6 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 /** Local container locator for integrated singleplayer worlds only. */
+// Configuration is exposed through the module's expandable ClickGUI settings.
 public class ChestESP extends Module {
     private final Minecraft mc = Minecraft.getMinecraft();
     private final Setting.BooleanSetting normalChests = new Setting.BooleanSetting("Normal Chests", true);
