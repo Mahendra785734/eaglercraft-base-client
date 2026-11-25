@@ -279,12 +279,14 @@ public class ClickGuiScreen extends GuiScreen {
                 }
                 offset += 14;
 
-                if (module.open && hasSettings(module)) {
-                    for (Setting<?> setting : module.getSettings()) {
-                        if (isHover(mouseX, mouseY, x, y + offset, width, 14)) {
-                            return setting.getName();
+                if (module.open) {
+                    if (isHover(mouseX, mouseY, x, y + offset, width, 14)) return "Keybind - click to change";
+                    offset += 14;
+                    if (hasSettings(module)) {
+                        for (Setting<?> setting : module.getSettings()) {
+                            if (isHover(mouseX, mouseY, x, y + offset, width, 14)) return setting.getName();
+                            offset += 14;
                         }
-                        offset += 14;
                     }
                 }
             }
@@ -323,13 +325,23 @@ public class ClickGuiScreen extends GuiScreen {
                     int rowY = y + offset;
                     if (rowY + 14 >= y + height && rowY + 14 <= visibleBottom) {
                         drawRect(x, rowY, x + width, rowY + 14, module.isEnabled() ? MODULE_ENABLED : MODULE_DISABLED);
-                        String symbol = hasSettings(module) ? (module.open ? "-" : "+") : "";
+                        String symbol = module.open ? "-" : "+";
                         fontRendererObj.drawString(symbol, x + width - 10, rowY + 4, ACCENT_COLOR);
-                        String bindLabel = listeningForKeybind == module ? "..." : (module.getKeybind() == 0 ? "K" : Keyboard.getKeyName(module.getKeybind()));
-                        fontRendererObj.drawString(bindLabel, x + width - 34, rowY + 4, listeningForKeybind == module ? ACCENT_COLOR : 0xFFD7DCE5);
                         fontRendererObj.drawString(module.getName(), x + 4, rowY + 4, TEXT_COLOR);
                     }
                     offset += 14;
+
+                    if (module.open) {
+                        int bindY = y + offset;
+                        if (bindY + 14 >= y + height && bindY + 14 <= visibleBottom) {
+                            drawRect(x, bindY, x + width, bindY + 14, 0xD51B2634);
+                            String bindText = listeningForKeybind == module ? "Press a key..." :
+                                "Keybind: " + (module.getKeybind() == 0 ? "None" : Keyboard.getKeyName(module.getKeybind()));
+                            fontRendererObj.drawString(fontRendererObj.trimStringToWidth(bindText, width - 8), x + 4, bindY + 4,
+                                listeningForKeybind == module ? ACCENT_COLOR : 0xFFD7DCE5);
+                        }
+                        offset += 14;
+                    }
 
                     if (module.open && hasSettings(module)) {
                         for (Setting<?> setting : module.getSettings()) {
@@ -431,19 +443,7 @@ public class ClickGuiScreen extends GuiScreen {
                         int gearY = y + offset + 1;
 
                         boolean overGear = mouseX >= gearX && mouseX <= gearX + gearSize && mouseY >= gearY && mouseY <= gearY + gearSize;
-                        boolean overKeybind = mouseX >= x + width - 38 && mouseX < gearX && mouseY >= y + offset && mouseY <= y + offset + 14;
-
                         if (mouseButton == 1) {
-                            if (hasSettings(module)) module.open = !module.open;
-                            return;
-                        }
-
-                        if (overKeybind && mouseButton == 0) {
-                            listeningForKeybind = module;
-                            return;
-                        }
-
-                        if (overGear && mouseButton == 0) {
                             module.open = !module.open;
                             return;
                         }
@@ -456,6 +456,14 @@ public class ClickGuiScreen extends GuiScreen {
                     }
 
                     offset += 14;
+
+                    if (module.open) {
+                        if (isHover(mouseX, mouseY, x, y + offset, width, 14)) {
+                            if (mouseButton == 0) listeningForKeybind = module;
+                            return;
+                        }
+                        offset += 14;
+                    }
 
                     if (module.open && hasSettings(module)) {
                         for (Setting<?> setting : module.getSettings()) {
@@ -508,7 +516,7 @@ public class ClickGuiScreen extends GuiScreen {
             int total = height;
             for (Module module : getVisibleModules(category)) {
                 total += 14;
-                if (module.open && hasSettings(module)) total += module.getSettings().size() * 14;
+                if (module.open) total += 14 + (hasSettings(module) ? module.getSettings().size() * 14 : 0);
             }
             return total;
         }
