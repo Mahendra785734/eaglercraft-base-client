@@ -91,7 +91,7 @@ public class AutoCrystal extends Module {
             mc.playerController.updateController();
         }
 
-        Vec3d hit = new Vec3d(base).add(0.5D, 1.0D, 0.5D);
+        Vec3d hit = new Vec3d(base).addVector(0.5D, 1.0D, 0.5D);
         mc.playerController.processRightClickBlock(
                 mc.player, mc.world, base, EnumFacing.UP, hit, EnumHand.MAIN_HAND);
         mc.player.swingArm(EnumHand.MAIN_HAND);
@@ -108,7 +108,7 @@ public class AutoCrystal extends Module {
         double maxDistanceSq = range.getValue() * range.getValue();
         for (EntityPlayer player : mc.world.playerEntities) {
             if (player == mc.player || !player.isEntityAlive() || player.isSpectator()) continue;
-            double distanceSq = mc.player.getDistanceSq(player);
+            double distanceSq = mc.player.getDistanceSqToEntity(player);
             if (distanceSq <= maxDistanceSq) {
                 closest = player;
                 maxDistanceSq = distanceSq;
@@ -119,15 +119,15 @@ public class AutoCrystal extends Module {
 
     private EntityEnderCrystal findCrystalToBreak(Minecraft mc, EntityPlayer target) {
         double maxDistanceSq = breakRange.getValue() * breakRange.getValue();
-        AxisAlignedBB searchBox = target.getEntityBoundingBox().grow(breakRange.getValue());
+        AxisAlignedBB searchBox = target.getEntityBoundingBox().expandXyz(breakRange.getValue());
         List<EntityEnderCrystal> crystals =
                 mc.world.getEntitiesWithinAABB(EntityEnderCrystal.class, searchBox);
 
         EntityEnderCrystal closest = null;
         double closestDistanceSq = maxDistanceSq;
         for (EntityEnderCrystal crystal : crystals) {
-            double targetDistanceSq = target.getDistanceSq(crystal);
-            double playerDistanceSq = mc.player.getDistanceSq(crystal);
+            double targetDistanceSq = target.getDistanceSqToEntity(crystal);
+            double playerDistanceSq = mc.player.getDistanceSqToEntity(crystal);
             if (targetDistanceSq <= maxDistanceSq && playerDistanceSq <= 36.0D
                     && targetDistanceSq < closestDistanceSq) {
                 closest = crystal;
@@ -165,7 +165,7 @@ public class AutoCrystal extends Module {
     private int findHotbarItem(Minecraft mc, net.minecraft.item.Item item) {
         for (int slot = 0; slot < 9; slot++) {
             ItemStack stack = mc.player.inventory.getStackInSlot(slot);
-            if (!stack.isEmpty() && stack.getItem() == item) return slot;
+            if (stack.getItem() == item && stack.stackSize > 0) return slot;
         }
         return -1;
     }
