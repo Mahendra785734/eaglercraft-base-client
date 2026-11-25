@@ -82,6 +82,32 @@ public class GuiIngameMenu extends GuiScreen {
 					PauseMenuCustomizeState.icon_serverInfo_R_aspect));
 		}
 		
+        int panelWidth = Math.min(280, Math.max(180, this.width - 24));
+        int panelX = (this.width - panelWidth) / 2;
+        int panelY = Math.max(34, (this.height - 184) / 2);
+        for (int n = 0; n < this.buttonList.size(); ++n) {
+            GuiButton b = (GuiButton)this.buttonList.get(n);
+            switch (b.id) {
+            case 4:
+                b.xPosition = panelX; b.yPosition = panelY + 28; b.width = panelWidth; b.height = 28; break;
+            case 5:
+                b.xPosition = panelX; b.yPosition = panelY + 62; b.width = (panelWidth - 8) / 2; b.height = 22; break;
+            case 6:
+                b.xPosition = panelX + (panelWidth + 8) / 2; b.yPosition = panelY + 62;
+                b.width = panelWidth - (panelWidth + 8) / 2; b.height = 22; break;
+            case 0:
+                b.xPosition = panelX; b.yPosition = panelY + 90; b.width = (panelWidth - 8) / 2; b.height = 22; break;
+            case 7: case 8:
+                b.xPosition = panelX + (panelWidth + 8) / 2; b.yPosition = panelY + 90;
+                b.width = panelWidth - (panelWidth + 8) / 2; b.height = 22; break;
+            case 9:
+                b.xPosition = panelX; b.yPosition = panelY + 118; b.width = panelWidth; b.height = 22; break;
+            case 1:
+                b.xPosition = panelX; b.yPosition = panelY + 146; b.width = panelWidth; b.height = 26; break;
+            default: break;
+            }
+        }
+
 		if (!hasSentAutoSave) {
 			hasSentAutoSave = true;
 			SingleplayerServerController.autoSave();
@@ -189,9 +215,15 @@ public class GuiIngameMenu extends GuiScreen {
 	 */
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		String titleStr = I18n.format("menu.game", new Object[0]);
-		int titleStrWidth = fontRendererObj.getStringWidth(titleStr);
-		this.drawString(this.fontRendererObj, titleStr, (this.width - titleStrWidth) / 2, 40, 16777215);
+        int panelWidth = Math.min(280, Math.max(180, this.width - 24));
+        int panelX = (this.width - panelWidth) / 2;
+        int panelY = Math.max(34, (this.height - 184) / 2);
+        drawRect(panelX - 12, panelY - 18, panelX + panelWidth + 12, panelY + 180, 0xD90B111B);
+        drawRect(panelX - 12, panelY - 18, panelX + panelWidth + 12, panelY - 15, 0xFFFFC15A);
+        drawRect(panelX - 12, panelY - 15, panelX - 10, panelY + 180, 0xFF8B6538);
+        drawRect(panelX + panelWidth + 10, panelY - 15, panelX + panelWidth + 12, panelY + 180, 0xFF343D4A);
+        this.drawString(this.fontRendererObj, "KYZXX CLIENT", panelX, panelY - 9, 0xFFFFC15A);
+        this.drawString(this.fontRendererObj, "GAME MENU  |  EAGLERCRAFT 1.12.2", panelX, panelY + 5, 0xFFB8C1CE);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		if (PauseMenuCustomizeState.icon_title_L != null) {
 			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
