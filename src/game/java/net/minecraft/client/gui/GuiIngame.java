@@ -677,6 +677,12 @@ public class GuiIngame extends Gui {
 					? used + "/" + capacity + " slots" : used + " slots";
 			lines.add("Inventory: " + count);
 		}
+		if (isKyzxxModuleEnabled("ArmorCompare")) {
+			com.isacofff.clientbase.modules.Module compareModule = Client.manager.getModuleByName("ArmorCompare");
+			if (compareModule instanceof com.isacofff.clientbase.modules.features.PlayerFeatures.ArmorCompare) {
+				lines.addAll(((com.isacofff.clientbase.modules.features.PlayerFeatures.ArmorCompare) compareModule).getLines(player));
+			}
+		}
 		if (isKyzxxModuleEnabled("ArmorValue")) {
             int armor = player.getTotalArmorValue();
             int percent = Math.round(armor * 100.0F / 20.0F);
