@@ -3,7 +3,7 @@ package com.isacofff.clientbase.modules.features;
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.lax1dude.eaglercraft.opengl.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
