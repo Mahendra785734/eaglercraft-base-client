@@ -147,19 +147,19 @@ public final class PlayerFeatures {
             if (checkArmor.getValue()) {
                 for (int i = 0; i < player.inventory.armorInventory.size(); ++i) {
                     ItemStack stack = player.inventory.armorInventory.get(i);
-                    String result = describeIfLow(stack, "armor slot " + (i + 1), limit);
+                    AlertCandidate result = describeIfLow(stack, "armor slot " + (i + 1), limit);
                     if (result != null) return result;
                 }
             }
             if (checkInventory.getValue()) {
                 for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
                     ItemStack stack = player.inventory.mainInventory.get(i);
-                    String result = describeIfLow(stack, "inventory slot " + (i + 1), limit);
+                    AlertCandidate result = describeIfLow(stack, "inventory slot " + (i + 1), limit);
                     if (result != null) return result;
                 }
                 for (int i = 0; i < player.inventory.offHandInventory.size(); ++i) {
                     ItemStack stack = player.inventory.offHandInventory.get(i);
-                    String result = describeIfLow(stack, "offhand", limit);
+                    AlertCandidate result = describeIfLow(stack, "offhand", limit);
                     if (result != null) return result;
                 }
             }
