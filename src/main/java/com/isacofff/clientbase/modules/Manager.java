@@ -20,6 +20,8 @@ public class Manager {
         modules.add(new ClickCPS());
         modules.add(new HudFeatures.CombatSessionHUD());
         modules.add(new HudFeatures.BlockInfoHUD());
+        modules.add(new PlayerFeatures.ArmorCompare());
+        modules.add(new PlayerFeatures.InventoryAlerts());
         modules.add(new ArmorStatus());
         modules.add(new ModuleList());
         modules.add(new FPS());
