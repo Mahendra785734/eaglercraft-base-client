@@ -19,6 +19,7 @@ public class Manager {
         modules.add(new Coordinates());
         modules.add(new ClickCPS());
         modules.add(new HudFeatures.CombatSessionHUD());
+        modules.add(new CombatFeatures.TriggerBot());
         modules.add(new HudFeatures.BlockInfoHUD());
         modules.add(new PlayerFeatures.ArmorCompare());
         modules.add(new PlayerFeatures.InventoryAlerts());
