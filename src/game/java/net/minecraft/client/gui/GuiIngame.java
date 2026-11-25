@@ -753,14 +753,29 @@ public class GuiIngame extends Gui {
 						stats.getLeftClicks(), stats.getRightClicks(), seconds / 60L, seconds % 60L));
 			}
 		}
-		if (isKyzxxModuleEnabled("BlockInfoHUD") && this.mc.objectMouseOver != null
-				&& this.mc.objectMouseOver.typeOfHit == net.minecraft.util.math.RayTraceResult.Type.BLOCK
-				&& this.mc.objectMouseOver.getBlockPos() != null) {
-			net.minecraft.util.math.BlockPos targetPos = this.mc.objectMouseOver.getBlockPos();
-			net.minecraft.block.Block targetBlock = this.mc.world.getBlockState(targetPos).getBlock();
-			double distance = player.getDistance(targetPos.getX() + 0.5D, targetPos.getY() + 0.5D, targetPos.getZ() + 0.5D);
-			lines.add(String.format(java.util.Locale.ROOT, "Block: %s | %d %d %d | %.1fm",
-					targetBlock.getLocalizedName(), targetPos.getX(), targetPos.getY(), targetPos.getZ(), distance));
+		if (isKyzxxModuleEnabled("BlockInfoHUD")) {
+			// The crosshair result can briefly outlive a world transition. Keep this
+			// optional HUD read-only and fail closed if the world/target is stale.
+			net.minecraft.util.math.RayTraceResult hit = this.mc.objectMouseOver;
+			if (this.mc.world != null && hit != null
+					&& hit.typeOfHit == net.minecraft.util.math.RayTraceResult.Type.BLOCK) {
+				net.minecraft.util.math.BlockPos targetPos = hit.getBlockPos();
+				if (targetPos != null) {
+					try {
+						net.minecraft.block.state.IBlockState state = this.mc.world.getBlockState(targetPos);
+						net.minecraft.block.Block targetBlock = state == null ? null : state.getBlock();
+						if (targetBlock != null) {
+							double distance = player.getDistance(targetPos.getX() + 0.5D,
+									targetPos.getY() + 0.5D, targetPos.getZ() + 0.5D);
+							lines.add(String.format(java.util.Locale.ROOT, "Block: %s | %d %d %d | %.1fm",
+									targetBlock.getLocalizedName(), targetPos.getX(), targetPos.getY(),
+								targetPos.getZ(), distance));
+						}
+					} catch (RuntimeException ignored) {
+						// A world transition or unloaded target must not crash HUD rendering.
+					}
+				}
+			}
 		}
 		for (int n = 0; n < lines.size(); ++n) {
 			String line = lines.get(n);

@@ -1196,9 +1196,6 @@ public class Minecraft implements IThreadListener {
      * Runs the current tick.
      */
     public void runTick() throws IOException {
-        if (com.isacofff.clientbase.Client.manager != null) {
-            com.isacofff.clientbase.Client.manager.onTick();
-        }
         if (this.rightClickDelayTimer > 0) {
             --this.rightClickDelayTimer;
         }
@@ -1207,7 +1204,11 @@ public class Minecraft implements IThreadListener {
             this.ingameGUI.updateTick();
         }
 
+        // Refresh the crosshair target before client modules inspect it.
         this.entityRenderer.getMouseOver(1.0F);
+        if (com.isacofff.clientbase.Client.manager != null) {
+            com.isacofff.clientbase.Client.manager.onTick();
+        }
         this.field_193035_aW.func_193297_a(this.world, this.objectMouseOver);
 
         if (!this.isGamePaused && this.world != null) {
