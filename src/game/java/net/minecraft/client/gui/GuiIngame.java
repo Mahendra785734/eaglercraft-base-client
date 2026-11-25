@@ -349,91 +349,6 @@ public class GuiIngame extends Gui {
 		GlStateManager.enableAlpha();
 
 		if (Client.manager != null && this.mc.player != null) {
-			com.isacofff.clientbase.modules.Module coordinates = Client.manager.getModuleByName("Coordinates");
-			if (coordinates != null && coordinates.isEnabled()) {
-				String position = "XYZ: " + (int) Math.floor(this.mc.player.posX) + "  "
-						+ (int) Math.floor(this.mc.player.posY) + "  " + (int) Math.floor(this.mc.player.posZ);
-				drawRect(5, 5, 12 + this.getFontRenderer().getStringWidth(position), 19, 0xB810141C);
-				this.getFontRenderer().drawStringWithShadow(position, 9.0F, 8.0F, 0xFFFFD27A);
-			}
-
-			com.isacofff.clientbase.modules.Module keys = Client.manager.getModuleByName("CreamyKeys");
-			if (keys != null && keys.isEnabled()) {
-				int bx = i - 82;
-				int by = j - 105;
-				drawKyzxxKey("W", bx + 25, by, this.mc.gameSettings.keyBindForward.isKeyDown());
-				drawKyzxxKey("A", bx, by + 22, this.mc.gameSettings.keyBindLeft.isKeyDown());
-				drawKyzxxKey("S", bx + 25, by + 22, this.mc.gameSettings.keyBindBack.isKeyDown());
-				drawKyzxxKey("D", bx + 50, by + 22, this.mc.gameSettings.keyBindRight.isKeyDown());
-				drawKyzxxKey("SPACE", bx, by + 45, this.mc.gameSettings.keyBindJump.isKeyDown(), 75);
-				drawKyzxxKey("SHIFT", bx + 78, by + 45, this.mc.gameSettings.keyBindSneak.isKeyDown(), 46);
-			}
-
-			com.isacofff.clientbase.modules.Module fps = Client.manager.getModuleByName("FPS");
-			if (fps != null && fps.isEnabled()) {
-				String fpsText = "FPS: " + Minecraft.getDebugFPS();
-				drawRect(5, 23, 12 + this.getFontRenderer().getStringWidth(fpsText), 37, 0xB810141C);
-				this.getFontRenderer().drawStringWithShadow(fpsText, 9.0F, 26.0F, 0xFFFFFFFF);
-			}
-
-			com.isacofff.clientbase.modules.Module cpsModule = Client.manager.getModuleByName("ClickCPS");
-			if (cpsModule instanceof com.isacofff.clientbase.modules.features.ClickCPS
-					&& cpsModule.isEnabled()) {
-				com.isacofff.clientbase.modules.features.ClickCPS cps =
-						(com.isacofff.clientbase.modules.features.ClickCPS) cpsModule;
-				String cpsText = "LMB " + cps.getLeftCps() + "  |  RMB " + cps.getRightCps();
-				drawRect(5, 41, 16 + this.getFontRenderer().getStringWidth(cpsText), 55, 0xB810141C);
-				this.getFontRenderer().drawStringWithShadow(cpsText, 9.0F, 44.0F, 0xFFFFD27A);
-			}
-
-			com.isacofff.clientbase.modules.Module armorModule = Client.manager.getModuleByName("ArmorStatus");
-			if (armorModule instanceof com.isacofff.clientbase.modules.features.ArmorStatus && armorModule.isEnabled()) {
-				com.isacofff.clientbase.modules.features.ArmorStatus armorSettings =
-						(com.isacofff.clientbase.modules.features.ArmorStatus) armorModule;
-				int armorX = i / 2 - 42;
-				int armorY = j - 58;
-				for (int slot = 3; slot >= 0; --slot) {
-					net.minecraft.item.ItemStack armor = this.mc.player.inventory.armorItemInSlot(slot);
-					int itemX = armorX + (3 - slot) * 22;
-					if (!armor.func_190926_b()) {
-						if (armorSettings.showBackground.getValue()) drawRect(itemX - 2, armorY - 2, itemX + 20, armorY + 31, 0xB810141C);
-						this.itemRenderer.renderItemAndEffectIntoGUI(this.mc.player, armor, itemX, armorY);
-						this.itemRenderer.renderItemOverlays(this.mc.fontRendererObj, armor, itemX, armorY);
-						if (armor.isItemStackDamageable()) {
-							int max = armor.getMaxDamage();
-							int remaining = Math.max(0, max - armor.getItemDamage());
-							float ratio = max <= 0 ? 1.0F : remaining / (float) max;
-							if (armorSettings.showBar.getValue()) {
-								drawRect(itemX, armorY + 18, itemX + 16, armorY + 20, 0xFF343A44);
-								drawRect(itemX, armorY + 18, itemX + Math.round(16.0F * ratio), armorY + 20,
-										ratio > 0.5F ? 0xFF55D68B : (ratio > 0.2F ? 0xFFFFC45C : 0xFFFF5B5B));
-							}
-							if (armorSettings.showDurability.getValue()) {
-								String durability = armorSettings.showPercent.getValue()
-										? Math.round(ratio * 100.0F) + "%" : String.valueOf(remaining);
-								int tw = this.getFontRenderer().getStringWidth(durability);
-								this.getFontRenderer().drawStringWithShadow(durability, itemX + (16 - tw) / 2.0F, armorY + 22, 0xFFFFFFFF);
-							}
-						}
-						if (armorSettings.showName.getValue()) {
-							String label = armor.getDisplayName();
-							int tw = this.getFontRenderer().getStringWidth(label);
-							this.getFontRenderer().drawStringWithShadow(label, itemX + (16 - tw) / 2.0F, armorY + 32, 0xFFE8EDF5);
-						}
-					} else if (armorSettings.showEmptySlots.getValue()) {
-						if (armorSettings.showBackground.getValue()) drawRect(itemX - 2, armorY - 2, itemX + 20, armorY + 20, 0x7010141C);
-						int edge = 0xFF596675;
-						drawRect(itemX + 2, armorY + 2, itemX + 14, armorY + 3, edge);
-						drawRect(itemX + 2, armorY + 13, itemX + 14, armorY + 14, edge);
-						drawRect(itemX + 2, armorY + 2, itemX + 3, armorY + 14, edge);
-						drawRect(itemX + 13, armorY + 2, itemX + 14, armorY + 14, edge);
-						String slotLabel = slot == 3 ? "H" : slot == 2 ? "C" : slot == 1 ? "L" : "B";
-						int labelWidth = this.getFontRenderer().getStringWidth(slotLabel);
-						this.getFontRenderer().drawStringWithShadow(slotLabel, itemX + (16 - labelWidth) / 2.0F, armorY + 5, 0xFF9EABB8);
-					}
-				}
-			}
-
 			com.isacofff.clientbase.modules.Module moduleList = Client.manager.getModuleByName("ActiveModules");
 			if (moduleList != null && moduleList.isEnabled()) {
 				java.util.ArrayList<com.isacofff.clientbase.modules.Module> activeModules = new java.util.ArrayList<>();
@@ -469,7 +384,6 @@ public class GuiIngame extends Gui {
 					drawRect(listX - 6, listY - 5, listX + 150, listY + Math.max(1, row) * 12 + 3, 0x44FFFFFF);
 				}
 			}
-			renderKyzxxExtraHud(i);
 		}
 	}
 

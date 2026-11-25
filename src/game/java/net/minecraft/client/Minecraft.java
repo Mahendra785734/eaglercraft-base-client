@@ -1428,9 +1428,12 @@ public class Minecraft implements IThreadListener {
 
             boolean flag = Keyboard.getEventKeyState();
 
-            if (flag && com.isacofff.clientbase.Client.manager != null) {
+            if (com.isacofff.clientbase.Client.manager != null) {
                 com.isacofff.clientbase.modules.features.KeySounds keySounds = com.isacofff.clientbase.Client.manager.getModule(com.isacofff.clientbase.modules.features.KeySounds.class);
-                if (keySounds != null && keySounds.isEnabled()) keySounds.play(i);
+                if (keySounds != null) {
+                    if (flag && keySounds.isEnabled()) keySounds.play(i);
+                    else if (!flag) keySounds.release(i);
+                }
             }
 
             if (flag) {
