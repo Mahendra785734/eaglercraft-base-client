@@ -18,6 +18,7 @@ import net.minecraft.client.gui.advancements.GuiScreenAdvancements;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 
+// KYZXX pause-menu styling keeps all vanilla button actions intact.
 public class GuiIngameMenu extends GuiScreen {
 
 	boolean hasSentAutoSave = !SingleplayerServerController.isWorldRunning();
