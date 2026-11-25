@@ -165,7 +165,7 @@ public class AutoCrystal extends Module {
     private int findHotbarItem(Minecraft mc, net.minecraft.item.Item item) {
         for (int slot = 0; slot < 9; slot++) {
             ItemStack stack = mc.player.inventory.getStackInSlot(slot);
-            if (stack.getItem() == item && stack.stackSize > 0) return slot;
+            if (stack.getItem() == item && !stack.func_190926_b()) return slot;
         }
         return -1;
     }
