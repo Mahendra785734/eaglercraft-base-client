@@ -12,6 +12,7 @@ public class Manager {
         modules.add(new KeySounds());
         modules.add(new AutoCrystal());
         modules.add(new KillAura());
+        modules.add(new ChestESP());
         modules.add(new KyzxxMusic());
         modules.add(new FullBright());
         modules.add(new AutoSprint());
