@@ -1248,6 +1248,14 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			this.renderCloudsCheck(renderglobal, partialTicks, pass, d0, d1, d2);
 		}
 
+		// Client ChestESP overlay is rendered once per frame and only in integrated singleplayer.
+		if (pass == 2 && com.isacofff.clientbase.Client.manager != null) {
+			com.isacofff.clientbase.modules.Module chestEsp = com.isacofff.clientbase.Client.manager.getModuleByName("ChestESP");
+			if (chestEsp instanceof com.isacofff.clientbase.modules.features.ChestESP) {
+				((com.isacofff.clientbase.modules.features.ChestESP) chestEsp).onRender3D(partialTicks);
+			}
+		}
+
 		if (this.renderHand) {
 			GlStateManager.clear(256);
 			this.renderHand(partialTicks, pass);
