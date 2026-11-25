@@ -74,7 +74,7 @@ public final class CombatFeatures {
             Entity target = mc.objectMouseOver.entityHit;
             if (!(target instanceof EntityLivingBase) || target == mc.player || target.isDead) return;
             EntityLivingBase livingTarget = (EntityLivingBase) target;
-            if (livingTarget.getHealth() <= 0.0F || mc.player.getDistance(target) > range.getValue()) return;
+            if (livingTarget.getHealth() <= 0.0F || mc.player.getDistance(target.posX, target.posY, target.posZ) > range.getValue()) return;
             if (target.isInvisible() && !attackInvisibleEntities.getValue()) return;
 
             if (target instanceof EntityPlayer) {
