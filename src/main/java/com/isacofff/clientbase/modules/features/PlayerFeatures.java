@@ -130,19 +130,19 @@ public final class PlayerFeatures {
             Minecraft mc = Minecraft.getMinecraft();
             if (mc.player == null || mc.world == null) return;
 
-            String lowItem = findLowDurabilityItem(mc.player);
+            AlertCandidate lowItem = findLowDurabilityItem(mc.player);
             if (lowItem == null) {
                 lastAlertKey = "";
                 return;
             }
-            if (!lowItem.equals(lastAlertKey)) {
+            if (!lowItem.key.equals(lastAlertKey)) {
                 mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(
-                        "§e[KYZXX] §fLow durability: " + lowItem));
-                lastAlertKey = lowItem;
+                        "§e[KYZXX] §fLow durability: " + lowItem.message));
+                lastAlertKey = lowItem.key;
             }
         }
 
-        private String findLowDurabilityItem(EntityPlayer player) {
+        private AlertCandidate findLowDurabilityItem(EntityPlayer player) {
             int limit = (int) Math.round(threshold.getValue());
             if (checkArmor.getValue()) {
                 for (int i = 0; i < player.inventory.armorInventory.size(); ++i) {
@@ -166,13 +166,24 @@ public final class PlayerFeatures {
             return null;
         }
 
-        private String describeIfLow(ItemStack stack, String location, int limit) {
+        private AlertCandidate describeIfLow(ItemStack stack, String location, int limit) {
             if (stack == null || stack.func_190926_b() || !stack.isItemStackDamageable()) return null;
             int maximum = stack.getMaxDamage();
             if (maximum <= 0) return null;
             int remaining = Math.max(0, (maximum - stack.getItemDamage()) * 100 / maximum);
             if (remaining > limit) return null;
-            return stack.getDisplayName() + " (" + remaining + "%, " + location + ")";
+            String name = stack.getDisplayName();
+            return new AlertCandidate(location + ":" + name, name + " (" + remaining + "%, " + location + ")");
+        }
+
+        private static class AlertCandidate {
+            private final String key;
+            private final String message;
+
+            private AlertCandidate(String key, String message) {
+                this.key = key;
+                this.message = message;
+            }
         }
     }
 }
